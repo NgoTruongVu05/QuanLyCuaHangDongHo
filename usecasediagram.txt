@@ -1,0 +1,90 @@
+@startuml
+left to right direction
+
+actor "Nhân viên bán hàng" as NV
+actor "Quản lý cửa hàng" as QL
+
+rectangle "Hệ thống cửa hàng đồng hồ" {
+
+  ' Đăng nhập
+  usecase "Đăng nhập" as DN
+  usecase "Kiểm tra thông tin đăng nhập" as KTDN
+  usecase "Thông báo lỗi đăng nhập" as BLDN
+
+  ' Quản lý sản phẩm
+  usecase "Quản lý sản phẩm" as QLSP
+  usecase "Thêm sản phẩm" as TSP
+  usecase "Chỉnh sửa sản phẩm" as SSP
+  usecase "Xóa sản phẩm" as XSP
+
+  ' Quản lý nhân viên
+  usecase "Quản lý nhân viên" as QLNV
+  usecase "Thêm nhân viên" as TNV
+  usecase "Chỉnh sửa nhân viên" as SNV
+  usecase "Xóa nhân viên" as XNV
+
+  ' Quản lý khách hàng
+  usecase "Quản lý khách hàng" as QLKH
+  usecase "Thêm khách hàng" as TKH
+  usecase "Chỉnh sửa khách hàng" as SKH
+  usecase "Xóa khách hàng" as XKH
+
+  ' Quản lý đơn hàng và hóa đơn
+  usecase "Quản lý hóa đơn" as QLHD
+  usecase "Thêm đơn hàng" as TDH
+  usecase "Xuất hóa đơn" as XHD
+
+  ' Kiểm tra và báo lỗi chung
+  usecase "Kiểm tra hợp lệ dữ liệu" as KTDL
+  usecase "Thông báo lỗi dữ liệu" as TBL
+
+  ' Báo cáo
+  usecase "Thống kê hóa đơn" as TKHD
+  usecase "Báo cáo tồn kho" as BCTK
+}
+
+' Quan hệ actor
+NV --> QLHD
+NV --> TKHD
+
+QL --> DN
+QL --> QLSP
+QL --> QLNV
+QL --> QLKH
+QL --> QLHD
+QL --> TKHD
+QL --> BCTK
+
+' Quan hệ include/extend
+DN ..> KTDN : <<include>>
+KTDN ..> BLDN : <<extend>>
+
+QLSP ..> TSP : <<extend>>
+QLSP ..> SSP : <<extend>>
+QLSP ..> XSP : <<extend>>
+TSP ..> KTDL : <<include>>
+SSP ..> KTDL : <<include>>
+XSP ..> KTDL : <<include>>
+
+QLNV ..> TNV : <<extend>>
+QLNV ..> SNV : <<extend>>
+QLNV ..> XNV : <<extend>>
+TNV ..> KTDL : <<include>>
+SNV ..> KTDL : <<include>>
+XNV ..> KTDL : <<include>>
+
+QLKH ..> TKH : <<extend>>
+QLKH ..> SKH : <<extend>>
+QLKH ..> XKH : <<extend>>
+TKH ..> KTDL : <<include>>
+SKH ..> KTDL : <<include>>
+XKH ..> KTDL : <<include>>
+
+QLHD ..> TDH : <<extend>>
+QLHD ..> XHD : <<extend>>
+TDH ..> KTDL : <<include>>
+TDH ..> TBL : <<extend>>
+KTDL ..> TBL : <<extend>>
+
+TDH ..> XHD : <<include>>
+@enduml
