@@ -40,6 +40,7 @@ class MainWindow(QMainWindow):
         
         # Tabs
         self.tabs = QTabWidget()
+        self.tabs.currentChanged.connect(self.on_tab_changed)
         
         # Tab Tạo hóa đơn (luôn hiển thị)
         self.create_invoice_tab = CreateInvoiceTab(self.db, None)  # user_id = None cho khách
@@ -120,3 +121,11 @@ class MainWindow(QMainWindow):
         self.setWindowTitle('Hệ thống quản lý cửa hàng đồng hồ - Chưa đăng nhập')
         
         QMessageBox.information(self, 'Thông báo', 'Đã đăng xuất!')
+
+    def on_tab_changed(self, index):
+        """Handle tab changed event"""
+        current_tab = self.tabs.widget(index)
+        
+        # Reload data if it's create invoice tab
+        if isinstance(current_tab, CreateInvoiceTab):
+            current_tab.load_data()

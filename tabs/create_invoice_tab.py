@@ -179,3 +179,10 @@ class CreateInvoiceTab(QWidget):
         self.cart.clear()
         self.update_cart_display()
         self.load_products()
+    
+    def load_data(self):
+        """Reload all data from database"""
+        self.load_products()
+        self.load_customers()
+        self.cart.clear()
+        self.update_cart_display()
