@@ -82,6 +82,7 @@ class EmployeeManagementTab(QWidget):
                     border-radius: 3px;
                     padding: 3px 8px;
                     font-size: 11px;
+                    margin-right: 2px;
                 }
                 QPushButton:hover {
                     background-color: #2980B9;
@@ -89,6 +90,8 @@ class EmployeeManagementTab(QWidget):
             ''')
             edit_btn.clicked.connect(lambda checked, r=row: self.edit_employee_row(r))
             action_layout.addWidget(edit_btn)
+
+            self.table.resizeRowsToContents()
             
             # Không cho xóa tài khoản quản lý (ID bắt đầu bằng "ql")
             employee_id = employee[0]
