@@ -11,6 +11,15 @@ class Database:
     
     def create_tables(self):
         cursor = self.conn.cursor()
+
+        # Bảng thương hiệu (brands)
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS brands (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT UNIQUE NOT NULL,
+                country TEXT
+            )
+        ''')
         
         # Bảng sản phẩm (liên kết brand_id)
         cursor.execute('''
