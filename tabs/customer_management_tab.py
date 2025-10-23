@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton, 
                              QTableWidget, QTableWidgetItem, QMessageBox,
-                             QHeaderView)
+                             QHeaderView, QLineEdit, QLabel, QComboBox)
 
 class CustomerManagementTab(QWidget):
     def __init__(self, db, user_role):
@@ -27,6 +27,41 @@ class CustomerManagementTab(QWidget):
         controls_layout.addStretch()
         layout.addLayout(controls_layout)
         
+        # Search area
+        search_layout = QHBoxLayout()
+        
+        search_layout.addWidget(QLabel('Tìm kiếm:'))
+        
+        self.search_type = QComboBox()
+        self.search_type.addItems(['Tất cả', 'Tên', 'Số điện thoại'])  # BỎ EMAIL
+        self.search_type.currentTextChanged.connect(self.on_search_type_changed)
+        search_layout.addWidget(self.search_type)
+        
+        self.search_input = QLineEdit()
+        self.search_input.setPlaceholderText('Nhập từ khóa tìm kiếm...')
+        self.search_input.textChanged.connect(self.search_customers)
+        search_layout.addWidget(self.search_input)
+        
+        # Clear search button
+        clear_search_btn = QPushButton('Xóa tìm kiếm')
+        clear_search_btn.clicked.connect(self.clear_search)
+        clear_search_btn.setStyleSheet('''
+            QPushButton {
+                background-color: #95A5A6;
+                color: white;
+                border: none;
+                border-radius: 3px;
+                padding: 5px 10px;
+            }
+            QPushButton:hover {
+                background-color: #7F8C8D;
+            }
+        ''')
+        search_layout.addWidget(clear_search_btn)
+        
+        search_layout.addStretch()
+        layout.addLayout(search_layout)
+        
         # Table
         self.table = QTableWidget()
         self.table.setColumnCount(6)  # Thêm cột hành động
@@ -45,12 +80,72 @@ class CustomerManagementTab(QWidget):
         
         self.setLayout(layout)
     
+    def on_search_type_changed(self, search_type):
+        """Cập nhật placeholder text khi thay đổi loại tìm kiếm"""
+        if search_type == 'Tất cả':
+            self.search_input.setPlaceholderText('Nhập từ khóa tìm kiếm...')
+        elif search_type == 'Tên':
+            self.search_input.setPlaceholderText('Nhập tên khách hàng...')
+        elif search_type == 'Số điện thoại':
+            self.search_input.setPlaceholderText('Nhập số điện thoại...')
+        # BỎ PHẦN EMAIL
+        
+        # Trigger search again when type changes
+        self.search_customers()
+    
+    def search_customers(self):
+        """Tìm kiếm khách hàng dựa trên loại và từ khóa"""
+        search_text = self.search_input.text().strip().lower()
+        search_type = self.search_type.currentText()
+        
+        if not search_text:
+            # Nếu không có từ khóa, hiển thị tất cả
+            self.load_data()
+            return
+        
+        cursor = self.db.conn.cursor()
+        
+        if search_type == 'Tất cả':
+            # Tìm kiếm trên các trường Tên và Số điện thoại (BỎ EMAIL)
+            cursor.execute('''
+                SELECT * FROM customers 
+                WHERE LOWER(name) LIKE ? OR LOWER(phone) LIKE ?
+            ''', (f'%{search_text}%', f'%{search_text}%'))
+        
+        elif search_type == 'Tên':
+            cursor.execute('''
+                SELECT * FROM customers 
+                WHERE LOWER(name) LIKE ?
+            ''', (f'%{search_text}%',))
+        
+        elif search_type == 'Số điện thoại':
+            cursor.execute('''
+                SELECT * FROM customers 
+                WHERE LOWER(phone) LIKE ?
+            ''', (f'%{search_text}%',))
+        
+        customers = cursor.fetchall()
+        self.display_customers(customers)
+    
+    def clear_search(self):
+        """Xóa tìm kiếm và hiển thị tất cả khách hàng"""
+        self.search_type.setCurrentText('Tất cả')
+        self.search_input.clear()
+        self.load_data()
+    
     def load_data(self):
+        """Tải toàn bộ dữ liệu khách hàng"""
         cursor = self.db.conn.cursor()
         cursor.execute('SELECT * FROM customers')
         customers = cursor.fetchall()
-        
+        self.display_customers(customers)
+    
+    def display_customers(self, customers):
+        """Hiển thị danh sách khách hàng lên table"""
+        # Xóa tất cả trước khi thêm mới
+        self.table.setRowCount(0)
         self.table.setRowCount(len(customers))
+        
         for row, customer in enumerate(customers):
             for col, value in enumerate(customer):
                 self.table.setItem(row, col, QTableWidgetItem(str(value) if value else ''))
@@ -64,12 +159,13 @@ class CustomerManagementTab(QWidget):
                 edit_btn = QPushButton('Sửa')
                 edit_btn.setStyleSheet('''
                     QPushButton {
-                        background-color: #3498DB;
-                        color: white;
-                        border: none;
-                        border-radius: 3px;
-                        padding: 3px 8px;
-                        font-size: 11px;
+                    background-color: #3498DB;
+                    color: white;
+                    border: none;
+                    border-radius: 3px;
+                    padding: 3px 8px;
+                    font-size: 11px;
+                    margin-right: 2px;
                     }
                     QPushButton:hover {
                         background-color: #2980B9;
@@ -84,6 +180,7 @@ class CustomerManagementTab(QWidget):
                         background-color: #E74C3C;
                         color: white;
                         border: none;
+                        margin: 0 3px;
                         border-radius: 3px;
                         padding: 3px 8px;
                         font-size: 11px;
@@ -101,6 +198,8 @@ class CustomerManagementTab(QWidget):
                         background-color: #27AE60;
                         color: white;
                         border: none;
+                        margin: 0 3px;
+                        padding: 3px 0;
                         border-radius: 3px;
                         padding: 3px 8px;
                         font-size: 11px;
@@ -114,6 +213,9 @@ class CustomerManagementTab(QWidget):
             
             action_layout.addStretch()
             self.table.setCellWidget(row, 5, action_widget)
+
+        for row in range(self.table.rowCount()):
+            self.table.setRowHeight(row, 40)
     
     def add_customer(self):
         from dialogs.customer_dialog import CustomerDialog
