@@ -19,12 +19,12 @@ class InvoiceManagementTab(QWidget):
         controls_layout = QHBoxLayout()
         
         # Button Quản lý Hóa đơn
-        self.invoice_btn = QPushButton('Hóa đơn')
+        self.invoice_btn = QPushButton('Hóa đơn bán hàng')
         self.invoice_btn.setFixedHeight(35)
         self.invoice_btn.clicked.connect(lambda: self.switch_mode("invoices"))
         
         # Button Quản lý Sửa chữa
-        self.repair_btn = QPushButton('Sửa chữa')
+        self.repair_btn = QPushButton('Hóa đơn sửa chữa')
         self.repair_btn.setFixedHeight(35)
         self.repair_btn.clicked.connect(lambda: self.switch_mode("repairs"))
         
