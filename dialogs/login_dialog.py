@@ -28,11 +28,13 @@ class LoginDialog(QDialog):
         form_layout = QFormLayout()
         
         self.id_input = QLineEdit()
+        self.id_input.setStyleSheet('padding: 5px;border: 1px; border-radius: 3px;margin-bottom: 5px;')
         self.id_input.setPlaceholderText('Nhập ID (nv... hoặc ql...)')
         self.id_input.setMinimumHeight(35)
         form_layout.addRow('ID:', self.id_input)
         
         self.password_input = QLineEdit()
+        self.password_input.setStyleSheet('padding: 5px;border: 1px; border-radius: 3px;margin-bottom: 5px;')
         self.password_input.setPlaceholderText('Nhập mật khẩu')
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
         self.password_input.setMinimumHeight(35)
