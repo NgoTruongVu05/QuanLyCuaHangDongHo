@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import (QDialog, QFormLayout, QLineEdit, QPushButton, 
-                             QComboBox, QMessageBox, QDoubleSpinBox, QLabel)
+                             QComboBox, QMessageBox, QDoubleSpinBox, QLabel,
+                             QVBoxLayout, QHBoxLayout, QSpacerItem, QSizePolicy)
 
 class EmployeeDialog(QDialog):
     def __init__(self, db, employee_id=None):
@@ -14,24 +15,24 @@ class EmployeeDialog(QDialog):
         self.setWindowTitle('Thêm/Sửa nhân viên' if not self.employee_id else 'Sửa nhân viên')
         self.setFixedSize(450, 450)
         
-        layout = QFormLayout()
+        form_layout = QFormLayout()
         
         # Mã định danh (chỉ nhập khi thêm mới)
         if not self.employee_id:
             self.ma_dinh_danh_input = QLineEdit()
             self.ma_dinh_danh_input.setPlaceholderText('Nhập 12 chữ số')
             self.ma_dinh_danh_input.textChanged.connect(self.on_ma_dinh_danh_changed)
-            layout.addRow('Mã định danh (12 số):', self.ma_dinh_danh_input)
+            form_layout.addRow('Mã định danh (12 số):', self.ma_dinh_danh_input)
             
             # Hiển thị ID - không cho phép sửa
             self.id_label = QLabel('Chưa có ID')
             self.id_label.setStyleSheet('color: #2E86AB; font-weight: bold; background-color: #f0f0f0; padding: 5px; border: 1px solid #ccc;')
-            layout.addRow('ID:', self.id_label)
+            form_layout.addRow('ID:', self.id_label)
         else:
             # Khi sửa, hiển thị ID readonly
             id_label = QLabel(self.employee_id)
             id_label.setStyleSheet('color: #666; background-color: #f0f0f0; padding: 5px; border: 1px solid #ccc;')
-            layout.addRow('ID:', id_label)
+            form_layout.addRow('ID:', id_label)
         
         self.password_input = QLineEdit()
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
@@ -39,36 +40,47 @@ class EmployeeDialog(QDialog):
             self.password_input.setPlaceholderText('Bắt buộc khi thêm mới')
         else:
             self.password_input.setPlaceholderText('Để trống nếu không đổi mật khẩu')
-        layout.addRow('Mật khẩu:', self.password_input)
+        form_layout.addRow('Mật khẩu:', self.password_input)
         
         self.full_name_input = QLineEdit()
-        layout.addRow('Họ tên:', self.full_name_input)
+        form_layout.addRow('Họ tên:', self.full_name_input)
         
         self.role_combo = QComboBox()
         self.role_combo.addItems(['Nhân viên', 'Quản lý'])
         self.role_combo.currentTextChanged.connect(self.on_role_changed)
-        layout.addRow('Vai trò:', self.role_combo)
+        form_layout.addRow('Vai trò:', self.role_combo)
         
         self.position_combo = QComboBox()
         self.position_combo.addItems(['Bán hàng', 'Kỹ thuật', 'Quản lý'])
-        layout.addRow('Chức vụ:', self.position_combo)
+        form_layout.addRow('Chức vụ:', self.position_combo)
         
         self.base_salary_input = QDoubleSpinBox()
         self.base_salary_input.setMaximum(999999999)
         self.base_salary_input.setPrefix('VND ')
-        layout.addRow('Lương cơ bản:', self.base_salary_input)
+        form_layout.addRow('Lương cơ bản:', self.base_salary_input)
         
         self.phone_input = QLineEdit()
-        layout.addRow('Điện thoại:', self.phone_input)
+        form_layout.addRow('Điện thoại:', self.phone_input)
         
         self.email_input = QLineEdit()
-        layout.addRow('Email:', self.email_input)
+        form_layout.addRow('Email:', self.email_input)
         
-        save_btn = QPushButton('Lưu')
-        save_btn.clicked.connect(self.save_employee)
-        layout.addRow(save_btn)
-        
-        self.setLayout(layout)
+        # nút Lưu - sẽ đặt ở dưới cùng, căn giữa
+        self.save_btn = QPushButton('Lưu')
+        self.save_btn.clicked.connect(self.save_employee)
+
+        # Main vertical layout: form on top, expanding spacer, button row at bottom centered
+        main_layout = QVBoxLayout()
+        main_layout.addLayout(form_layout)
+        main_layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding))
+
+        btn_row = QHBoxLayout()
+        btn_row.addStretch()
+        btn_row.addWidget(self.save_btn)
+        btn_row.addStretch()
+        main_layout.addLayout(btn_row)
+
+        self.setLayout(main_layout)
     
     def on_ma_dinh_danh_changed(self, text):
         """Cập nhật ID khi mã định danh thay đổi"""
