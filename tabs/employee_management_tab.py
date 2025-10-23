@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton, 
                              QTableWidget, QTableWidgetItem, QMessageBox,
                              QHeaderView, QComboBox, QLineEdit, QLabel)
+from PyQt6.QtCore import Qt
 
 class EmployeeManagementTab(QWidget):
     def __init__(self, db, user_role):
@@ -75,6 +76,9 @@ class EmployeeManagementTab(QWidget):
         self.table.setHorizontalHeaderLabels([
             'ID', 'Mã ĐD', 'Họ tên', 'Vai trò', 'Lương cơ bản', 'Điện thoại', 'Hành động'
         ])
+        
+        # KHÔNG CHO CHỌN BẤT KỲ Ô NÀO - THÊM DÒNG NÀY
+        self.table.setSelectionMode(QTableWidget.SelectionMode.NoSelection)
         
         # Set column widths
         header = self.table.horizontalHeader()
@@ -210,11 +214,16 @@ class EmployeeManagementTab(QWidget):
             for col, value in enumerate(employee):
                 if col == 3:  # Cột vai trò
                     role_text = "Quản lý" if value == 1 else "Nhân viên"
-                    self.table.setItem(row, col, QTableWidgetItem(role_text))
+                    item = QTableWidgetItem(role_text)
                 elif col == 4:  # Cột lương (đã dịch chuyển do bỏ position)
-                    self.table.setItem(row, col, QTableWidgetItem(f"{value:,.0f} VND" if value else "0 VND"))
+                    item = QTableWidgetItem(f"{value:,.0f} VND" if value else "0 VND")
                 else:
-                    self.table.setItem(row, col, QTableWidgetItem(str(value) if value else ''))
+                    item = QTableWidgetItem(str(value) if value else '')
+                
+                # KHÔNG CHO CHỌN VÀ CHỈNH SỬA - THÊM DÒNG NÀY
+                item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsSelectable & ~Qt.ItemFlag.ItemIsEditable)
+                
+                self.table.setItem(row, col, item)
             
             # Nút sửa và xóa cho từng dòng
             action_widget = QWidget()

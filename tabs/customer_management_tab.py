@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton, 
                              QTableWidget, QTableWidgetItem, QMessageBox,
                              QHeaderView, QLineEdit, QLabel, QComboBox)
+from PyQt6.QtCore import Qt
 
 class CustomerManagementTab(QWidget):
     def __init__(self, db, user_role):
@@ -66,6 +67,9 @@ class CustomerManagementTab(QWidget):
         self.table = QTableWidget()
         self.table.setColumnCount(6)  # Thêm cột hành động
         self.table.setHorizontalHeaderLabels(['ID', 'Tên', 'Điện thoại', 'Email', 'Địa chỉ', 'Hành động'])
+
+        
+        self.table.setSelectionMode(QTableWidget.SelectionMode.NoSelection)
         
         # Set column widths
         header = self.table.horizontalHeader()
@@ -148,7 +152,13 @@ class CustomerManagementTab(QWidget):
         
         for row, customer in enumerate(customers):
             for col, value in enumerate(customer):
-                self.table.setItem(row, col, QTableWidgetItem(str(value) if value else ''))
+                # Tạo item riêng
+                item = QTableWidgetItem(str(value) if value else '')
+                
+                # KHÔNG CHO CHỌN VÀ CHỈNH SỬA - THÊM DÒNG NÀY
+                item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsSelectable & ~Qt.ItemFlag.ItemIsEditable)
+                
+                self.table.setItem(row, col, item)
             
             # Nút sửa và xóa cho từng dòng
             action_widget = QWidget()
