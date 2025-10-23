@@ -102,7 +102,7 @@ class InvoiceManagementTab(QWidget):
         
         inactive_repair_style = '''
             QPushButton {
-                background-color: #7D3C98;
+                background-color:#27AE60;
                 color: white;
                 border: 2px solid #4A235A;
                 border-radius: 8px;
@@ -111,7 +111,7 @@ class InvoiceManagementTab(QWidget):
                 font-size: 12px;
             }
             QPushButton:hover {
-                background-color: #6C3483;
+                background-color: #229954;
                 border: 2px solid #F39C12;
             }
         '''

@@ -132,11 +132,11 @@ class Database:
         cursor.executemany('''
             INSERT OR IGNORE INTO brands (name, country) VALUES (?, ?)
         ''', [
-            ('Seiko', 'Japan'),
-            ('Casio', 'Japan'),
-            ('Rolex', 'Switzerland'),
-            ('Citizen', 'Japan'),
-            ('Omega', 'Switzerland')
+            ('Seiko', 'Nhật Bản'),
+            ('Casio', 'Nhật Bản'),
+            ('Rolex', 'Thụy Sĩ'),
+            ('Citizen', 'Nhật Bản'),
+            ('Omega', 'Thụy Sĩ')
         ])
         
         # Thêm admin mặc định - QL + 6 SỐ CUỐI

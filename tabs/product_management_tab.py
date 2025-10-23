@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
                              QTableWidget, QTableWidgetItem, QMessageBox,
                              QHeaderView)
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor
 
 class ProductManagementTab(QWidget):
     def __init__(self, db, user_role):
@@ -47,6 +48,13 @@ class ProductManagementTab(QWidget):
         header.setSectionResizeMode(7, QHeaderView.ResizeMode.Stretch)  # Thông số
         header.setSectionResizeMode(8, QHeaderView.ResizeMode.ResizeToContents)  # Hành động
 
+        # Selection behavior (optional)
+        # self.table.setSelectionMode(QTableWidget.SelectionMode.SingleSelection)
+        # self.table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
+
+        # Allow deselection by clicking empty area
+        self.table.clicked.connect(self.handle_click)
+
         layout.addWidget(self.table)
         self.setLayout(layout)
 
@@ -54,6 +62,7 @@ class ProductManagementTab(QWidget):
         """
         Lấy dữ liệu sản phẩm kèm tên brand qua JOIN,
         rồi fill vào đúng 9 cột của table.
+        Nếu quantity <= 5 sẽ đánh dấu ô và hiện cảnh báo sau khi load.
         """
         cursor = self.db.conn.cursor()
         cursor.execute('''
@@ -67,12 +76,14 @@ class ProductManagementTab(QWidget):
         products = cursor.fetchall()
 
         self.table.setRowCount(len(products))
+        low_stock = []  # list of tuples (id, name, quantity)
+
         for row, product in enumerate(products):
             # product tuple indices based on SELECT above
             pid = product[0]
             name = product[1] or ''
             brand = product[2] or ''
-            ptype = product[3] or ''
+            ptype = (product[3] or '').lower()
             price = product[4]
             quantity = product[5] if product[5] is not None else 0
             description = product[6] or ''
@@ -85,42 +96,71 @@ class ProductManagementTab(QWidget):
             connectivity = product[12] or ''
 
             # Col 0: ID
-            self.table.setItem(row, 0, QTableWidgetItem(str(pid)))
+            id_item = QTableWidgetItem(str(pid))
+            id_item.setFlags(id_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 0, id_item)
 
             # Col 1: Tên
-            self.table.setItem(row, 1, QTableWidgetItem(name))
+            name_item = QTableWidgetItem(name)
+            name_item.setFlags(name_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 1, name_item)
 
             # Col 2: Thương hiệu (tên)
-            self.table.setItem(row, 2, QTableWidgetItem(brand))
+            brand_item = QTableWidgetItem(brand)
+            brand_item.setFlags(brand_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 2, brand_item)
 
             # Col 3: Loại (hiển thị thân thiện)
-            if ptype.lower() in ('mechanical', 'm', 'coil'):
+            if ptype in ('mechanical', 'm', 'coil'):
                 type_text = "Đồng hồ cơ"
-            elif ptype.lower() in ('digital', 'smart', 'electronic'):
+            elif ptype in ('digital', 'smart', 'electronic'):
                 type_text = "Đồng hồ điện tử"
             else:
-                type_text = ptype
-            self.table.setItem(row, 3, QTableWidgetItem(type_text))
+                type_text = product[3] or ''
+            type_item = QTableWidgetItem(type_text)
+            type_item.setFlags(type_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 3, type_item)
 
             # Col 4: Giá — format có xử lý None
             if price is None:
                 price_text = ''
             else:
                 try:
-                    # format integer-like currency (no decimals). Điều chỉnh nếu bạn lưu cents.
                     price_text = f"{price:,.0f} VND"
                 except Exception:
                     price_text = str(price)
-            self.table.setItem(row, 4, QTableWidgetItem(price_text))
+            price_item = QTableWidgetItem(price_text)
+            price_item.setFlags(price_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 4, price_item)
 
             # Col 5: Số lượng
-            self.table.setItem(row, 5, QTableWidgetItem(str(quantity)))
+            qty_item = QTableWidgetItem(str(quantity))
+            qty_item.setFlags(qty_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+
+            # Highlight low stock: <=5 => mark màu vàng cam, <=2 => đỏ
+            try:
+                qnum = int(quantity)
+            except Exception:
+                qnum = 0
+
+            if qnum <= 2:
+                qty_item.setBackground(QColor("#E74C3C"))   # red
+                qty_item.setForeground(QColor("white"))
+                low_stock.append((pid, name, qnum))
+            elif qnum <= 5:
+                qty_item.setBackground(QColor("#F39C12"))   # orange
+                qty_item.setForeground(QColor("black"))
+                low_stock.append((pid, name, qnum))
+
+            self.table.setItem(row, 5, qty_item)
 
             # Col 6: Mô tả
-            self.table.setItem(row, 6, QTableWidgetItem(description))
+            desc_item = QTableWidgetItem(description)
+            desc_item.setFlags(desc_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 6, desc_item)
 
             # Col 7: Thông số (tổng hợp)
-            if ptype.lower() == "mechanical":
+            if ptype == "mechanical":
                 pr = f"{movement_type or 'Automatic'}"
                 if power_reserve:
                     pr += f", {power_reserve}h"
@@ -136,7 +176,9 @@ class ProductManagementTab(QWidget):
                     specs += f", {connectivity}"
                 if features:
                     specs += f", {features}"
-            self.table.setItem(row, 7, QTableWidgetItem(specs))
+            specs_item = QTableWidgetItem(specs)
+            specs_item.setFlags(specs_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 7, specs_item)
 
             # Col 8: Action buttons (Sửa / Xóa / Xem)
             action_widget = QWidget()
@@ -200,6 +242,13 @@ class ProductManagementTab(QWidget):
             self.table.setCellWidget(row, 8, action_widget)
             self.table.resizeRowsToContents()
 
+        # Nếu có sản phẩm low stock, hiện cảnh báo tổng hợp
+        if low_stock:
+            # build thông báo ngắn gọn
+            lines = [f"- {name} (ID: {pid}) — {qty} cái" for pid, name, qty in low_stock]
+            msg = "Có sản phẩm sắp hết hàng (<= 5):\n\n" + "\n".join(lines)
+            QMessageBox.warning(self, "Cảnh báo tồn kho", msg)
+
     def add_product(self):
         from dialogs.product_dialog import ProductDialog
         dialog = ProductDialog(self.db)
@@ -251,15 +300,15 @@ class ProductManagementTab(QWidget):
         specs = self.table.item(row, 7).text() if self.table.item(row, 7) else ''
 
         info_text = f"""
-                        ID: {product_id}
-                        Tên: {product_name}
-                        Thương hiệu: {brand}
-                        Loại: {product_type}
-                        Giá: {price}
-                        Số lượng: {quantity}
-                        Mô tả: {description}
-                        Thông số: {specs}
-                        """
+                    ID: {product_id}
+                    Tên: {product_name}
+                    Thương hiệu: {brand}
+                    Loại: {product_type}
+                    Giá: {price}
+                    Số lượng: {quantity}
+                    Mô tả: {description}
+                    Thông số: {specs}
+                    """
         QMessageBox.information(self, 'Chi tiết sản phẩm', info_text)
 
     def handle_click(self, index):
