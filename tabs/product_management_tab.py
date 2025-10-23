@@ -139,14 +139,20 @@ class ProductManagementTab(QWidget):
         from dialogs.product_dialog import ProductDialog
         dialog = ProductDialog(self.db)
         if dialog.exec():
+            # Tự động cập nhật bảng sau khi thêm
             self.load_data()
+            # Thông báo thành công
+            QMessageBox.information(self, 'Thành công', 'Đã thêm sản phẩm mới!')
     
     def edit_product_row(self, row):
         product_id = int(self.table.item(row, 0).text())
         from dialogs.product_dialog import ProductDialog
         dialog = ProductDialog(self.db, product_id)
         if dialog.exec():
+            # Tự động cập nhật bảng sau khi sửa
             self.load_data()
+            # Thông báo thành công
+            QMessageBox.information(self, 'Thành công', 'Đã cập nhật sản phẩm!')
     
     def delete_product_row(self, row):
         product_id = int(self.table.item(row, 0).text())
@@ -158,6 +164,7 @@ class ProductManagementTab(QWidget):
             cursor = self.db.conn.cursor()
             cursor.execute('DELETE FROM products WHERE id = ?', (product_id,))
             self.db.conn.commit()
+<<<<<<< HEAD
             self.load_data()
     
     def view_product_row(self, row):
@@ -184,3 +191,9 @@ class ProductManagementTab(QWidget):
         """
         
         QMessageBox.information(self, 'Chi tiết sản phẩm', info_text)
+=======
+            # Tự động cập nhật bảng sau khi xóa
+            self.load_data()
+            # Thông báo thành công
+            QMessageBox.information(self, 'Thành công', 'Đã xóa sản phẩm!')
+>>>>>>> e7fdcec20bc832cb76df73ca6e14f621b3b27e81
