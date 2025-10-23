@@ -27,25 +27,23 @@ class EmployeeManagementTab(QWidget):
         controls_layout.addStretch()
         layout.addLayout(controls_layout)
         
-        # Table - Thêm cột mã định danh
+        # Table - BỎ cột username
         self.table = QTableWidget()
-        self.table.setColumnCount(10)
+        self.table.setColumnCount(8)
         self.table.setHorizontalHeaderLabels([
-            'ID', 'Mã ĐD', 'Username', 'Họ tên', 'Vai trò', 'Chức vụ', 'Lương cơ bản', 'Điện thoại', 'Email', 'Hành động'
+            'ID', 'Mã ĐD', 'Họ tên', 'Vai trò', 'Chức vụ', 'Lương cơ bản', 'Điện thoại', 'Hành động'
         ])
         
         # Set column widths
         header = self.table.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)  # ID
         header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)  # Mã ĐD
-        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)  # Username
-        header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)  # Full name
-        header.setSectionResizeMode(4, QHeaderView.ResizeMode.ResizeToContents)  # Role
-        header.setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)  # Position
-        header.setSectionResizeMode(6, QHeaderView.ResizeMode.ResizeToContents)  # Salary
-        header.setSectionResizeMode(7, QHeaderView.ResizeMode.ResizeToContents)  # Phone
-        header.setSectionResizeMode(8, QHeaderView.ResizeMode.Stretch)  # Email
-        header.setSectionResizeMode(9, QHeaderView.ResizeMode.ResizeToContents)  # Action
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)  # Full name
+        header.setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)  # Role
+        header.setSectionResizeMode(4, QHeaderView.ResizeMode.ResizeToContents)  # Position
+        header.setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)  # Salary
+        header.setSectionResizeMode(6, QHeaderView.ResizeMode.ResizeToContents)  # Phone
+        header.setSectionResizeMode(7, QHeaderView.ResizeMode.ResizeToContents)  # Action
         
         layout.addWidget(self.table)
         
@@ -53,18 +51,18 @@ class EmployeeManagementTab(QWidget):
     
     def load_data(self):
         cursor = self.db.conn.cursor()
-        cursor.execute('SELECT id, ma_dinh_danh, username, full_name, vaitro, position, base_salary, phone, email FROM employees')
+        cursor.execute('SELECT id, ma_dinh_danh, full_name, vaitro, position, base_salary, phone FROM employees')
         employees = cursor.fetchall()
         
         self.table.setRowCount(len(employees))
         for row, employee in enumerate(employees):
             for col, value in enumerate(employee):
-                if col == 4:  # Cột vai trò
+                if col == 3:  # Cột vai trò
                     role_text = "Quản lý" if value == 1 else "Nhân viên"
                     self.table.setItem(row, col, QTableWidgetItem(role_text))
-                elif col == 6:  # Cột lương
+                elif col == 5:  # Cột lương
                     self.table.setItem(row, col, QTableWidgetItem(f"{value:,.0f} VND" if value else "0 VND"))
-                elif col == 5:  # Cột chức vụ
+                elif col == 4:  # Cột chức vụ
                     position_text = self.get_position_text(value)
                     self.table.setItem(row, col, QTableWidgetItem(position_text))
                 else:
@@ -92,9 +90,9 @@ class EmployeeManagementTab(QWidget):
             edit_btn.clicked.connect(lambda checked, r=row: self.edit_employee_row(r))
             action_layout.addWidget(edit_btn)
             
-            # Không cho xóa tài khoản admin (ID bắt đầu bằng "ad")
+            # Không cho xóa tài khoản quản lý (ID bắt đầu bằng "ql")
             employee_id = employee[0]
-            if not employee_id.startswith('ad'):  # Không hiển thị nút xóa cho admin
+            if not employee_id.startswith('ql'):  # Không hiển thị nút xóa cho quản lý
                 delete_btn = QPushButton('Xóa')
                 delete_btn.setStyleSheet('''
                     QPushButton {
@@ -113,7 +111,7 @@ class EmployeeManagementTab(QWidget):
                 action_layout.addWidget(delete_btn)
             
             action_layout.addStretch()
-            self.table.setCellWidget(row, 9, action_widget)
+            self.table.setCellWidget(row, 7, action_widget)
     
     def get_position_text(self, position):
         position_map = {'sales': 'Bán hàng', 'technician': 'Kỹ thuật', 'manager': 'Quản lý'}
@@ -134,11 +132,11 @@ class EmployeeManagementTab(QWidget):
     
     def delete_employee_row(self, row):
         employee_id = self.table.item(row, 0).text()
-        employee_name = self.table.item(row, 3).text()
+        employee_name = self.table.item(row, 2).text()
         
-        # Prevent deleting admin accounts
-        if employee_id.startswith('ad'):
-            QMessageBox.warning(self, 'Lỗi', 'Không thể xóa tài khoản quản trị!')
+        # Prevent deleting manager accounts
+        if employee_id.startswith('ql'):
+            QMessageBox.warning(self, 'Lỗi', 'Không thể xóa tài khoản quản lý!')
             return
         
         reply = QMessageBox.question(self, 'Xác nhận', 

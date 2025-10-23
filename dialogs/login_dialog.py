@@ -27,10 +27,10 @@ class LoginDialog(QDialog):
         # Form đăng nhập
         form_layout = QFormLayout()
         
-        self.login_input = QLineEdit()
-        self.login_input.setPlaceholderText('Nhập ID hoặc Username')
-        self.login_input.setMinimumHeight(35)
-        form_layout.addRow('Đăng nhập:', self.login_input)
+        self.id_input = QLineEdit()
+        self.id_input.setPlaceholderText('Nhập ID (nv... hoặc ql...)')
+        self.id_input.setMinimumHeight(35)
+        form_layout.addRow('ID:', self.id_input)
         
         self.password_input = QLineEdit()
         self.password_input.setPlaceholderText('Nhập mật khẩu')
@@ -62,20 +62,20 @@ class LoginDialog(QDialog):
         
         self.setLayout(layout)
         
-        # Set focus vào ô đăng nhập
-        self.login_input.setFocus()
+        # Set focus vào ô ID
+        self.id_input.setFocus()
     
     def login(self):
-        login_input = self.login_input.text().strip()
+        user_id = self.id_input.text().strip()
         password = self.password_input.text().strip()
         
-        if not login_input or not password:
+        if not user_id or not password:
             QMessageBox.warning(self, 'Lỗi', 'Vui lòng nhập đầy đủ thông tin!')
             return
         
-        user = self.db.verify_login(login_input, password)
+        user = self.db.verify_login(user_id, password)
         if user:
             self.user_info = user
             self.accept()
         else:
-            QMessageBox.warning(self, 'Lỗi', 'Thông tin đăng nhập không đúng!')
+            QMessageBox.warning(self, 'Lỗi', 'ID hoặc mật khẩu không đúng!')
