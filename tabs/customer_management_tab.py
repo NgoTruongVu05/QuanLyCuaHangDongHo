@@ -15,11 +15,10 @@ class CustomerManagementTab(QWidget):
         
         # Controls
         controls_layout = QHBoxLayout()
-        
-        if self.user_role == 1:
-            add_btn = QPushButton('Thêm khách hàng')
-            add_btn.clicked.connect(self.add_customer)
-            controls_layout.addWidget(add_btn)
+
+        add_btn = QPushButton('Thêm khách hàng')
+        add_btn.clicked.connect(self.add_customer)
+        controls_layout.addWidget(add_btn)
         
         refresh_btn = QPushButton('Làm mới')
         refresh_btn.clicked.connect(self.load_data)

@@ -97,6 +97,13 @@ def set_app_style(app):
         }
     """)
 
+def show_login(db):
+    """Hiển thị dialog đăng nhập và trả về user_info nếu thành công"""
+    login_dialog = LoginDialog(db)
+    if login_dialog.exec():
+        return login_dialog.user_info
+    return None
+
 def main():
     app = QApplication(sys.argv)
     
@@ -106,17 +113,26 @@ def main():
     # Khởi tạo database
     db = Database()
     
-    # Hiển thị dialog đăng nhập đầu tiên
-    login_dialog = LoginDialog(db)
-    if login_dialog.exec():
-        user_info = login_dialog.user_info
-        # Hiển thị main window sau khi đăng nhập thành công
-        main_window = MainWindow(user_info, db)
-        main_window.show()
-        sys.exit(app.exec())
-    else:
-        # Thoát ứng dụng nếu không đăng nhập
-        sys.exit(0)
+    # Vòng lặp chính cho đăng nhập
+    while True:
+        # Hiển thị dialog đăng nhập
+        user_info = show_login(db)
+        
+        if user_info:
+            # Hiển thị main window sau khi đăng nhập thành công
+            main_window = MainWindow(user_info, db)
+            main_window.show()
+            
+            # Chạy ứng dụng và chờ đợi
+            app.exec()
+            
+            # Khi main_window đóng (đăng xuất), quay lại vòng lặp đăng nhập
+            continue
+        else:
+            # Thoát ứng dụng nếu không đăng nhập
+            break
+    
+    sys.exit(0)
 
 if __name__ == '__main__':
     main()
