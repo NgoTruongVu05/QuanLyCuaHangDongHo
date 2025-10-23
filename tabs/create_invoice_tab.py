@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
-                             QLineEdit, QPushButton, QTableWidget, 
+                             QPushButton, QTableWidget, 
                              QTableWidgetItem, QComboBox, QSpinBox, 
                              QGroupBox, QFormLayout, QMessageBox)
 from PyQt6.QtCore import QDate
