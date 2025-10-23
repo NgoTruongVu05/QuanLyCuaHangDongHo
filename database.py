@@ -51,8 +51,7 @@ class Database:
                 vaitro INTEGER NOT NULL DEFAULT 0,
                 phone TEXT,
                 email TEXT,
-                base_salary REAL DEFAULT 0,
-                position TEXT DEFAULT 'sales'
+                base_salary REAL DEFAULT 0
             )
         ''')
         
