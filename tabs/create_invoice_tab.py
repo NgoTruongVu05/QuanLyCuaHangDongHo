@@ -61,7 +61,6 @@ class CreateInvoiceTab(QWidget):
         self.cart_table = QTableWidget()
         self.cart_table.setColumnCount(4)
         self.cart_table.setHorizontalHeaderLabels(['Sản phẩm', 'Đơn giá', 'Số lượng', 'Thành tiền'])
-        right_layout.addWidget(QLabel('Giỏ hàng:'))
         right_layout.addWidget(self.cart_table)
         
         # Total and create invoice

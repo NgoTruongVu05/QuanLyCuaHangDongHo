@@ -97,25 +97,8 @@ class MainWindow(QMainWindow):
                                    'Bạn có chắc muốn đăng xuất?',
                                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
-<<<<<<< HEAD
         if reply == QMessageBox.StandardButton.Yes:
             self.close()
-=======
-        # Cập nhật giao diện
-        self.user_info_label.setText('Chưa đăng nhập')
-        self.login_btn.setText('Đăng nhập')
-        self.login_btn.clicked.disconnect()
-        self.login_btn.clicked.connect(self.show_login)
-        
-        # Ẩn tab quản lý
-        self.hide_management_tabs()
-        
-        # Reset user_id cho tab tạo hóa đơn
-        self.create_invoice_tab.user_id = None
-        
-        self.setWindowTitle('Hệ thống quản lý cửa hàng đồng hồ - Chưa đăng nhập')
-        
-        QMessageBox.information(self, 'Thông báo', 'Đã đăng xuất!')
 
     def on_tab_changed(self, index):
         """Handle tab changed event"""
@@ -134,4 +117,3 @@ class MainWindow(QMainWindow):
             current_tab.load_data()
         elif isinstance(current_tab, StatisticsTab):
             current_tab.load_statistics()
->>>>>>> e7fdcec20bc832cb76df73ca6e14f621b3b27e81

@@ -164,8 +164,10 @@ class ProductManagementTab(QWidget):
             cursor = self.db.conn.cursor()
             cursor.execute('DELETE FROM products WHERE id = ?', (product_id,))
             self.db.conn.commit()
-<<<<<<< HEAD
+            # Tự động cập nhật bảng sau khi xóa
             self.load_data()
+            # Thông báo thành công
+            QMessageBox.information(self, 'Thành công', 'Đã xóa sản phẩm!')
     
     def view_product_row(self, row):
         product_id = int(self.table.item(row, 0).text())
@@ -191,9 +193,3 @@ class ProductManagementTab(QWidget):
         """
         
         QMessageBox.information(self, 'Chi tiết sản phẩm', info_text)
-=======
-            # Tự động cập nhật bảng sau khi xóa
-            self.load_data()
-            # Thông báo thành công
-            QMessageBox.information(self, 'Thành công', 'Đã xóa sản phẩm!')
->>>>>>> e7fdcec20bc832cb76df73ca6e14f621b3b27e81

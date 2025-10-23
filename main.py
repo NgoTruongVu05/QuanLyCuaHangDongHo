@@ -106,7 +106,6 @@ def main():
     # Khởi tạo database
     db = Database()
     
-<<<<<<< HEAD
     # Hiển thị dialog đăng nhập đầu tiên
     login_dialog = LoginDialog(db)
     if login_dialog.exec():
@@ -118,14 +117,6 @@ def main():
     else:
         # Thoát ứng dụng nếu không đăng nhập
         sys.exit(0)
-=======
-    # Hiển thị main window
-    main_window = MainWindow(db)
-    main_window.setWindowTitle('Quản Lý Cửa Hàng Đồng Hồ')
-    main_window.show()
-    
-    sys.exit(app.exec())
->>>>>>> e7fdcec20bc832cb76df73ca6e14f621b3b27e81
 
 if __name__ == '__main__':
     main()
