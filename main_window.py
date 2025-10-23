@@ -5,7 +5,6 @@ from tabs.create_repair_tab import CreateRepairTab
 from tabs.product_management_tab import ProductManagementTab
 from tabs.customer_management_tab import CustomerManagementTab
 from tabs.invoice_management_tab import InvoiceManagementTab
-from tabs.repair_management_tab import RepairManagementTab
 from tabs.statistics_tab import StatisticsTab
 from tabs.employee_management_tab import EmployeeManagementTab
 from tabs.salary_management_tab import SalaryManagementTab
@@ -71,14 +70,12 @@ class MainWindow(QMainWindow):
         self.product_tab = ProductManagementTab(self.db, self.user_role)
         self.customer_tab = CustomerManagementTab(self.db, self.user_role)
         self.invoice_tab = InvoiceManagementTab(self.db, self.user_role)
-        self.repair_tab = RepairManagementTab(self.db, self.user_role)
         self.statistics_tab = StatisticsTab(self.db, self.user_role)
         
         # Thêm các tab cơ bản cho cả admin và nhân viên
         self.tabs.addTab(self.product_tab, "Quản lý sản phẩm")
         self.tabs.addTab(self.customer_tab, "Quản lý khách hàng")
         self.tabs.addTab(self.invoice_tab, "Quản lý hóa đơn")
-        self.tabs.addTab(self.repair_tab, "Quản lý sửa chữa")
         self.tabs.addTab(self.statistics_tab, "Thống kê")
         
         # Chỉ thêm tab quản lý nhân viên và lương cho admin
