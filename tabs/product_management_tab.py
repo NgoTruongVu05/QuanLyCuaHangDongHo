@@ -294,29 +294,12 @@ class ProductManagementTab(QWidget):
                 ''')
                 delete_btn.clicked.connect(lambda checked, r=row: self.delete_product_row(r))
                 action_layout.addWidget(delete_btn)
-            else:
-                view_btn = QPushButton('Xem')
-                view_btn.setStyleSheet('''
-                    QPushButton {
-                        background-color: #27AE60;
-                        color: white;
-                        border: none;
-                        border-radius: 3px;
-                        padding: 3px 8px;
-                        font-size: 11px;
-                    }
-                    QPushButton:hover {
-                        background-color: #229954;
-                    }
-                ''')
 
             action_layout.addStretch()
             self.table.setCellWidget(row, 8, action_widget)
-            self.table.resizeRowsToContents()
-
-            # Ghi nhận low stock để cảnh báo (nếu cần)
-            if quantity <= 5:
-                low_stock.append((pid, name, quantity))
+            self.table.resizeRowsToContents()            
+            for row in range(self.table.rowCount()):
+                self.table.setRowHeight(row, 40)
 
     # --- Các hàm khác giữ nguyên ---
     def add_product(self):
