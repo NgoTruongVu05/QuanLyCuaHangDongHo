@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QTableWidget, 
                              QTableWidgetItem, QPushButton, QMessageBox)
+from PyQt6.QtCore import Qt  # Add this import
 
 class InvoiceManagementTab(QWidget):
     def __init__(self, db, user_role):
@@ -34,13 +35,27 @@ class InvoiceManagementTab(QWidget):
         self.table.setRowCount(len(invoices))
         for row, invoice in enumerate(invoices):
             for col, value in enumerate(invoice):
-                self.table.setItem(row, col, QTableWidgetItem(str(value) if value else 'Khách lẻ'))
+                item = QTableWidgetItem(str(value) if value else 'Khách lẻ')
+                item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+                self.table.setItem(row, col, item)
             
-            # Detail button
+            # Detail button with custom styling
             detail_btn = QPushButton('Xem chi tiết')
+            detail_btn.setStyleSheet("""
+                QPushButton {
+                    margin: 3px;
+                    padding: 5px;
+                }
+            """)
+            detail_btn.setFixedHeight(30)
             detail_btn.clicked.connect(lambda checked, inv_id=invoice[0]: self.show_invoice_details(inv_id))
             self.table.setCellWidget(row, 5, detail_btn)
-    
+        
+        # Adjust column sizes
+        self.table.resizeColumnsToContents()
+        self.table.resizeRowsToContents()
+        self.table.setColumnWidth(5, 120)
+
     def show_invoice_details(self, invoice_id):
         cursor = self.db.conn.cursor()
         cursor.execute('''

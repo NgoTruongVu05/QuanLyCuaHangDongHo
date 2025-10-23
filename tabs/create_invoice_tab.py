@@ -32,7 +32,7 @@ class CreateInvoiceTab(QWidget):
         self.quantity_spin.setMaximum(100)
         product_layout.addRow('Số lượng:', self.quantity_spin)
         
-        add_to_cart_btn = QPushButton('Thêm vào giỏ hàng')
+        add_to_cart_btn = QPushButton('Thêm')
         add_to_cart_btn.clicked.connect(self.add_to_cart)
         product_layout.addRow(add_to_cart_btn)
         

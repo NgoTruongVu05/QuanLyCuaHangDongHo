@@ -126,6 +126,16 @@ class MainWindow(QMainWindow):
         """Handle tab changed event"""
         current_tab = self.tabs.widget(index)
         
-        # Reload data if it's create invoice tab
+        # Reload data for each tab type
         if isinstance(current_tab, CreateInvoiceTab):
             current_tab.load_data()
+        elif isinstance(current_tab, InvoiceManagementTab):
+            current_tab.load_data()
+        elif isinstance(current_tab, ProductManagementTab):
+            current_tab.load_data()
+        elif isinstance(current_tab, CustomerManagementTab):
+            current_tab.load_data()
+        elif isinstance(current_tab, EmployeeManagementTab):
+            current_tab.load_data()
+        elif isinstance(current_tab, StatisticsTab):
+            current_tab.load_statistics()
