@@ -1,8 +1,9 @@
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
                              QTableWidget, QTableWidgetItem, QMessageBox,
-                             QHeaderView)
+                             QHeaderView, QLabel)
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor
+from PyQt6.QtWidgets import QGraphicsDropShadowEffect
 
 class ProductManagementTab(QWidget):
     def __init__(self, db, user_role):
@@ -48,21 +49,112 @@ class ProductManagementTab(QWidget):
         header.setSectionResizeMode(7, QHeaderView.ResizeMode.Stretch)  # Thông số
         header.setSectionResizeMode(8, QHeaderView.ResizeMode.ResizeToContents)  # Hành động
 
-        # Selection behavior (optional)
-        # self.table.setSelectionMode(QTableWidget.SelectionMode.SingleSelection)
-        # self.table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
-
         # Allow deselection by clicking empty area
         self.table.clicked.connect(self.handle_click)
 
         layout.addWidget(self.table)
         self.setLayout(layout)
 
+    def _create_qty_widget(self, quantity: int):
+        """
+        Tạo widget cho ô Số lượng gồm:
+        [ QLabel(quantity) , stretch , QLabel(badge) ]
+        badge chỉ hiện nếu quantity <= 5.
+        """
+        qty_widget = QWidget()
+        layout = QHBoxLayout(qty_widget)
+        layout.setContentsMargins(6, 2, 6, 2)
+        layout.setSpacing(4)
+
+        # Label hiển thị số lượng với styling đẹp hơn
+        qty_label = QLabel(str(quantity))
+        qty_label.setAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft)
+        qty_label.setStyleSheet("""
+            QLabel {
+                color: white;
+                font-weight: 600;
+                font-size: 13px;
+                padding: 2px 0px;
+            }
+        """)
+        layout.addWidget(qty_label)
+
+        layout.addStretch()
+
+        # Badge với thiết kế hiện đại
+        badge_label = QLabel()
+        badge_label.setFixedHeight(20)
+        badge_label.setFixedWidth(42)
+        badge_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        
+        # Hiệu ứng shadow cho badge
+        shadow = QGraphicsDropShadowEffect()
+        shadow.setBlurRadius(8)
+        shadow.setXOffset(0)
+        shadow.setYOffset(2)
+        shadow.setColor(QColor(0, 0, 0, 60))
+        badge_label.setGraphicsEffect(shadow)
+
+        if quantity <= 2:
+            # Màu đỏ - mức độ nguy hiểm cao
+            badge_label.setText(f"⚠ {quantity}")
+            badge_label.setStyleSheet("""
+                QLabel {
+                    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                        stop:0 #FF6B6B, stop:1 #E74C3C);
+                    color: white;
+                    border-radius: 10px;
+                    font-size: 10px;
+                    font-weight: bold;
+                    padding: 1px 4px;
+                    border: 1px solid #C0392B;
+                }
+                QLabel:hover {
+                    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                        stop:0 #FF7979, stop:1 #FF6B6B);
+                }
+            """)
+        elif quantity <= 5:
+            # Màu cam - mức độ cảnh báo
+            badge_label.setText(f"⚠ {quantity}")
+            badge_label.setStyleSheet("""
+                QLabel {
+                    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                        stop:0 #FFA726, stop:1 #F39C12);
+                    color: #2C3E50;
+                    border-radius: 10px;
+                    font-size: 10px;
+                    font-weight: bold;
+                    padding: 1px 4px;
+                    border: 1px solid #E67E22;
+                }
+                QLabel:hover {
+                    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                        stop:0 #FFB74D, stop:1 #FFA726);
+                }
+            """)
+        else:
+            # Không hiện badge nhưng có thể hiện indicator nhỏ nếu muốn
+            badge_label.hide()
+
+        layout.addWidget(badge_label)
+        
+        # Tooltip hữu ích
+        if quantity <= 5:
+            if quantity <= 2:
+                tooltip_text = f"Cảnh báo: Chỉ còn {quantity} sản phẩm - Sắp hết hàng!"
+            else:
+                tooltip_text = f"Cảnh báo: Chỉ còn {quantity} sản phẩm - Số lượng thấp"
+            qty_widget.setToolTip(tooltip_text)
+            badge_label.setToolTip(tooltip_text)
+        
+        return qty_widget
+
     def load_data(self):
         """
         Lấy dữ liệu sản phẩm kèm tên brand qua JOIN,
         rồi fill vào đúng 9 cột của table.
-        Nếu quantity <= 5 sẽ đánh dấu ô và hiện cảnh báo sau khi load.
+        Badge hiển thị ở cuối ô Số lượng nếu <=5.
         """
         cursor = self.db.conn.cursor()
         cursor.execute('''
@@ -76,10 +168,9 @@ class ProductManagementTab(QWidget):
         products = cursor.fetchall()
 
         self.table.setRowCount(len(products))
-        low_stock = []  # list of tuples (id, name, quantity)
+        low_stock = []
 
         for row, product in enumerate(products):
-            # product tuple indices based on SELECT above
             pid = product[0]
             name = product[1] or ''
             brand = product[2] or ''
@@ -110,7 +201,7 @@ class ProductManagementTab(QWidget):
             brand_item.setFlags(brand_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
             self.table.setItem(row, 2, brand_item)
 
-            # Col 3: Loại (hiển thị thân thiện)
+            # Col 3: Loại
             if ptype in ('mechanical', 'm', 'coil'):
                 type_text = "Đồng hồ cơ"
             elif ptype in ('digital', 'smart', 'electronic'):
@@ -121,7 +212,7 @@ class ProductManagementTab(QWidget):
             type_item.setFlags(type_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
             self.table.setItem(row, 3, type_item)
 
-            # Col 4: Giá — format có xử lý None
+            # Col 4: Giá
             if price is None:
                 price_text = ''
             else:
@@ -133,33 +224,16 @@ class ProductManagementTab(QWidget):
             price_item.setFlags(price_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
             self.table.setItem(row, 4, price_item)
 
-            # Col 5: Số lượng
-            qty_item = QTableWidgetItem(str(quantity))
-            qty_item.setFlags(qty_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
-
-            # Highlight low stock: <=5 => mark màu vàng cam, <=2 => đỏ
-            try:
-                qnum = int(quantity)
-            except Exception:
-                qnum = 0
-
-            if qnum <= 2:
-                qty_item.setBackground(QColor("#E74C3C"))   # red
-                qty_item.setForeground(QColor("white"))
-                low_stock.append((pid, name, qnum))
-            elif qnum <= 5:
-                qty_item.setBackground(QColor("#F39C12"))   # orange
-                qty_item.setForeground(QColor("black"))
-                low_stock.append((pid, name, qnum))
-
-            self.table.setItem(row, 5, qty_item)
+            # Col 5: Số lượng -> dùng custom widget có badge
+            qty_widget = self._create_qty_widget(int(quantity))
+            self.table.setCellWidget(row, 5, qty_widget)
 
             # Col 6: Mô tả
             desc_item = QTableWidgetItem(description)
             desc_item.setFlags(desc_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
             self.table.setItem(row, 6, desc_item)
 
-            # Col 7: Thông số (tổng hợp)
+            # Col 7: Thông số
             if ptype == "mechanical":
                 pr = f"{movement_type or 'Automatic'}"
                 if power_reserve:
@@ -170,7 +244,6 @@ class ProductManagementTab(QWidget):
                     pr += f", {features}"
                 specs = pr
             else:
-                # digital / smart
                 specs = f"{battery_life or 0} tháng"
                 if connectivity:
                     specs += f", {connectivity}"
@@ -180,7 +253,7 @@ class ProductManagementTab(QWidget):
             specs_item.setFlags(specs_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
             self.table.setItem(row, 7, specs_item)
 
-            # Col 8: Action buttons (Sửa / Xóa / Xem)
+            # Col 8: Action buttons
             action_widget = QWidget()
             action_layout = QHBoxLayout(action_widget)
             action_layout.setContentsMargins(5, 2, 5, 2)
@@ -221,37 +294,14 @@ class ProductManagementTab(QWidget):
                 ''')
                 delete_btn.clicked.connect(lambda checked, r=row: self.delete_product_row(r))
                 action_layout.addWidget(delete_btn)
-            else:
-                view_btn = QPushButton('Xem')
-                view_btn.setStyleSheet('''
-                    QPushButton {
-                        background-color: #27AE60;
-                        color: white;
-                        border: none;
-                        border-radius: 3px;
-                        padding: 3px 8px;
-                        font-size: 11px;
-                    }
-                    QPushButton:hover {
-                        background-color: #229954;
-                    }
-                ''')
-                view_btn.clicked.connect(lambda checked, r=row: self.view_product_row(r))
-                action_layout.addWidget(view_btn)
 
             action_layout.addStretch()
             self.table.setCellWidget(row, 8, action_widget)
-            self.table.resizeRowsToContents()
-        for row in range(self.table.rowCount()):
-            self.table.setRowHeight(row, 40)
+            self.table.resizeRowsToContents()            
+            for row in range(self.table.rowCount()):
+                self.table.setRowHeight(row, 40)
 
-        # Nếu có sản phẩm low stock, hiện cảnh báo tổng hợp
-        if low_stock:
-            # build thông báo ngắn gọn
-            lines = [f"- {name} (ID: {pid}) — {qty} cái" for pid, name, qty in low_stock]
-            msg = "Có sản phẩm sắp hết hàng (<= 5):\n\n" + "\n".join(lines)
-            QMessageBox.warning(self, "Cảnh báo tồn kho", msg)
-
+    # --- Các hàm khác giữ nguyên ---
     def add_product(self):
         from dialogs.product_dialog import ProductDialog
         dialog = ProductDialog(self.db)
@@ -260,9 +310,10 @@ class ProductManagementTab(QWidget):
             QMessageBox.information(self, 'Thành công', 'Đã thêm sản phẩm mới!')
 
     def edit_product_row(self, row):
-        # bảo đảm ô ID tồn tại trước khi parse
         id_item = self.table.item(row, 0)
         if not id_item:
+            # nếu ID không ở dạng item (vì ta dùng cellWidget cho qty), vẫn lấy qua cell(0,row)
+            # nhưng ở đây ID là QTableWidgetItem, nên chỉ cần check
             return
         product_id = int(id_item.text())
         from dialogs.product_dialog import ProductDialog
@@ -272,6 +323,7 @@ class ProductManagementTab(QWidget):
             QMessageBox.information(self, 'Thành công', 'Đã cập nhật sản phẩm!')
 
     def delete_product_row(self, row):
+        # Lấy ID từ item
         id_item = self.table.item(row, 0)
         name_item = self.table.item(row, 1)
         if not id_item:
@@ -298,7 +350,14 @@ class ProductManagementTab(QWidget):
         brand = self.table.item(row, 2).text() if self.table.item(row, 2) else ''
         product_type = self.table.item(row, 3).text() if self.table.item(row, 3) else ''
         price = self.table.item(row, 4).text() if self.table.item(row, 4) else ''
-        quantity = self.table.item(row, 5).text() if self.table.item(row, 5) else ''
+        # quantity là cellWidget -> lấy text từ widget
+        qty_widget = self.table.cellWidget(row, 5)
+        if qty_widget:
+            qty_label = qty_widget.findChild(QLabel)
+            quantity = qty_label.text() if qty_label else ''
+        else:
+            quantity = self.table.item(row, 5).text() if self.table.item(row, 5) else ''
+
         description = self.table.item(row, 6).text() if self.table.item(row, 6) else ''
         specs = self.table.item(row, 7).text() if self.table.item(row, 7) else ''
 
@@ -315,13 +374,10 @@ class ProductManagementTab(QWidget):
         QMessageBox.information(self, 'Chi tiết sản phẩm', info_text)
 
     def handle_click(self, index):
-        """Handle click events to allow deselection"""
         if not index.isValid():
             self.table.clearSelection()
             return
 
         selected = self.table.selectedItems()
-        if selected:
-            # nếu click cùng hàng đã chọn -> bỏ chọn
-            if selected[0].row() == index.row():
-                self.table.clearSelection()
+        if selected and selected[0].row() == index.row():
+            self.table.clearSelection()
