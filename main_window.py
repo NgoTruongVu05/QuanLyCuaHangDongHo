@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
                              QPushButton, QTabWidget, QLabel, QMessageBox)
+from PyQt6.QtCore import QTimer
 from tabs.create_invoice_tab import CreateInvoiceTab
 from tabs.create_repair_tab import CreateRepairTab
 from tabs.product_management_tab import ProductManagementTab
@@ -73,7 +74,6 @@ class MainWindow(QMainWindow):
         self.statistics_tab = StatisticsTab(self.db, self.user_role)
         
         # Thêm các tab cơ bản cho cả admin và nhân viên
-        self.tabs.addTab(self.product_tab, "Quản lý sản phẩm")
         self.tabs.addTab(self.customer_tab, "Quản lý khách hàng")
         self.tabs.addTab(self.invoice_tab, "Quản lý hóa đơn")
         self.tabs.addTab(self.statistics_tab, "Thống kê")
@@ -82,6 +82,7 @@ class MainWindow(QMainWindow):
         if self.user_role == 1:
             self.employee_tab = EmployeeManagementTab(self.db, self.user_role)
             self.salary_tab = SalaryManagementTab(self.db, self.user_role)
+            self.tabs.addTab(self.product_tab, "Quản lý sản phẩm")
             self.tabs.addTab(self.employee_tab, "Quản lý nhân viên")
             self.tabs.addTab(self.salary_tab, "Quản lý lương")
         
@@ -95,6 +96,7 @@ class MainWindow(QMainWindow):
                                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         
         if reply == QMessageBox.StandardButton.Yes:
+            # Đóng cửa sổ hiện tại và quay lại đăng nhập
             self.close()
 
     def on_tab_changed(self, index):
