@@ -9,6 +9,7 @@ from tabs.invoice_management_tab import InvoiceManagementTab
 from tabs.statistics_tab import StatisticsTab
 from tabs.employee_management_tab import EmployeeManagementTab
 from tabs.salary_management_tab import SalaryManagementTab
+from tabs.brand_management_tab import BrandManagementTab
 
 class MainWindow(QMainWindow):
     def __init__(self, user_info, db):
@@ -83,6 +84,8 @@ class MainWindow(QMainWindow):
             self.employee_tab = EmployeeManagementTab(self.db, self.user_role)
             self.salary_tab = SalaryManagementTab(self.db, self.user_role)
             self.tabs.addTab(self.product_tab, "Quản lý sản phẩm")
+            self.brand_tab = BrandManagementTab(self.db, self.user_role)
+            self.tabs.addTab(self.brand_tab, "Quản lý thương hiệu")
             self.tabs.addTab(self.employee_tab, "Quản lý nhân viên")
             self.tabs.addTab(self.salary_tab, "Quản lý lương")
         

@@ -1,14 +1,37 @@
 import sqlite3
 import hashlib
+from typing import Optional, List, Tuple
 
 class Database:
-    def __init__(self):
-        self.conn = sqlite3.connect('watch_store.db')
+    def __init__(self, db_path: str = 'watch_store.db'):
+        self.conn = sqlite3.connect(db_path)
+        # Để trả về dict thay vì tuple, bạn có thể dùng row_factory nếu muốn
+        # self.conn.row_factory = sqlite3.Row
         self.create_tables()
     
     def create_tables(self):
         cursor = self.conn.cursor()
         
+        # Bảng sản phẩm (liên kết brand_id)
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS products (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                brand_id INTEGER NOT NULL,
+                product_type TEXT NOT NULL,
+                price REAL NOT NULL,
+                quantity INTEGER NOT NULL CHECK(quantity >= 0),
+                description TEXT,
+                movement_type TEXT,
+                power_reserve INTEGER,
+                water_resistant BOOLEAN,
+                battery_life INTEGER,
+                features TEXT,
+                connectivity TEXT,
+                FOREIGN KEY (brand_id) REFERENCES brands (id)
+            )
+        ''')
+
         # Bảng nhân viên - BỎ cột username
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS employees (
@@ -24,7 +47,7 @@ class Database:
             )
         ''')
         
-        # Các bảng khác giữ nguyên...
+        # Bảng khách hàng
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS customers (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32,24 +55,6 @@ class Database:
                 phone TEXT,
                 email TEXT,
                 address TEXT
-            )
-        ''')
-        
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS products (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                brand TEXT NOT NULL,
-                product_type TEXT NOT NULL,
-                price REAL NOT NULL,
-                quantity INTEGER NOT NULL,
-                description TEXT,
-                movement_type TEXT,
-                power_reserve INTEGER,
-                water_resistant BOOLEAN,
-                battery_life INTEGER,
-                features TEXT,
-                connectivity TEXT
             )
         ''')
         
@@ -115,6 +120,17 @@ class Database:
             )
         ''')
         
+        # Thêm dữ liệu mẫu cho brands
+        cursor.executemany('''
+            INSERT OR IGNORE INTO brands (name, country) VALUES (?, ?)
+        ''', [
+            ('Seiko', 'Japan'),
+            ('Casio', 'Japan'),
+            ('Rolex', 'Switzerland'),
+            ('Citizen', 'Japan'),
+            ('Omega', 'Switzerland')
+        ])
+        
         # Thêm admin mặc định - QL + 6 SỐ CUỐI
         cursor.execute('''
             INSERT OR IGNORE INTO employees 
@@ -159,3 +175,53 @@ class Database:
         cursor = self.conn.cursor()
         cursor.execute('SELECT id FROM employees WHERE ma_dinh_danh = ?', (ma_dinh_danh,))
         return cursor.fetchone() is not None
+
+    # Một vài hàm CRUD hữu ích cho brands và products
+    def add_brand(self, name: str, country: Optional[str] = None) -> int:
+        """Thêm thương hiệu mới, trả về id thương hiệu"""
+        cursor = self.conn.cursor()
+        cursor.execute('INSERT OR IGNORE INTO brands (name, country) VALUES (?, ?)', (name, country))
+        self.conn.commit()
+        # lấy id (nếu đã tồn tại, vẫn trả về id hiện có)
+        cursor.execute('SELECT id FROM brands WHERE name = ?', (name,))
+        row = cursor.fetchone()
+        return row[0] if row else None
+
+    def get_brands(self) -> List[Tuple[int, str, Optional[str]]]:
+        cursor = self.conn.cursor()
+        cursor.execute('SELECT id, name, country FROM brands')
+        return cursor.fetchall()
+
+    def add_product(self, name: str, brand_id: int, product_type: str, price: float, quantity: int, **kwargs) -> int:
+        if quantity < 0:
+            raise ValueError("Quantity cannot be negative")
+            
+        cursor = self.conn.cursor()
+        cursor.execute('''
+            INSERT INTO products (name, brand_id, product_type, price, quantity, description, movement_type, power_reserve, water_resistant, battery_life, features, connectivity)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            name,
+            brand_id,
+            product_type,
+            price,
+            quantity,
+            kwargs.get('description'),
+            kwargs.get('movement_type'),
+            kwargs.get('power_reserve'),
+            kwargs.get('water_resistant'),
+            kwargs.get('battery_life'),
+            kwargs.get('features'),
+            kwargs.get('connectivity')
+        ))
+        self.conn.commit()
+        return cursor.lastrowid
+
+    def get_products_with_brand(self) -> List[Tuple]:
+        cursor = self.conn.cursor()
+        cursor.execute('''
+            SELECT p.id, p.name, b.name AS brand, p.product_type, p.price, p.quantity
+            FROM products p
+            JOIN brands b ON p.brand_id = b.id
+        ''')
+        return cursor.fetchall()
