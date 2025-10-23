@@ -123,10 +123,6 @@ class EmployeeDialog(QDialog):
         position_map = {'sales': 'Bán hàng', 'technician': 'Kỹ thuật', 'manager': 'Quản lý'}
         return position_map.get(position, 'Bán hàng')
     
-    def get_position_value(self, text):
-        position_map = {'Bán hàng': 'sales', 'Kỹ thuật': 'technician', 'Quản lý': 'manager'}
-        return position_map.get(text, 'sales')
-    
     def save_employee(self):
         # Lấy dữ liệu từ form
         password = self.password_input.text()

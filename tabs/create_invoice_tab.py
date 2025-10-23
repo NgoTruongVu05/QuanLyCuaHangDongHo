@@ -95,7 +95,6 @@ class CreateInvoiceTab(QWidget):
         customers = cursor.fetchall()
         
         self.customer_combo.clear()
-        self.customer_combo.addItem('Khách lẻ', -1)
         for customer in customers:
             self.customer_combo.addItem(customer[1], customer[0])
     

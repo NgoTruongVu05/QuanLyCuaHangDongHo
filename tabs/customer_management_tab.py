@@ -164,26 +164,26 @@ class CustomerManagementTab(QWidget):
             action_widget = QWidget()
             action_layout = QHBoxLayout(action_widget)
             action_layout.setContentsMargins(5, 2, 5, 2)
+
+            edit_btn = QPushButton('Sửa')
+            edit_btn.setStyleSheet('''
+                QPushButton {
+                background-color: #3498DB;
+                color: white;
+                border: none;
+                border-radius: 3px;
+                padding: 3px 8px;
+                font-size: 11px;
+                margin-right: 2px;
+                }
+                QPushButton:hover {
+                    background-color: #2980B9;
+                }
+            ''')
+            edit_btn.clicked.connect(lambda checked, r=row: self.edit_customer_row(r))
+            action_layout.addWidget(edit_btn)
             
             if self.user_role == 1:
-                edit_btn = QPushButton('Sửa')
-                edit_btn.setStyleSheet('''
-                    QPushButton {
-                    background-color: #3498DB;
-                    color: white;
-                    border: none;
-                    border-radius: 3px;
-                    padding: 3px 8px;
-                    font-size: 11px;
-                    margin-right: 2px;
-                    }
-                    QPushButton:hover {
-                        background-color: #2980B9;
-                    }
-                ''')
-                edit_btn.clicked.connect(lambda checked, r=row: self.edit_customer_row(r))
-                action_layout.addWidget(edit_btn)
-                
                 delete_btn = QPushButton('Xóa')
                 delete_btn.setStyleSheet('''
                     QPushButton {
@@ -201,24 +201,7 @@ class CustomerManagementTab(QWidget):
                 ''')
                 delete_btn.clicked.connect(lambda checked, r=row: self.delete_customer_row(r))
                 action_layout.addWidget(delete_btn)
-            else:
-                view_btn = QPushButton('Xem')
-                view_btn.setStyleSheet('''
-                    QPushButton {
-                        background-color: #27AE60;
-                        color: white;
-                        border: none;
-                        margin: 0 3px;
-                        border-radius: 3px;
-                        padding: 3px 8px;
-                        font-size: 11px;
-                    }
-                    QPushButton:hover {
-                        background-color: #229954;
-                    }
-                ''')
-                view_btn.clicked.connect(lambda checked, r=row: self.view_customer_row(r))
-                action_layout.addWidget(view_btn)
+                
             
             action_layout.addStretch()
             self.table.setCellWidget(row, 5, action_widget)
@@ -251,21 +234,3 @@ class CustomerManagementTab(QWidget):
             self.db.conn.commit()
             self.load_data()
     
-    def view_customer_row(self, row):
-        customer_id = int(self.table.item(row, 0).text())
-        name = self.table.item(row, 1).text()
-        phone = self.table.item(row, 2).text()
-        email = self.table.item(row, 3).text()
-        address = self.table.item(row, 4).text()
-        
-        info_text = f"""
-        Thông tin khách hàng:
-        
-        ID: {customer_id}
-        Tên: {name}
-        Điện thoại: {phone or 'Chưa có'}
-        Email: {email or 'Chưa có'}
-        Địa chỉ: {address or 'Chưa có'}
-        """
-        
-        QMessageBox.information(self, 'Chi tiết khách hàng', info_text)
