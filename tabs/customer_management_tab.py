@@ -209,7 +209,6 @@ class CustomerManagementTab(QWidget):
                         color: white;
                         border: none;
                         margin: 0 3px;
-                        padding: 3px 0;
                         border-radius: 3px;
                         padding: 3px 8px;
                         font-size: 11px;

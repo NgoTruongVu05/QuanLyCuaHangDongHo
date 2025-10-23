@@ -195,6 +195,7 @@ class ProductManagementTab(QWidget):
                         border-radius: 3px;
                         padding: 3px 8px;
                         font-size: 11px;
+                        margin-right: 2px;
                     }
                     QPushButton:hover {
                         background-color: #2980B9;
@@ -212,7 +213,7 @@ class ProductManagementTab(QWidget):
                         border-radius: 3px;
                         padding: 3px 8px;
                         font-size: 11px;
-                        margin-right: 2px
+                        margin: 0 3px;
                     }
                     QPushButton:hover {
                         background-color: #C0392B;
@@ -241,6 +242,8 @@ class ProductManagementTab(QWidget):
             action_layout.addStretch()
             self.table.setCellWidget(row, 8, action_widget)
             self.table.resizeRowsToContents()
+        for row in range(self.table.rowCount()):
+            self.table.setRowHeight(row, 40)
 
         # Nếu có sản phẩm low stock, hiện cảnh báo tổng hợp
         if low_stock:

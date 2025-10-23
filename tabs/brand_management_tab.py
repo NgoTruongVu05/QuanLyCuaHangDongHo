@@ -148,6 +148,7 @@ class BrandManagementTab(QWidget):
                         border-radius: 3px;
                         padding: 3px 8px;
                         font-size: 11px;
+                        margin: 0 3px;
                     }
                     QPushButton:hover {
                         background-color: #C0392B;
@@ -156,9 +157,12 @@ class BrandManagementTab(QWidget):
                 delete_btn.clicked.connect(lambda checked, r=row: self.delete_brand_row(r))
                 action_layout.addWidget(delete_btn)
             
+            
             action_layout.addStretch()
             self.table.setCellWidget(row, 3, action_widget)
             self.table.resizeRowsToContents()
+        for row in range(self.table.rowCount()):
+            self.table.setRowHeight(row, 40)
     
     def add_brand(self):
         dialog = BrandDialog(self.db)

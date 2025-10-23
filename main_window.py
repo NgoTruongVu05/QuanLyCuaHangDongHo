@@ -109,6 +109,7 @@ class MainWindow(QMainWindow):
         # Reload data for each tab type
         if isinstance(current_tab, CreateInvoiceTab):
             current_tab.load_products()
+            current_tab.load_customers()
         elif isinstance(current_tab, InvoiceManagementTab):
             current_tab.load_data()
         elif isinstance(current_tab, ProductManagementTab):
