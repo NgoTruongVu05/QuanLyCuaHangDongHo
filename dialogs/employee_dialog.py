@@ -12,7 +12,7 @@ class EmployeeDialog(QDialog):
     
     def init_ui(self):
         self.setWindowTitle('Thêm/Sửa nhân viên' if not self.employee_id else 'Sửa nhân viên')
-        self.setFixedSize(450, 500)
+        self.setFixedSize(450, 450)
         
         layout = QFormLayout()
         
@@ -26,15 +26,12 @@ class EmployeeDialog(QDialog):
             # Hiển thị ID - không cho phép sửa
             self.id_label = QLabel('Chưa có ID')
             self.id_label.setStyleSheet('color: #2E86AB; font-weight: bold; background-color: #f0f0f0; padding: 5px; border: 1px solid #ccc;')
-            layout.addRow('ID nhân viên:', self.id_label)
+            layout.addRow('ID:', self.id_label)
         else:
             # Khi sửa, hiển thị ID readonly
             id_label = QLabel(self.employee_id)
             id_label.setStyleSheet('color: #666; background-color: #f0f0f0; padding: 5px; border: 1px solid #ccc;')
-            layout.addRow('ID nhân viên:', id_label)
-        
-        self.username_input = QLineEdit()
-        layout.addRow('Tên đăng nhập:', self.username_input)
+            layout.addRow('ID:', id_label)
         
         self.password_input = QLineEdit()
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
@@ -49,6 +46,7 @@ class EmployeeDialog(QDialog):
         
         self.role_combo = QComboBox()
         self.role_combo.addItems(['Nhân viên', 'Quản lý'])
+        self.role_combo.currentTextChanged.connect(self.on_role_changed)
         layout.addRow('Vai trò:', self.role_combo)
         
         self.position_combo = QComboBox()
@@ -75,11 +73,26 @@ class EmployeeDialog(QDialog):
     def on_ma_dinh_danh_changed(self, text):
         """Cập nhật ID khi mã định danh thay đổi"""
         if len(text) == 12 and text.isdigit():
-            six_digits = text[-6:]  # Lấy 6 số cuối
-            employee_id = f"nv{six_digits}"
-            self.id_label.setText(employee_id)
+            role = self.role_combo.currentIndex()
+            try:
+                employee_id = self.db.generate_employee_id(text, role)
+                self.id_label.setText(employee_id)
+            except ValueError:
+                self.id_label.setText('Mã định danh không hợp lệ')
         else:
             self.id_label.setText('Chưa có ID')
+    
+    def on_role_changed(self, role_text):
+        """Cập nhật ID khi vai trò thay đổi"""
+        if not self.employee_id and hasattr(self, 'ma_dinh_danh_input'):
+            ma_dinh_danh = self.ma_dinh_danh_input.text()
+            if len(ma_dinh_danh) == 12 and ma_dinh_danh.isdigit():
+                role = 1 if role_text == 'Quản lý' else 0
+                try:
+                    employee_id = self.db.generate_employee_id(ma_dinh_danh, role)
+                    self.id_label.setText(employee_id)
+                except ValueError:
+                    self.id_label.setText('Mã định danh không hợp lệ')
     
     def load_employee_data(self):
         cursor = self.db.conn.cursor()
@@ -87,13 +100,12 @@ class EmployeeDialog(QDialog):
         employee = cursor.fetchone()
         
         if employee:
-            self.username_input.setText(employee[2])
-            self.full_name_input.setText(employee[4])
-            self.role_combo.setCurrentIndex(employee[5])  # vaitro
-            self.position_combo.setCurrentText(self.get_position_text(employee[8]))
-            self.base_salary_input.setValue(employee[7] if employee[7] else 0)
-            self.phone_input.setText(employee[6] if employee[6] else '')
-            self.email_input.setText(employee[6] if employee[6] else '')
+            self.full_name_input.setText(employee[3])
+            self.role_combo.setCurrentIndex(employee[4])  # vaitro
+            self.position_combo.setCurrentText(self.get_position_text(employee[7]))
+            self.base_salary_input.setValue(employee[6] if employee[6] else 0)
+            self.phone_input.setText(employee[5] if employee[5] else '')
+            self.email_input.setText(employee[5] if employee[5] else '')
     
     def get_position_text(self, position):
         position_map = {'sales': 'Bán hàng', 'technician': 'Kỹ thuật', 'manager': 'Quản lý'}
@@ -105,7 +117,6 @@ class EmployeeDialog(QDialog):
     
     def save_employee(self):
         # Lấy dữ liệu từ form
-        username = self.username_input.text().strip()
         password = self.password_input.text()
         full_name = self.full_name_input.text().strip()
         role = self.role_combo.currentIndex()  # 0=nhân viên, 1=quản lý
@@ -114,8 +125,8 @@ class EmployeeDialog(QDialog):
         phone = self.phone_input.text().strip()
         email = self.email_input.text().strip()
         
-        if not username or not full_name:
-            QMessageBox.warning(self, 'Lỗi', 'Vui lòng nhập đầy đủ thông tin!')
+        if not full_name:
+            QMessageBox.warning(self, 'Lỗi', 'Vui lòng nhập họ tên!')
             return
         
         cursor = self.db.conn.cursor()
@@ -146,31 +157,25 @@ class EmployeeDialog(QDialog):
                 QMessageBox.warning(self, 'Lỗi', 'Vui lòng nhập mã định danh hợp lệ!')
                 return
             
-            # Kiểm tra username trùng
-            cursor.execute('SELECT id FROM employees WHERE username = ?', (username,))
-            if cursor.fetchone():
-                QMessageBox.warning(self, 'Lỗi', 'Tên đăng nhập đã tồn tại!')
-                return
-            
             hashed_password = self.db.hash_password(password)
             cursor.execute('''
-                INSERT INTO employees (id, ma_dinh_danh, username, password, full_name, vaitro, phone, email, base_salary, position)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (employee_id, ma_dinh_danh, username, hashed_password, full_name, role, phone, email, base_salary, position))
+                INSERT INTO employees (id, ma_dinh_danh, password, full_name, vaitro, phone, email, base_salary, position)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (employee_id, ma_dinh_danh, hashed_password, full_name, role, phone, email, base_salary, position))
         
         else:
             # SỬA
             if password:
                 hashed_password = self.db.hash_password(password)
                 cursor.execute('''
-                    UPDATE employees SET username=?, password=?, full_name=?, vaitro=?, phone=?, email=?, base_salary=?, position=?
+                    UPDATE employees SET password=?, full_name=?, vaitro=?, phone=?, email=?, base_salary=?, position=?
                     WHERE id=?
-                ''', (username, hashed_password, full_name, role, phone, email, base_salary, position, self.employee_id))
+                ''', (hashed_password, full_name, role, phone, email, base_salary, position, self.employee_id))
             else:
                 cursor.execute('''
-                    UPDATE employees SET username=?, full_name=?, vaitro=?, phone=?, email=?, base_salary=?, position=?
+                    UPDATE employees SET full_name=?, vaitro=?, phone=?, email=?, base_salary=?, position=?
                     WHERE id=?
-                ''', (username, full_name, role, phone, email, base_salary, position, self.employee_id))
+                ''', (full_name, role, phone, email, base_salary, position, self.employee_id))
         
         self.db.conn.commit()
         self.accept()

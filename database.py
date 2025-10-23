@@ -9,12 +9,11 @@ class Database:
     def create_tables(self):
         cursor = self.conn.cursor()
         
-        # Bảng nhân viên - thêm cột ma_dinh_danh
+        # Bảng nhân viên - BỎ cột username
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS employees (
                 id TEXT PRIMARY KEY,
                 ma_dinh_danh TEXT UNIQUE NOT NULL,
-                username TEXT UNIQUE NOT NULL,
                 password TEXT NOT NULL,
                 full_name TEXT NOT NULL,
                 vaitro INTEGER NOT NULL DEFAULT 0,
@@ -25,7 +24,7 @@ class Database:
             )
         ''')
         
-        # Bảng khách hàng
+        # Các bảng khác giữ nguyên...
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS customers (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,7 +35,6 @@ class Database:
             )
         ''')
         
-        # Bảng sản phẩm
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS products (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -117,49 +115,40 @@ class Database:
             )
         ''')
         
-        # Thêm admin mặc định - CHỈ 6 SỐ CUỐI
+        # Thêm admin mặc định - QL + 6 SỐ CUỐI
         cursor.execute('''
             INSERT OR IGNORE INTO employees 
-            (id, ma_dinh_danh, username, password, full_name, vaitro, base_salary, position)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', ('nv123456', '123456789012', 'admin', self.hash_password('admin123'), 'Quản trị viên', 1, 15000000, 'manager'))
+            (id, ma_dinh_danh, password, full_name, vaitro, base_salary, position)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', ('ql123456', '123456789012', self.hash_password('admin123'), 'Quản trị viên', 1, 15000000, 'manager'))
         
-        # Thêm nhân viên mặc định - CHỈ 6 SỐ CUỐI
+        # Thêm nhân viên mặc định - NV + 6 SỐ CUỐI
         cursor.execute('''
             INSERT OR IGNORE INTO employees 
-            (id, ma_dinh_danh, username, password, full_name, vaitro, base_salary, position)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', ('nv654321', '987654321098', 'nhanvien', self.hash_password('123456'), 'Nhân Viên Mẫu', 0, 8000000, 'sales'))
+            (id, ma_dinh_danh, password, full_name, vaitro, base_salary, position)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', ('nv654321', '987654321098', self.hash_password('123456'), 'Nhân Viên Mẫu', 0, 8000000, 'sales'))
         
         self.conn.commit()
     
-    def generate_employee_id(self, ma_dinh_danh):
-        """Tạo ID theo format: nv + 6 số cuối mã định danh"""
+    def generate_employee_id(self, ma_dinh_danh, vaitro):
+        """Tạo ID theo format: nv/ql + 6 số cuối mã định danh"""
         if len(ma_dinh_danh) != 12 or not ma_dinh_danh.isdigit():
             raise ValueError("Mã định danh phải có đúng 12 chữ số")
         
         six_digits = ma_dinh_danh[-6:]  # 6 số cuối
-        return f"nv{six_digits}"
+        prefix = "ql" if vaitro == 1 else "nv"  # ql cho quản lý, nv cho nhân viên
+        return f"{prefix}{six_digits}"
     
     def hash_password(self, password):
         return hashlib.sha256(password.encode()).hexdigest()
     
     def verify_login(self, login_input, password):
-        """Xác thực đăng nhập: nhân viên dùng ID, quản lý dùng username"""
+        """Xác thực đăng nhập: tất cả đều dùng ID"""
         cursor = self.conn.cursor()
         
-        # Thử đăng nhập bằng ID trước (cho nhân viên)
         cursor.execute('''
             SELECT * FROM employees WHERE id = ? AND password = ?
-        ''', (login_input, self.hash_password(password)))
-        user = cursor.fetchone()
-        
-        if user:
-            return user
-        
-        # Nếu không tìm thấy bằng ID, thử bằng username (cho quản lý)
-        cursor.execute('''
-            SELECT * FROM employees WHERE username = ? AND password = ?
         ''', (login_input, self.hash_password(password)))
         user = cursor.fetchone()
         
@@ -169,10 +158,4 @@ class Database:
         """Kiểm tra mã định danh đã tồn tại chưa"""
         cursor = self.conn.cursor()
         cursor.execute('SELECT id FROM employees WHERE ma_dinh_danh = ?', (ma_dinh_danh,))
-        return cursor.fetchone() is not None
-    
-    def check_username_exists(self, username):
-        """Kiểm tra username đã tồn tại chưa"""
-        cursor = self.conn.cursor()
-        cursor.execute('SELECT id FROM employees WHERE username = ?', (username,))
         return cursor.fetchone() is not None

@@ -15,14 +15,14 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.user_info = user_info
         self.db = db
-        self.user_role = user_info[5]  # vaitro ở index 5
+        self.user_role = user_info[4]  # vaitro ở index 4 (đã bỏ username)
         self.init_ui()
     
     def init_ui(self):
-        # Hiển thị thông tin người dùng - HIỂN THỊ USERNAME
-        username = self.user_info[2]  # username ở index 2
+        # Hiển thị thông tin người dùng - HIỂN THỊ ID
+        user_id = self.user_info[0]  # id ở index 0
         role_text = "Quản lý" if self.user_role == 1 else "Nhân viên"
-        self.setWindowTitle(f'Hệ thống quản lý cửa hàng đồng hồ - {username} ({role_text})')
+        self.setWindowTitle(f'Hệ thống quản lý cửa hàng đồng hồ - {user_id} ({role_text})')
         self.setGeometry(100, 100, 1200, 700)
         
         central_widget = QWidget()
@@ -31,8 +31,8 @@ class MainWindow(QMainWindow):
         # Header với thông tin user và nút đăng xuất
         header_layout = QHBoxLayout()
         
-        # HIỂN THỊ USERNAME THAY VÌ FULL NAME
-        user_info_text = f'{username} ({role_text})'
+        # HIỂN THỊ ID THAY VÌ USERNAME
+        user_info_text = f'{user_id} ({role_text})'
         self.user_info_label = QLabel(user_info_text)
         self.user_info_label.setStyleSheet('font-weight: bold; color: #2E86AB;')
         header_layout.addWidget(self.user_info_label)
