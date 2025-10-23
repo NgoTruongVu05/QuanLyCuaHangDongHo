@@ -142,16 +142,16 @@ class Database:
         # Thêm admin mặc định - QL + 6 SỐ CUỐI
         cursor.execute('''
             INSERT OR IGNORE INTO employees 
-            (id, ma_dinh_danh, password, full_name, vaitro, base_salary, position)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        ''', ('ql123456', '123456789012', self.hash_password('admin123'), 'Quản trị viên', 1, 15000000, 'manager'))
+            (id, ma_dinh_danh, password, full_name, vaitro, base_salary)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', ('ql123456', '123456789012', self.hash_password('admin123'), 'Quản trị viên', 1, 15000000))
         
         # Thêm nhân viên mặc định - NV + 6 SỐ CUỐI
         cursor.execute('''
             INSERT OR IGNORE INTO employees 
-            (id, ma_dinh_danh, password, full_name, vaitro, base_salary, position)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        ''', ('nv654321', '987654321098', self.hash_password('123456'), 'Nhân Viên Mẫu', 0, 8000000, 'sales'))
+            (id, ma_dinh_danh, password, full_name, vaitro, base_salary)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', ('nv654321', '987654321098', self.hash_password('123456'), 'Nhân Viên Mẫu', 0, 8000000))
         
         self.conn.commit()
     
