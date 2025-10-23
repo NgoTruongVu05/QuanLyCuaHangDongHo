@@ -1,2 +1,5 @@
 Tự tạo file .venv nha thằng nào tải cái gì về thì tạo ghi vào file requirements.txt cho AE biết để tải về
-<img width="1369" height="900" alt="image" src="https://github.com/user-attachments/assets/3a6e97a9-7cef-43c8-bf6d-2f6f826aa372" />
+3123411345		Ngô Trường Vũ
+3123411094		Nguyễn Đình Hiệp
+3123411218		Nguyễn Huỳnh Tấn Phát
+3123411274		Dương Minh Thiện
