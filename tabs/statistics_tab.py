@@ -104,9 +104,9 @@ class StatisticsTab(QWidget):
         
         # Sales statistics
         if month == 'Tất cả':
-            cursor.execute('SELECT SUM(total_amount), COUNT(*) FROM invoices WHERE invoice_type = "sale" AND strftime("%Y", created_date) = ?', (str(year),))
+            cursor.execute('SELECT SUM(total_amount), COUNT(*) FROM invoices WHERE strftime("%Y", created_date) = ?', (str(year),))
         else:
-            cursor.execute('SELECT SUM(total_amount), COUNT(*) FROM invoices WHERE invoice_type = "sale" AND strftime("%m", created_date) = ? AND strftime("%Y", created_date) = ?', 
+            cursor.execute('SELECT SUM(total_amount), COUNT(*) FROM invoices WHERE strftime("%m", created_date) = ? AND strftime("%Y", created_date) = ?', 
                           (month.zfill(2), str(year)))
         
         sales_result = cursor.fetchone()

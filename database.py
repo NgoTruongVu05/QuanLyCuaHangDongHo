@@ -74,7 +74,6 @@ class Database:
                 employee_id TEXT,
                 total_amount REAL NOT NULL,
                 created_date TEXT NOT NULL,
-                invoice_type TEXT DEFAULT 'sale',
                 status TEXT DEFAULT 'pending',
                 FOREIGN KEY (customer_id) REFERENCES customers (id),
                 FOREIGN KEY (employee_id) REFERENCES employees (id)
