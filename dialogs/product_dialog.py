@@ -1,6 +1,7 @@
-from PyQt6.QtWidgets import (QDialog, QFormLayout, QLineEdit, QPushButton, 
+from PyQt6.QtWidgets import (QDialog, QFormLayout, QLineEdit, QPushButton,
                              QDoubleSpinBox, QSpinBox, QMessageBox, QComboBox,
                              QCheckBox, QVBoxLayout, QGroupBox, QHBoxLayout, QLabel)
+from PyQt6.QtGui import QDoubleValidator
 
 class ProductDialog(QDialog):
     def __init__(self, db, product_id=None):
@@ -11,6 +12,18 @@ class ProductDialog(QDialog):
         self.init_ui()
         if product_id:
             self.load_product_data()
+
+    def _format_input(self, line_edit):
+        text = line_edit.text()
+        if text:
+            try:
+                num = float(text.replace(',', ''))
+                formatted = f"{num:,.0f}"
+                if formatted != text:
+                    line_edit.setText(formatted)
+                    line_edit.setCursorPosition(len(formatted))
+            except ValueError:
+                pass
     
     def init_ui(self):
         self.setWindowTitle('Thêm/Sửa sản phẩm' if not self.product_id else 'Sửa sản phẩm')
@@ -37,8 +50,13 @@ class ProductDialog(QDialog):
         
         # Price input with VND label
         price_layout = QHBoxLayout()
-        self.price_input = QDoubleSpinBox()
-        self.price_input.setMaximum(999999999999)
+        self.price_input = QLineEdit()
+        self.price_input.setMaxLength(20)  # Allow more for commas
+        self.price_input.textChanged.connect(lambda: self._format_input(self.price_input))
+        # Set validator for price range
+        price_validator = QDoubleValidator(500000, 1000000000000, 0)  # Min 500k, Max 1 trillion
+        price_validator.setNotation(QDoubleValidator.Notation.StandardNotation)
+        self.price_input.setValidator(price_validator)
         price_label = QLabel('VND')
         price_layout.addWidget(self.price_input)
         price_layout.addWidget(price_label)
@@ -47,7 +65,7 @@ class ProductDialog(QDialog):
         
         self.quantity_input = QSpinBox()
         self.quantity_input.setMinimum(0)  # Prevent negative values
-        self.quantity_input.setMaximum(40)
+        self.quantity_input.setMaximum(100)  # Maximum 100 units per product
         basic_layout.addRow('Số lượng:', self.quantity_input)
         
         self.description_input = QLineEdit()
@@ -68,7 +86,7 @@ class ProductDialog(QDialog):
         power_reserve_layout = QHBoxLayout()
         self.power_reserve_input = QSpinBox()
         self.power_reserve_input.setMinimum(30)
-        self.power_reserve_input.setMaximum(200)
+        self.power_reserve_input.setMaximum(999)
         power_reserve_label = QLabel('giờ')
         power_reserve_layout.addWidget(self.power_reserve_input)
         power_reserve_layout.addWidget(power_reserve_label)
@@ -88,7 +106,7 @@ class ProductDialog(QDialog):
         # Battery life input with hours label
         battery_life_layout = QHBoxLayout()
         self.battery_life_input = QSpinBox()
-        self.battery_life_input.setMaximum(60)
+        self.battery_life_input.setMaximum(99)
         battery_life_label = QLabel('năm')
         battery_life_layout.addWidget(self.battery_life_input)
         battery_life_layout.addWidget(battery_life_label)
@@ -165,7 +183,7 @@ class ProductDialog(QDialog):
             # Basic info
             self.name_input.setText(product_data[1])
             self.brand_combo.setCurrentText(product_data[-1])  # Set brand from joined query
-            self.price_input.setValue(product_data[4])
+            self.price_input.setText(f"{product_data[4]:,.0f}")
             self.quantity_input.setValue(product_data[5])
             self.description_input.setText(product_data[6] if product_data[6] else '')
             
@@ -197,7 +215,12 @@ class ProductDialog(QDialog):
         cursor.execute('SELECT id FROM brands WHERE name = ?', (brand,))
         brand_id = cursor.fetchone()[0]
         
-        price = self.price_input.value()
+        try:
+            price_text = self.price_input.text().replace(',', '')
+            price = float(price_text)
+        except ValueError:
+            QMessageBox.warning(self, 'Lỗi', 'Giá phải là số hợp lệ!')
+            return
         quantity = self.quantity_input.value()
         description = self.description_input.text()
         

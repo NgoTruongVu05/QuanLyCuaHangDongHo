@@ -1,6 +1,9 @@
-from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton, 
+from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
                             QTableWidget, QTableWidgetItem, QMessageBox,
-                            QHeaderView, QDialog, QFormLayout, QLineEdit)
+                            QHeaderView, QDialog, QFormLayout, QLineEdit,
+                            QFileDialog, QProgressDialog)
+from PyQt6.QtCore import Qt
+import csv
 
 class BrandDialog(QDialog):
     def __init__(self, db, brand_id=None):
@@ -80,13 +83,38 @@ class BrandManagementTab(QWidget):
         
         if self.user_role == 1:  # Chỉ admin mới được thêm thương hiệu
             add_btn = QPushButton('Thêm thương hiệu')
+            add_btn.setStyleSheet('''
+                QPushButton {
+                    color: white;
+                    border: none;
+                    border-radius: 12px;
+                    padding: 8px 16px;
+                    font-size: 12px;
+                }
+                QPushButton:hover {
+                    background-color: #8E44AD;
+                }
+            ''')
             add_btn.clicked.connect(self.add_brand)
             controls_layout.addWidget(add_btn)
-        
-        refresh_btn = QPushButton('Làm mới')
-        refresh_btn.clicked.connect(self.load_data)
-        controls_layout.addWidget(refresh_btn)
-        
+
+            import_csv_btn = QPushButton('Nhập CSV')
+            import_csv_btn.setStyleSheet('''
+                QPushButton {
+                    background-color: #9B59B6;
+                    color: white;
+                    border: none;
+                    border-radius: 12px;
+                    padding: 8px 16px;
+                    font-size: 12px;
+                }
+                QPushButton:hover {
+                    background-color: #8E44AD;
+                }
+            ''')
+            import_csv_btn.clicked.connect(self.import_csv)
+            controls_layout.addWidget(import_csv_btn)
+
         controls_layout.addStretch()
         layout.addLayout(controls_layout)
         
@@ -191,10 +219,111 @@ class BrandManagementTab(QWidget):
                               f'Không thể xóa thương hiệu "{brand_name}" vì có {product_count} sản phẩm đang sử dụng!')
             return
         
-        reply = QMessageBox.question(self, 'Xác nhận', 
-                                   f'Bạn có chắc muốn xóa thương hiệu "{brand_name}"?')
+        reply = QMessageBox.question(self, 'Xác nhận',
+                                   f'Bạn có chắc muốn xóa thương hiệu "{brand_name}"?',
+                                   QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         if reply == QMessageBox.StandardButton.Yes:
             cursor.execute('DELETE FROM brands WHERE id = ?', (brand_id,))
             self.db.conn.commit()
             self.load_data()
             QMessageBox.information(self, 'Thành công', 'Đã xóa thương hiệu!')
+
+    def import_csv(self):
+        """
+        Import brands from CSV file.
+        Expected CSV headers: name, country
+        """
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "Chọn file CSV", "", "CSV files (*.csv);;All files (*)"
+        )
+        if not file_path:
+            return
+
+        try:
+            with open(file_path, 'r', encoding='utf-8-sig') as file:
+                reader = csv.DictReader(file)
+                rows = list(reader)
+
+            if not rows:
+                QMessageBox.warning(self, 'Lỗi', 'File CSV trống hoặc không có dữ liệu.')
+                return
+
+            # Validate headers
+            required_headers = ['name']
+            if not all(header in reader.fieldnames for header in required_headers):
+                QMessageBox.warning(self, 'Lỗi', f'File CSV thiếu các cột bắt buộc: {", ".join(required_headers)}')
+                return
+
+            # Validate all rows first before importing
+            errors = []
+            cursor = self.db.conn.cursor()
+            for i, row in enumerate(rows):
+                try:
+                    # Parse data for validation
+                    name = row.get('name', '').strip()
+                    if not name:
+                        errors.append(f"Dòng {i+2}: Tên thương hiệu không được để trống")
+                        continue
+
+                except Exception as e:
+                    errors.append(f"Dòng {i+2}: {str(e)}")
+
+            # If any errors found, block import
+            if errors:
+                error_msg = '\n'.join(errors[:10])  # Show first 10 errors
+                if len(errors) > 10:
+                    error_msg += f'\n... và {len(errors) - 10} lỗi khác'
+                QMessageBox.warning(self, 'Lỗi nhập dữ liệu', f'Không thể nhập dữ liệu do có lỗi:\n{error_msg}')
+                return
+
+            # If validation passed, proceed with import
+            # Show progress dialog
+            progress = QProgressDialog("Đang nhập dữ liệu...", "Hủy", 0, len(rows), self)
+            progress.setWindowModality(Qt.WindowModality.WindowModal)
+            progress.show()
+
+            cursor = self.db.conn.cursor()
+            imported_count = 0
+            skipped_count = 0
+
+            for i, row in enumerate(rows):
+                if progress.wasCanceled():
+                    break
+
+                progress.setValue(i)
+
+                try:
+                    # Parse data
+                    name = row.get('name', '').strip()
+                    country = row.get('country', '').strip()
+
+                    # Check if brand already exists
+                    cursor.execute('SELECT id FROM brands WHERE name = ?', (name,))
+                    if cursor.fetchone():
+                        skipped_count += 1
+                        continue
+
+                    # Insert brand
+                    cursor.execute('INSERT INTO brands (name, country) VALUES (?, ?)', (name, country))
+
+                    imported_count += 1
+
+                except Exception as e:
+                    # This shouldn't happen since we validated, but just in case
+                    QMessageBox.warning(self, 'Lỗi', f'Lỗi không mong muốn ở dòng {i+2}: {str(e)}')
+                    return
+
+            self.db.conn.commit()
+            progress.setValue(len(rows))
+
+            # Show success
+            self.load_data()
+            if skipped_count > 0:
+                QMessageBox.information(self, 'Thành công',
+                                      f'Đã nhập thành công {imported_count} thương hiệu. Đã bỏ qua {skipped_count} thương hiệu đã tồn tại.')
+            else:
+                QMessageBox.information(self, 'Thành công',
+                                      f'Đã nhập thành công {imported_count} thương hiệu.')
+
+        except Exception as e:
+            QMessageBox.critical(self, 'Lỗi', f'Không thể đọc file CSV: {str(e)}')

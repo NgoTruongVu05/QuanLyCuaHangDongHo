@@ -2,9 +2,12 @@ from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
                              QTableWidget, QTableWidgetItem, QMessageBox,
                              QHeaderView, QLabel, QDialog, QDialogButtonBox,
                              QTextEdit, QSizePolicy, QLineEdit, QComboBox,
-                             QGraphicsDropShadowEffect, QScrollArea, QFormLayout)
+                             QGraphicsDropShadowEffect, QScrollArea, QFormLayout,
+                             QFileDialog, QProgressDialog)
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QColor, QIcon, QFont
+from PyQt6.QtGui import QColor, QIcon, QFont, QIntValidator, QDoubleValidator
+import csv
+import os
 
 class ProductManagementTab(QWidget):
     def __init__(self, db, user_role):
@@ -15,6 +18,18 @@ class ProductManagementTab(QWidget):
         self.proxy_model = None  # For sorting and filtering
         self.init_ui()
         self.load_data()
+
+    def _format_input(self, line_edit):
+        text = line_edit.text()
+        if text:
+            try:
+                num = float(text.replace(',', ''))
+                formatted = f"{num:,.0f}"
+                if formatted != text:
+                    line_edit.setText(formatted)
+                    line_edit.setCursorPosition(len(formatted))
+            except ValueError:
+                pass
 
     def init_ui(self):
         layout = QVBoxLayout()
@@ -44,11 +59,15 @@ class ProductManagementTab(QWidget):
         price_min_label = QLabel('Giá từ:')
         self.price_min_input = QLineEdit()
         self.price_min_input.setPlaceholderText('VNĐ')
+        self.price_min_input.setMaxLength(20)
+        self.price_min_input.textChanged.connect(lambda: self._format_input(self.price_min_input))
         self.price_min_input.textChanged.connect(self.filter_products)
 
         price_max_label = QLabel('đến:')
         self.price_max_input = QLineEdit()
         self.price_max_input.setPlaceholderText('VNĐ')
+        self.price_max_input.setMaxLength(20)
+        self.price_max_input.textChanged.connect(lambda: self._format_input(self.price_max_input))
         self.price_max_input.textChanged.connect(self.filter_products)
 
         filter_layout.addWidget(brand_label)
@@ -66,12 +85,16 @@ class ProductManagementTab(QWidget):
         advanced_layout = QHBoxLayout()
         self.power_reserve_label = QLabel('Thời gian trữ cót  (giờ):')
         self.power_reserve_input = QLineEdit()
-        self.power_reserve_input.setPlaceholderText('Min')
+        self.power_reserve_input.setPlaceholderText('(tối đa 3 số)')
+        self.power_reserve_input.setMaxLength(3)
+        self.power_reserve_input.setValidator(QDoubleValidator(0, 999, 1))
         self.power_reserve_input.textChanged.connect(self.filter_products)
 
         self.battery_life_label = QLabel('Thời lượng pin (năm):')
         self.battery_life_input = QLineEdit()
-        self.battery_life_input.setPlaceholderText('Min')
+        self.battery_life_input.setPlaceholderText('(tối đa 2 số))')
+        self.battery_life_input.setMaxLength(2)
+        self.battery_life_input.setValidator(QIntValidator(0, 99))
         self.battery_life_input.textChanged.connect(self.filter_products)
 
         self.connectivity_label = QLabel('Kết nối:')
@@ -103,7 +126,7 @@ class ProductManagementTab(QWidget):
                     background-color: #27AE60;
                     color: white;
                     border: none;
-                    border-radius: 5px;
+                    border-radius: 12px;
                     padding: 8px 16px;
                     font-size: 12px;
                 }
@@ -114,7 +137,22 @@ class ProductManagementTab(QWidget):
             add_btn.clicked.connect(self.add_product)
             controls_layout.addWidget(add_btn)
 
-
+            import_csv_btn = QPushButton('Nhập CSV')
+            import_csv_btn.setStyleSheet('''
+                QPushButton {
+                    background-color: #9B59B6;
+                    color: white;
+                    border: none;
+                    border-radius: 12px;
+                    padding: 8px 16px;
+                    font-size: 12px;
+                }
+                QPushButton:hover {
+                    background-color: #8E44AD;
+                }
+            ''')
+            import_csv_btn.clicked.connect(self.import_csv)
+            controls_layout.addWidget(import_csv_btn)
 
         controls_layout.addStretch()
         layout.addLayout(controls_layout)
@@ -247,16 +285,16 @@ class ProductManagementTab(QWidget):
         # Lưu lại danh sách products để dùng khi hiển thị dialog
         self.products = products
 
-        # Populate brand filter
-        brands = set()
-        for product in products:
-            brand = product[2] or ''
-            if brand:
-                brands.add(brand)
+        # Populate brand filter with all brands from database
+        cursor = self.db.conn.cursor()
+        cursor.execute('SELECT name FROM brands ORDER BY name')
+        all_brands = cursor.fetchall()
         self.brand_filter.clear()
         self.brand_filter.addItem('Tất cả')
-        for brand in sorted(brands):
-            self.brand_filter.addItem(brand)
+        for brand_row in all_brands:
+            brand_name = brand_row[0]
+            if brand_name:
+                self.brand_filter.addItem(brand_name)
 
         self.table.setRowCount(len(products))
 
@@ -616,15 +654,27 @@ class ProductManagementTab(QWidget):
         # Price filters
         price_min_text = self.price_min_input.text().strip()
         price_max_text = self.price_max_input.text().strip()
-        price_min = float(price_min_text.replace(',', '').replace(' VND', '')) if price_min_text else None
-        price_max = float(price_max_text.replace(',', '').replace(' VND', '')) if price_max_text else None
+        try:
+            price_min = float(price_min_text.replace(',', '').replace(' VND', '')) if price_min_text else None
+        except ValueError:
+            price_min = None
+        try:
+            price_max = float(price_max_text.replace(',', '').replace(' VND', '')) if price_max_text else None
+        except ValueError:
+            price_max = None
 
         # Advanced filters
         power_reserve_min_text = self.power_reserve_input.text().strip()
-        power_reserve_min = float(power_reserve_min_text) if power_reserve_min_text else None
+        try:
+            power_reserve_min = float(power_reserve_min_text) if power_reserve_min_text else None
+        except ValueError:
+            power_reserve_min = None
 
         battery_life_min_text = self.battery_life_input.text().strip()
-        battery_life_min = float(battery_life_min_text) if battery_life_min_text else None
+        try:
+            battery_life_min = float(battery_life_min_text) if battery_life_min_text else None
+        except ValueError:
+            battery_life_min = None
 
         selected_connectivity = self.connectivity_filter.currentText()
 
@@ -667,14 +717,27 @@ class ProductManagementTab(QWidget):
 
             # Check specifications based on type
             spec_match = True
-            if display_type == "Đồng hồ cơ":
-                if power_reserve_min is not None and power_reserve < power_reserve_min:
-                    spec_match = False
-            elif display_type == "Đồng hồ điện tử":
-                if battery_life_min is not None and battery_life < battery_life_min:
-                    spec_match = False
-                if selected_connectivity != 'Tất cả' and selected_connectivity not in connectivity:
-                    spec_match = False
+            if selected_type == 'Tất cả':
+                # When "Tất cả" is selected, apply filters to all products based on entered values
+                if power_reserve_min is not None:
+                    if display_type != "Đồng hồ cơ" or power_reserve < power_reserve_min:
+                        spec_match = False
+                if battery_life_min is not None:
+                    if display_type != "Đồng hồ điện tử" or battery_life < battery_life_min:
+                        spec_match = False
+                if selected_connectivity != 'Tất cả':
+                    if display_type != "Đồng hồ điện tử" or selected_connectivity not in connectivity:
+                        spec_match = False
+            else:
+                # When specific type is selected, apply filters only to that type
+                if display_type == "Đồng hồ cơ":
+                    if power_reserve_min is not None and power_reserve < power_reserve_min:
+                        spec_match = False
+                elif display_type == "Đồng hồ điện tử":
+                    if battery_life_min is not None and battery_life < battery_life_min:
+                        spec_match = False
+                    if selected_connectivity != 'Tất cả' and selected_connectivity not in connectivity:
+                        spec_match = False
 
             if search_match and brand_match and type_match and price_match and spec_match:
                 self.table.setRowHidden(row, False)
@@ -717,6 +780,170 @@ class ProductManagementTab(QWidget):
             self.battery_life_input.show()
             self.connectivity_label.show()
             self.connectivity_filter.show()
+
+    def import_csv(self):
+        """
+        Import products from CSV file.
+        Expected CSV headers: name, brand, product_type, price, quantity, description,
+        movement_type, power_reserve, water_resistant, battery_life, features, connectivity
+        """
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "Chọn file CSV", "", "CSV files (*.csv);;All files (*)"
+        )
+        if not file_path:
+            return
+
+        try:
+            with open(file_path, 'r', encoding='utf-8') as file:
+                reader = csv.DictReader(file)
+                rows = list(reader)
+
+            if not rows:
+                QMessageBox.warning(self, 'Lỗi', 'File CSV trống hoặc không có dữ liệu.')
+                return
+
+            # Validate headers
+            required_headers = ['name', 'brand', 'product_type', 'price', 'quantity']
+            if not all(header in reader.fieldnames for header in required_headers):
+                QMessageBox.warning(self, 'Lỗi', f'File CSV thiếu các cột bắt buộc: {", ".join(required_headers)}')
+                return
+
+            # Validate all rows first before importing
+            errors = []
+            cursor = self.db.conn.cursor()
+            for i, row in enumerate(rows):
+                try:
+                    # Parse data for validation
+                    name = row.get('name', '').strip()
+                    brand_name = row.get('brand', '').strip()
+                    # Check if brand exists
+                    cursor.execute('SELECT id FROM brands WHERE name = ?', (brand_name,))
+                    brand_result = cursor.fetchone()
+                    if not brand_result:
+                        errors.append(f"Dòng {i+2}: Thương hiệu '{brand_name}' không tồn tại trong cơ sở dữ liệu")
+                        continue
+                    product_type = row.get('product_type', '').strip()
+                    price = float(row.get('price', 0)) if row.get('price') else 0
+                    # Validate price range: 500k to 1 trillion VND
+                    if price < 500000 or price > 1000000000000:
+                        errors.append(f"Dòng {i+2}: Giá phải từ 500,000 đến 1,000,000,000,000 VND")
+                        continue
+                    quantity = int(row.get('quantity', 0)) if row.get('quantity') else 0
+                    # Validate quantity: must be positive
+                    if quantity < 0:
+                        errors.append(f"Dòng {i+2}: Số lượng không được âm")
+                        continue
+                    power_reserve = float(row.get('power_reserve', 0)) if row.get('power_reserve') else None
+                    # Validate power reserve: max 999 hours
+                    if power_reserve is not None and power_reserve > 999:
+                        errors.append(f"Dòng {i+2}: Thời gian trữ cót không được vượt quá 999 giờ")
+                        continue
+                    battery_life = int(row.get('battery_life', 0)) if row.get('battery_life') else None
+                    # Validate battery life: max 99 years
+                    if battery_life is not None and battery_life > 99:
+                        errors.append(f"Dòng {i+2}: Thời lượng pin không được vượt quá 99 năm")
+                        continue
+                except Exception as e:
+                    errors.append(f"Dòng {i+2}: {str(e)}")
+
+            # If any errors found, block import
+            if errors:
+                error_msg = '\n'.join(errors[:10])  # Show first 10 errors
+                if len(errors) > 10:
+                    error_msg += f'\n... và {len(errors) - 10} lỗi khác'
+                QMessageBox.warning(self, 'Lỗi nhập dữ liệu', f'Không thể nhập dữ liệu do có lỗi:\n{error_msg}')
+                return
+
+            # If validation passed, proceed with import
+            # Show progress dialog
+            progress = QProgressDialog("Đang nhập dữ liệu...", "Hủy", 0, len(rows), self)
+            progress.setWindowModality(Qt.WindowModality.WindowModal)
+            progress.show()
+
+            cursor = self.db.conn.cursor()
+            imported_count = 0
+            updated_count = 0
+            skipped_count = 0
+
+            for i, row in enumerate(rows):
+                if progress.wasCanceled():
+                    break
+
+                progress.setValue(i)
+
+                try:
+                    # Get brand_id
+                    brand_name = row.get('brand', '').strip()
+                    if brand_name:
+                        cursor.execute('SELECT id FROM brands WHERE name = ?', (brand_name,))
+                        brand_result = cursor.fetchone()
+                        if brand_result:
+                            brand_id = brand_result[0]
+                        else:
+                            cursor.execute('INSERT INTO brands (name) VALUES (?)', (brand_name,))
+                            brand_id = cursor.lastrowid
+                    else:
+                        brand_id = None
+
+                    # Parse data
+                    name = row.get('name', '').strip()
+                    product_type = row.get('product_type', '').strip()
+                    price = float(row.get('price', 0)) if row.get('price') else 0
+                    new_quantity = int(row.get('quantity', 0)) if row.get('quantity') else 0
+                    description = row.get('description', '').strip()
+                    movement_type = row.get('movement_type', '').strip()
+                    power_reserve = float(row.get('power_reserve', 0)) if row.get('power_reserve') else None
+                    water_resistant = row.get('water_resistant', '').strip() or None
+                    battery_life = int(row.get('battery_life', 0)) if row.get('battery_life') else None
+                    features = row.get('features', '').strip()
+                    connectivity = row.get('connectivity', '').strip()
+
+                    # Check if product already exists
+                    cursor.execute('SELECT id, quantity FROM products WHERE name = ? AND brand_id = ?', (name, brand_id))
+                    existing_product = cursor.fetchone()
+
+                    if existing_product:
+                        product_id, current_quantity = existing_product
+                        total_quantity = current_quantity + new_quantity
+
+                        if total_quantity <= 100:
+                            # Update existing product quantity
+                            cursor.execute('UPDATE products SET quantity = ? WHERE id = ?', (total_quantity, product_id))
+                            updated_count += 1
+                        else:
+                            # Skip if would exceed max quantity
+                            skipped_count += 1
+                            continue
+                    else:
+                        # Insert new product
+                        cursor.execute('''
+                            INSERT INTO products (name, brand_id, product_type, price, quantity,
+                                               description, movement_type, power_reserve, water_resistant,
+                                               battery_life, features, connectivity)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        ''', (name, brand_id, product_type, price, new_quantity, description,
+                              movement_type, power_reserve, water_resistant, battery_life, features, connectivity))
+                        imported_count += 1
+
+                except Exception as e:
+                    # This shouldn't happen since we validated, but just in case
+                    QMessageBox.warning(self, 'Lỗi', f'Lỗi không mong muốn ở dòng {i+2}: {str(e)}')
+                    return
+
+            self.db.conn.commit()
+            progress.setValue(len(rows))
+
+            # Show success
+            self.load_data()
+            success_msg = f'Đã nhập thành công {imported_count} sản phẩm mới.'
+            if updated_count > 0:
+                success_msg += f'\nĐã cập nhật số lượng cho {updated_count} sản phẩm hiện có.'
+            if skipped_count > 0:
+                success_msg += f'\nĐã bỏ qua {skipped_count} sản phẩm (vượt quá số lượng tối đa).'
+            QMessageBox.information(self, 'Thành công', success_msg)
+
+        except Exception as e:
+            QMessageBox.critical(self, 'Lỗi', f'Không thể đọc file CSV: {str(e)}')
 
     def handle_click(self, index):
         if not index.isValid():
