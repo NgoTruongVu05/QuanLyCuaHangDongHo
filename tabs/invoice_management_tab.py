@@ -153,6 +153,10 @@ class InvoiceManagementTab(QWidget):
                     item = QTableWidgetItem(str(value) if value else 'Khách lẻ')
                 item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
                 self.table.setItem(row, col, item)
+
+            detail_widget = QWidget()
+            detail_layout = QHBoxLayout(detail_widget)
+            detail_layout.setContentsMargins(5, 2, 5, 2)
             
             # Nút chi tiết
             detail_btn = QPushButton('Xem chi tiết')
@@ -164,6 +168,7 @@ class InvoiceManagementTab(QWidget):
                     border-radius: 3px;
                     padding: 3px 8px;
                     font-size: 11px;
+                    margin: 0 3px;
                 }
                 QPushButton:hover {
                     background-color: #2980B9;
@@ -171,7 +176,9 @@ class InvoiceManagementTab(QWidget):
             ''')
             detail_btn.clicked.connect(lambda checked, inv_id=invoice[0]: 
                                      self.show_invoice_details(inv_id))
-            self.table.setCellWidget(row, 5, detail_btn)
+            detail_layout.addWidget(detail_btn, alignment=Qt.AlignmentFlag.AlignCenter)
+            detail_layout.addStretch()
+            self.table.setCellWidget(row, 5, detail_widget)
             
             # Nút xóa (chỉ cho admin)
             action_widget = QWidget()

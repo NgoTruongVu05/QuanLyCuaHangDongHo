@@ -36,6 +36,7 @@ class CreateInvoiceTab(QWidget):
         self.product_table.setColumnCount(5)
         self.product_table.setHorizontalHeaderLabels(['Chọn', 'Tên', 'Giá', 'Tồn kho', 'ID'])
         self.product_table.setColumnHidden(4, True)  # Ẩn ID
+        self.product_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         product_layout.addWidget(self.product_table)
 
         qty_layout = QHBoxLayout()
@@ -65,6 +66,7 @@ class CreateInvoiceTab(QWidget):
         self.customer_table = QTableWidget()
         self.customer_table.setColumnCount(4)
         self.customer_table.setHorizontalHeaderLabels(['Chọn', 'Tên', 'Số điện thoại', 'Địa chỉ'])
+        self.customer_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         customer_layout.addWidget(self.customer_table)
 
         customer_group.setLayout(customer_layout)
@@ -73,8 +75,9 @@ class CreateInvoiceTab(QWidget):
         # ===== RIGHT SIDE =====
         right_layout = QVBoxLayout()
         self.cart_table = QTableWidget()
-        self.cart_table.setColumnCount(4)
-        self.cart_table.setHorizontalHeaderLabels(['Sản phẩm', 'Đơn giá', 'Số lượng', 'Thành tiền'])
+        self.cart_table.setColumnCount(5)
+        self.cart_table.setHorizontalHeaderLabels(['Sản phẩm', 'Đơn giá', 'Số lượng', 'Thành tiền', 'Hành động'])
+        self.cart_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         right_layout.addWidget(self.cart_table)
 
         total_layout = QHBoxLayout()
@@ -167,13 +170,24 @@ class CreateInvoiceTab(QWidget):
                 available_qty = int(self.product_table.item(row, 3).text())
                 qty = self.quantity_spin.value()
 
-                if qty > available_qty:
-                    QMessageBox.warning(self, 'Lỗi', f'Sản phẩm "{name}" vượt quá tồn kho!')
+                existing = next((item for item in self.cart if item['id'] == pid), None)
+
+                # Nếu sản phẩm đã có trong giỏ, tính tổng dự kiến
+                current_in_cart = existing['quantity'] if existing else 0
+                new_total_qty = current_in_cart + qty
+
+                if new_total_qty > available_qty:
+                    QMessageBox.warning(
+                        self,
+                        'Lỗi',
+                        f'Sản phẩm "{name}" chỉ còn {available_qty} trong kho.\n'
+                        f'Hiện đã có {current_in_cart} trong giỏ, bạn chỉ có thể thêm tối đa {available_qty - current_in_cart}.'
+                    )
                     continue
 
-                existing = next((item for item in self.cart if item['id'] == pid), None)
+                # Cập nhật giỏ hàng hợp lệ
                 if existing:
-                    existing['quantity'] += qty
+                    existing['quantity'] = new_total_qty
                 else:
                     self.cart.append({'id': pid, 'name': name, 'price': price, 'quantity': qty})
 
@@ -195,7 +209,27 @@ class CreateInvoiceTab(QWidget):
             self.cart_table.setItem(row, 3, QTableWidgetItem(f"{total_item:,} VND"))
             total += total_item
 
+            remove_btn = QPushButton("Xóa")
+            remove_btn.setStyleSheet("""
+                QPushButton {
+                    background-color: #E74C3C;
+                    color: white;
+                    border: none;
+                    border-radius: 3px;
+                    padding: 3px 8px;
+                    font-size: 11px;
+                    margin: 0 3px;
+                }
+                QPushButton:hover {
+                    background-color: #C0392B;
+                }
+            """)
+            remove_btn.clicked.connect(lambda _, r=row: self.remove_item_from_cart(r))
+            self.cart_table.setCellWidget(row, 4, remove_btn)
+
         self.total_label.setText(f"{total:,} VND")
+        self.cart_table.resizeColumnsToContents()
+        self.cart_table.horizontalHeader().setStretchLastSection(True)
 
     def create_invoice(self):
         if not self.cart:
@@ -280,6 +314,17 @@ class CreateInvoiceTab(QWidget):
         self.selected_customer = None
         self.product_search.clear()
         self.customer_search.clear()
-        self.product_table.setRowCount(0)
-        self.customer_table.setRowCount(0)
         self.update_cart_display()
+        self.load_data()
+
+    def remove_item_from_cart(self, row):
+        if 0 <= row < len(self.cart):
+            item_name = self.cart[row]['name']
+            reply = QMessageBox.question(
+                self, "Xác nhận",
+                f"Bạn có chắc muốn xóa sản phẩm '{item_name}' khỏi giỏ hàng?",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+            )
+            if reply == QMessageBox.StandardButton.Yes:
+                del self.cart[row]
+                self.update_cart_display()
