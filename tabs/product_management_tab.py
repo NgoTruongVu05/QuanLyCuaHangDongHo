@@ -1,41 +1,131 @@
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
                              QTableWidget, QTableWidgetItem, QMessageBox,
-                             QHeaderView, QLabel)
+                             QHeaderView, QLabel, QDialog, QDialogButtonBox,
+                             QTextEdit, QSizePolicy, QLineEdit, QComboBox,
+                             QGraphicsDropShadowEffect, QScrollArea, QFormLayout)
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QColor
-from PyQt6.QtWidgets import QGraphicsDropShadowEffect
+from PyQt6.QtGui import QColor, QIcon, QFont
 
 class ProductManagementTab(QWidget):
     def __init__(self, db, user_role):
         super().__init__()
         self.db = db
         self.user_role = user_role
+        self.products = []  # Lưu products khi load_data để lấy info khi cần
+        self.proxy_model = None  # For sorting and filtering
         self.init_ui()
         self.load_data()
 
     def init_ui(self):
         layout = QVBoxLayout()
 
+        # Search bar
+        search_layout = QHBoxLayout()
+        search_label = QLabel('Tìm kiếm:')
+        self.search_input = QLineEdit()
+        self.search_input.setPlaceholderText('Nhập tên sản phẩm hoặc thương hiệu...')
+        self.search_input.textChanged.connect(self.filter_products)
+        search_layout.addWidget(search_label)
+        search_layout.addWidget(self.search_input)
+        layout.addLayout(search_layout)
+
+        # Filters
+        filter_layout = QHBoxLayout()
+        brand_label = QLabel('Thương hiệu:')
+        self.brand_filter = QComboBox()
+        self.brand_filter.addItem('Tất cả')
+        self.brand_filter.currentTextChanged.connect(self.filter_products)
+
+        type_label = QLabel('Loại:')
+        self.type_filter = QComboBox()
+        self.type_filter.addItems(['Tất cả', 'Đồng hồ cơ', 'Đồng hồ điện tử'])
+        self.type_filter.currentTextChanged.connect(self.filter_products)
+
+        price_min_label = QLabel('Giá từ:')
+        self.price_min_input = QLineEdit()
+        self.price_min_input.setPlaceholderText('VNĐ')
+        self.price_min_input.textChanged.connect(self.filter_products)
+
+        price_max_label = QLabel('đến:')
+        self.price_max_input = QLineEdit()
+        self.price_max_input.setPlaceholderText('VNĐ')
+        self.price_max_input.textChanged.connect(self.filter_products)
+
+        filter_layout.addWidget(brand_label)
+        filter_layout.addWidget(self.brand_filter)
+        filter_layout.addWidget(type_label)
+        filter_layout.addWidget(self.type_filter)
+        filter_layout.addWidget(price_min_label)
+        filter_layout.addWidget(self.price_min_input)
+        filter_layout.addWidget(price_max_label)
+        filter_layout.addWidget(self.price_max_input)
+        filter_layout.addStretch()
+        layout.addLayout(filter_layout)
+
+        # Advanced filters
+        advanced_layout = QHBoxLayout()
+        self.power_reserve_label = QLabel('Thời gian trữ cót  (h):')
+        self.power_reserve_input = QLineEdit()
+        self.power_reserve_input.setPlaceholderText('Min')
+        self.power_reserve_input.textChanged.connect(self.filter_products)
+
+        self.battery_life_label = QLabel('Thời lượng pin (tháng):')
+        self.battery_life_input = QLineEdit()
+        self.battery_life_input.setPlaceholderText('Min')
+        self.battery_life_input.textChanged.connect(self.filter_products)
+
+        self.connectivity_label = QLabel('Kết nối:')
+        self.connectivity_filter = QComboBox()
+        self.connectivity_filter.addItems(['Tất cả', 'Bluetooth', 'Wi-Fi', 'GPS', 'NFC'])
+        self.connectivity_filter.currentTextChanged.connect(self.filter_products)
+
+        advanced_layout.addWidget(self.power_reserve_label)
+        advanced_layout.addWidget(self.power_reserve_input)
+        advanced_layout.addWidget(self.battery_life_label)
+        advanced_layout.addWidget(self.battery_life_input)
+        advanced_layout.addWidget(self.connectivity_label)
+        advanced_layout.addWidget(self.connectivity_filter)
+        advanced_layout.addStretch()
+        layout.addLayout(advanced_layout)
+
+        # Connect type filter to update advanced filters visibility
+        self.type_filter.currentTextChanged.connect(self.update_advanced_filters_visibility)
+        self.update_advanced_filters_visibility()  # Initial setup
+
         # Controls
         controls_layout = QHBoxLayout()
 
         if self.user_role == 1:
             add_btn = QPushButton('Thêm sản phẩm')
+            add_btn.setIcon(QIcon())  # Add icon if available
+            add_btn.setStyleSheet('''
+                QPushButton {
+                    background-color: #27AE60;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    padding: 8px 16px;
+                    font-size: 12px;
+                }
+                QPushButton:hover {
+                    background-color: #229954;
+                }
+            ''')
             add_btn.clicked.connect(self.add_product)
             controls_layout.addWidget(add_btn)
 
-        refresh_btn = QPushButton('Làm mới')
-        refresh_btn.clicked.connect(self.load_data)
-        controls_layout.addWidget(refresh_btn)
+
 
         controls_layout.addStretch()
         layout.addLayout(controls_layout)
 
         # Table settings
         self.table = QTableWidget()
-        self.table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)  # Make table read-only
-        self.table.setColumnCount(9)
-        self.table.setHorizontalHeaderLabels(['ID', 'Tên', 'Thương hiệu', 'Loại', 'Giá', 'Số lượng', 'Mô tả', 'Thông số', 'Hành động'])
+        self.table.setSelectionMode(QTableWidget.SelectionMode.NoSelection)
+
+        # --- Thay đổi: chỉ còn 8 cột (gộp mô tả + thông số thành "Chi tiết sản phẩm") ---
+        self.table.setColumnCount(8)
+        self.table.setHorizontalHeaderLabels(['ID', 'Tên', 'Thương hiệu', 'Loại', 'Giá', 'Số lượng', 'Chi tiết sản phẩm', 'Hành động'])
 
         # Set column widths
         header = self.table.horizontalHeader()
@@ -45,9 +135,11 @@ class ProductManagementTab(QWidget):
         header.setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)  # Loại
         header.setSectionResizeMode(4, QHeaderView.ResizeMode.ResizeToContents)  # Giá
         header.setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)  # Số lượng
-        header.setSectionResizeMode(6, QHeaderView.ResizeMode.Stretch)  # Mô tả
-        header.setSectionResizeMode(7, QHeaderView.ResizeMode.Stretch)  # Thông số
-        header.setSectionResizeMode(8, QHeaderView.ResizeMode.ResizeToContents)  # Hành động
+        header.setSectionResizeMode(6, QHeaderView.ResizeMode.Stretch)  # Chi tiết sản phẩm (mô tả + thông số)
+        header.setSectionResizeMode(7, QHeaderView.ResizeMode.ResizeToContents)  # Hành động
+
+        # Enable sorting
+        self.table.setSortingEnabled(True)
 
         # Allow deselection by clicking empty area
         self.table.clicked.connect(self.handle_click)
@@ -56,17 +148,11 @@ class ProductManagementTab(QWidget):
         self.setLayout(layout)
 
     def _create_qty_widget(self, quantity: int):
-        """
-        Tạo widget cho ô Số lượng gồm:
-        [ QLabel(quantity) , stretch , QLabel(badge) ]
-        badge chỉ hiện nếu quantity <= 5.
-        """
         qty_widget = QWidget()
         layout = QHBoxLayout(qty_widget)
         layout.setContentsMargins(6, 2, 6, 2)
         layout.setSpacing(4)
 
-        # Label hiển thị số lượng với styling đẹp hơn
         qty_label = QLabel(str(quantity))
         qty_label.setAlignment(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft)
         qty_label.setStyleSheet("""
@@ -78,16 +164,13 @@ class ProductManagementTab(QWidget):
             }
         """)
         layout.addWidget(qty_label)
-
         layout.addStretch()
 
-        # Badge với thiết kế hiện đại
         badge_label = QLabel()
         badge_label.setFixedHeight(20)
         badge_label.setFixedWidth(42)
         badge_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        
-        # Hiệu ứng shadow cho badge
+
         shadow = QGraphicsDropShadowEffect()
         shadow.setBlurRadius(8)
         shadow.setXOffset(0)
@@ -96,7 +179,6 @@ class ProductManagementTab(QWidget):
         badge_label.setGraphicsEffect(shadow)
 
         if quantity <= 2:
-            # Màu đỏ - mức độ nguy hiểm cao
             badge_label.setText(f"⚠ {quantity}")
             badge_label.setStyleSheet("""
                 QLabel {
@@ -115,7 +197,6 @@ class ProductManagementTab(QWidget):
                 }
             """)
         elif quantity <= 5:
-            # Màu cam - mức độ cảnh báo
             badge_label.setText(f"⚠ {quantity}")
             badge_label.setStyleSheet("""
                 QLabel {
@@ -134,12 +215,10 @@ class ProductManagementTab(QWidget):
                 }
             """)
         else:
-            # Không hiện badge nhưng có thể hiện indicator nhỏ nếu muốn
             badge_label.hide()
 
         layout.addWidget(badge_label)
-        
-        # Tooltip hữu ích
+
         if quantity <= 5:
             if quantity <= 2:
                 tooltip_text = f"Cảnh báo: Chỉ còn {quantity} sản phẩm - Sắp hết hàng!"
@@ -147,14 +226,13 @@ class ProductManagementTab(QWidget):
                 tooltip_text = f"Cảnh báo: Chỉ còn {quantity} sản phẩm - Số lượng thấp"
             qty_widget.setToolTip(tooltip_text)
             badge_label.setToolTip(tooltip_text)
-        
+
         return qty_widget
 
     def load_data(self):
         """
         Lấy dữ liệu sản phẩm kèm tên brand qua JOIN,
-        rồi fill vào đúng 9 cột của table.
-        Badge hiển thị ở cuối ô Số lượng nếu <=5.
+        rồi fill vào 8 cột của table: ID, Tên, Thương hiệu, Loại, Giá, Số lượng, Chi tiết sản phẩm, Hành động
         """
         cursor = self.db.conn.cursor()
         cursor.execute('''
@@ -166,9 +244,21 @@ class ProductManagementTab(QWidget):
             ORDER BY p.id
         ''')
         products = cursor.fetchall()
+        # Lưu lại danh sách products để dùng khi hiển thị dialog
+        self.products = products
+
+        # Populate brand filter
+        brands = set()
+        for product in products:
+            brand = product[2] or ''
+            if brand:
+                brands.add(brand)
+        self.brand_filter.clear()
+        self.brand_filter.addItem('Tất cả')
+        for brand in sorted(brands):
+            self.brand_filter.addItem(brand)
 
         self.table.setRowCount(len(products))
-        low_stock = []
 
         for row, product in enumerate(products):
             pid = product[0]
@@ -228,37 +318,36 @@ class ProductManagementTab(QWidget):
             qty_widget = self._create_qty_widget(int(quantity))
             self.table.setCellWidget(row, 5, qty_widget)
 
-            # Col 6: Mô tả
-            desc_item = QTableWidgetItem(description)
-            desc_item.setFlags(desc_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
-            self.table.setItem(row, 6, desc_item)
+            # Col 6: Chi tiết sản phẩm - nút "Xem chi tiết"
+            detail_widget = QWidget()
+            detail_layout = QHBoxLayout(detail_widget)
+            detail_layout.setContentsMargins(5, 2, 5, 2)
 
-            # Col 7: Thông số
-            if ptype == "mechanical":
-                pr = f"{movement_type or 'Automatic'}"
-                if power_reserve:
-                    pr += f", {power_reserve}h"
-                if water_resistant:
-                    pr += ", Chống nước"
-                if features:
-                    pr += f", {features}"
-                specs = pr
-            else:
-                specs = f"{battery_life or 0} tháng"
-                if connectivity:
-                    specs += f", {connectivity}"
-                if features:
-                    specs += f", {features}"
-            specs_item = QTableWidgetItem(specs)
-            specs_item.setFlags(specs_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
-            self.table.setItem(row, 7, specs_item)
+            view_detail_btn = QPushButton('Xem chi tiết')
+            view_detail_btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+            view_detail_btn.setStyleSheet('''
+                QPushButton {
+                    background-color: #2ECC71;
+                    color: white;
+                    border: none;
+                    border-radius: 3px;
+                    padding: 3px 8px;
+                    font-size: 11px;
+                }
+                QPushButton:hover {
+                    background-color: #27AE60;
+                }
+            ''')
+            view_detail_btn.clicked.connect(lambda checked, r=row: self.show_details_dialog(r))
+            detail_layout.addWidget(view_detail_btn)
+            self.table.setCellWidget(row, 6, detail_widget)
 
-            # Col 8: Action buttons
+            # Col 7: Action buttons (Sửa, Xóa)
             action_widget = QWidget()
             action_layout = QHBoxLayout(action_widget)
             action_layout.setContentsMargins(5, 2, 5, 2)
 
-            if self.user_role == 1:  # admin
+            if self.user_role == 1:  # admin: thêm Sửa và Xóa
                 edit_btn = QPushButton('Sửa')
                 edit_btn.setStyleSheet('''
                     QPushButton {
@@ -296,12 +385,183 @@ class ProductManagementTab(QWidget):
                 action_layout.addWidget(delete_btn)
 
             action_layout.addStretch()
-            self.table.setCellWidget(row, 8, action_widget)
-            self.table.resizeRowsToContents()            
-            for row in range(self.table.rowCount()):
-                self.table.setRowHeight(row, 40)
+            self.table.setCellWidget(row, 7, action_widget)
 
-    # --- Các hàm khác giữ nguyên ---
+        # Sau khi fill data
+        self.table.resizeRowsToContents()
+        for r in range(self.table.rowCount()):
+            self.table.setRowHeight(r, 40)
+
+    # --- Hiển thị dialog chi tiết ---
+    def show_details_dialog(self, row):
+        """
+        Mở dialog hiển thị mô tả và thông số chi tiết sản phẩm — dark theme.
+        """
+        if row < 0 or row >= len(self.products):
+            return
+
+        prod = self.products[row]
+        pid = prod[0]
+        name = prod[1] or ''
+        brand = prod[2] or ''
+        ptype_raw = prod[3] or ''
+        description = prod[6] or ''
+        movement_type = prod[7] or ''
+        power_reserve = prod[8]
+        water_resistant = prod[9]
+        battery_life = prod[10]
+        features = prod[11] or ''
+        connectivity = prod[12] or ''
+
+        specs = {}
+        if (ptype_raw or '').lower() in ('mechanical', 'm', 'coil'):
+            specs['Loại'] = f"Đồng hồ cơ ({movement_type or 'Automatic'})"
+            if power_reserve:
+                specs['Thời gian trữ cót'] = f"{power_reserve} giờ"
+            if water_resistant:
+                specs['Chống nước'] = str(water_resistant)
+        else:
+            specs['Loại'] = ptype_raw or 'Điện tử'
+            specs['Thời lượng pin'] = f"{battery_life or 0} tháng"
+            if connectivity:
+                specs['Kết nối'] = connectivity
+        if features:
+            specs['Tính năng khác'] = features
+        specs['Mã sản phẩm'] = str(pid)
+
+        # --- dialog setup ---
+        dialog = QDialog(self)
+        dialog.setWindowTitle(f"Chi tiết sản phẩm — {name}")
+        dialog.setMinimumWidth(560)
+        dialog.setWindowModality(Qt.WindowModality.ApplicationModal)
+
+        main_layout = QVBoxLayout(dialog)
+        main_layout.setContentsMargins(14, 14, 14, 14)
+        main_layout.setSpacing(10)
+
+        # ----- header -----
+        header_widget = QWidget()
+        header_layout = QVBoxLayout(header_widget)
+        header_layout.setContentsMargins(0, 0, 0, 0)
+
+        title_label = QLabel(name)
+        title_font = QFont()
+        title_font.setPointSize(13)
+        title_font.setBold(True)
+        title_label.setFont(title_font)
+        title_label.setWordWrap(True)
+        title_label.setStyleSheet("color: #ffffff;")
+
+        brand_label = QLabel(f"<i>{brand}</i>") if brand else QLabel("<i>Thương hiệu: Không rõ</i>")
+        brand_label.setTextFormat(Qt.TextFormat.RichText)
+        brand_label.setStyleSheet("color: #cccccc;")
+        brand_label.setWordWrap(True)
+
+        header_layout.addWidget(title_label)
+        header_layout.addWidget(brand_label)
+        main_layout.addWidget(header_widget)
+
+        # ----- body (mô tả + thông số) -----
+        body_widget = QWidget()
+        body_layout = QHBoxLayout(body_widget)
+        body_layout.setContentsMargins(0, 0, 0, 0)
+        body_layout.setSpacing(12)
+
+        # Mô tả
+        desc_container = QScrollArea()
+        desc_container.setWidgetResizable(True)
+        desc_widget = QWidget()
+        desc_layout = QVBoxLayout(desc_widget)
+        desc_layout.setContentsMargins(8, 8, 8, 8)
+
+        desc_label_title = QLabel("<b>Mô tả sản phẩm</b>")
+        desc_label_title.setTextFormat(Qt.TextFormat.RichText)
+        desc_label_title.setStyleSheet("color: #f0f0f0; font-size: 12.5px;")
+
+        desc_text = QTextEdit()
+        desc_text.setReadOnly(True)
+        desc_text.setAcceptRichText(False)
+        desc_text.setPlainText(description or "Không có mô tả.")
+        desc_text.setMinimumHeight(160)
+        desc_text.setStyleSheet("""
+            QTextEdit {
+                background-color: #2e2e2e;
+                color: #f0f0f0;
+                border: 1px solid #505050;
+                border-radius: 6px;
+                font-size: 12.5px;
+                padding: 6px;
+            }
+        """)
+
+        desc_layout.addWidget(desc_label_title)
+        desc_layout.addWidget(desc_text)
+        desc_widget.setLayout(desc_layout)
+        desc_container.setWidget(desc_widget)
+        desc_container.setMinimumWidth(320)
+        body_layout.addWidget(desc_container, stretch=2)
+
+        # Thông số kỹ thuật
+        specs_container = QScrollArea()
+        specs_container.setWidgetResizable(True)
+        specs_widget = QWidget()
+        specs_layout = QFormLayout(specs_widget)
+        specs_layout.setLabelAlignment(Qt.AlignmentFlag.AlignLeft)
+        specs_layout.setHorizontalSpacing(12)
+        specs_layout.setVerticalSpacing(8)
+        specs_layout.setContentsMargins(8, 8, 8, 8)
+
+        for key, val in specs.items():
+            label_key = QLabel(f"{key}:")
+            label_key.setStyleSheet("color: #cccccc; font-weight: 500;")
+            label_val = QLabel(str(val))
+            label_val.setWordWrap(True)
+            label_val.setStyleSheet("color: #f0f0f0;")
+            specs_layout.addRow(label_key, label_val)
+
+        if not specs:
+            specs_layout.addRow(QLabel("Không có thông số kỹ thuật."), QLabel(""))
+
+        specs_widget.setLayout(specs_layout)
+        specs_container.setWidget(specs_widget)
+        specs_container.setMinimumWidth(220)
+        body_layout.addWidget(specs_container, stretch=1)
+
+        main_layout.addWidget(body_widget)
+
+        # ----- footer -----
+        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok)
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setStyleSheet("""
+            QPushButton {
+                background-color: #3A8DFF;
+                color: white;
+                border-radius: 6px;
+                padding: 6px 14px;
+            }
+            QPushButton:hover {
+                background-color: #5BA3FF;
+            }
+        """)
+        buttons.accepted.connect(dialog.accept)
+        main_layout.addWidget(buttons, alignment=Qt.AlignmentFlag.AlignRight)
+
+        # Tổng thể dialog style
+        dialog.setStyleSheet("""
+            QDialog {
+                background-color: #353535;
+                border: 1px solid #505050;
+            }
+            QLabel {
+                font-size: 12.5px;
+            }
+            QScrollArea {
+                border: none;
+                background-color: transparent;
+            }
+        """)
+
+        dialog.exec()
+    # --- Các hàm khác giữ nguyên (chỉ sửa view/edit/delete để dùng self.products khi cần) ---
     def add_product(self):
         from dialogs.product_dialog import ProductDialog
         dialog = ProductDialog(self.db)
@@ -310,12 +570,10 @@ class ProductManagementTab(QWidget):
             QMessageBox.information(self, 'Thành công', 'Đã thêm sản phẩm mới!')
 
     def edit_product_row(self, row):
-        id_item = self.table.item(row, 0)
-        if not id_item:
-            # nếu ID không ở dạng item (vì ta dùng cellWidget cho qty), vẫn lấy qua cell(0,row)
-            # nhưng ở đây ID là QTableWidgetItem, nên chỉ cần check
+        # Lấy product id từ self.products để đảm bảo đúng (không phụ thuộc row thay đổi)
+        if row < 0 or row >= len(self.products):
             return
-        product_id = int(id_item.text())
+        product_id = int(self.products[row][0])
         from dialogs.product_dialog import ProductDialog
         dialog = ProductDialog(self.db, product_id)
         if dialog.exec():
@@ -323,13 +581,10 @@ class ProductManagementTab(QWidget):
             QMessageBox.information(self, 'Thành công', 'Đã cập nhật sản phẩm!')
 
     def delete_product_row(self, row):
-        # Lấy ID từ item
-        id_item = self.table.item(row, 0)
-        name_item = self.table.item(row, 1)
-        if not id_item:
+        if row < 0 or row >= len(self.products):
             return
-        product_id = int(id_item.text())
-        product_name = name_item.text() if name_item else ''
+        product_id = int(self.products[row][0])
+        product_name = self.products[row][1] or ''
 
         reply = QMessageBox.question(self, 'Xác nhận',
                                      f'Bạn có chắc muốn xóa sản phẩm \"{product_name}\"?',
@@ -341,37 +596,118 @@ class ProductManagementTab(QWidget):
             self.load_data()
             QMessageBox.information(self, 'Thành công', 'Đã xóa sản phẩm!')
 
+    def filter_products(self):
+        """
+        Filter products based on search input, brand, type, price range, and specifications.
+        """
+        search_text = self.search_input.text().lower()
+        selected_brand = self.brand_filter.currentText()
+        selected_type = self.type_filter.currentText()
+
+        # Price filters
+        price_min_text = self.price_min_input.text().strip()
+        price_max_text = self.price_max_input.text().strip()
+        price_min = float(price_min_text.replace(',', '').replace(' VND', '')) if price_min_text else None
+        price_max = float(price_max_text.replace(',', '').replace(' VND', '')) if price_max_text else None
+
+        # Advanced filters
+        power_reserve_min_text = self.power_reserve_input.text().strip()
+        power_reserve_min = float(power_reserve_min_text) if power_reserve_min_text else None
+
+        battery_life_min_text = self.battery_life_input.text().strip()
+        battery_life_min = float(battery_life_min_text) if battery_life_min_text else None
+
+        selected_connectivity = self.connectivity_filter.currentText()
+
+        for row in range(self.table.rowCount()):
+            if row >= len(self.products):
+                continue
+
+            product = self.products[row]
+            name = (product[1] or '').lower()
+            brand = (product[2] or '').lower()
+            ptype_raw = product[3] or ''
+            price = product[4] or 0
+            power_reserve = product[8] or 0
+            battery_life = product[10] or 0
+            connectivity = product[12] or ''
+
+            # Determine display type
+            if ptype_raw.lower() in ('mechanical', 'm', 'coil'):
+                display_type = "Đồng hồ cơ"
+            elif ptype_raw.lower() in ('digital', 'smart', 'electronic'):
+                display_type = "Đồng hồ điện tử"
+            else:
+                display_type = ptype_raw
+
+            # Check search
+            search_match = not search_text or search_text in name or search_text in brand
+
+            # Check brand
+            brand_match = selected_brand == 'Tất cả' or selected_brand.lower() == brand
+
+            # Check type
+            type_match = selected_type == 'Tất cả' or selected_type == display_type
+
+            # Check price range
+            price_match = True
+            if price_min is not None and price < price_min:
+                price_match = False
+            if price_max is not None and price > price_max:
+                price_match = False
+
+            # Check specifications based on type
+            spec_match = True
+            if display_type == "Đồng hồ cơ":
+                if power_reserve_min is not None and power_reserve < power_reserve_min:
+                    spec_match = False
+            elif display_type == "Đồng hồ điện tử":
+                if battery_life_min is not None and battery_life < battery_life_min:
+                    spec_match = False
+                if selected_connectivity != 'Tất cả' and selected_connectivity not in connectivity:
+                    spec_match = False
+
+            if search_match and brand_match and type_match and price_match and spec_match:
+                self.table.setRowHidden(row, False)
+            else:
+                self.table.setRowHidden(row, True)
+
     def view_product_row(self, row):
-        id_item = self.table.item(row, 0)
-        if not id_item:
-            return
-        product_id = int(id_item.text())
-        product_name = self.table.item(row, 1).text() if self.table.item(row, 1) else ''
-        brand = self.table.item(row, 2).text() if self.table.item(row, 2) else ''
-        product_type = self.table.item(row, 3).text() if self.table.item(row, 3) else ''
-        price = self.table.item(row, 4).text() if self.table.item(row, 4) else ''
-        # quantity là cellWidget -> lấy text từ widget
-        qty_widget = self.table.cellWidget(row, 5)
-        if qty_widget:
-            qty_label = qty_widget.findChild(QLabel)
-            quantity = qty_label.text() if qty_label else ''
-        else:
-            quantity = self.table.item(row, 5).text() if self.table.item(row, 5) else ''
+        """
+        Giữ cho tương thích: mở dialog chi tiết (nếu có)
+        """
+        self.show_details_dialog(row)
 
-        description = self.table.item(row, 6).text() if self.table.item(row, 6) else ''
-        specs = self.table.item(row, 7).text() if self.table.item(row, 7) else ''
+    def update_advanced_filters_visibility(self):
+        """
+        Update visibility of advanced filters based on selected watch type.
+        """
+        selected_type = self.type_filter.currentText()
 
-        info_text = f"""
-                    ID: {product_id}
-                    Tên: {product_name}
-                    Thương hiệu: {brand}
-                    Loại: {product_type}
-                    Giá: {price}
-                    Số lượng: {quantity}
-                    Mô tả: {description}
-                    Thông số: {specs}
-                    """
-        QMessageBox.information(self, 'Chi tiết sản phẩm', info_text)
+        if selected_type == 'Tất cả':
+            # Show all filters
+            self.power_reserve_label.show()
+            self.power_reserve_input.show()
+            self.battery_life_label.show()
+            self.battery_life_input.show()
+            self.connectivity_label.show()
+            self.connectivity_filter.show()
+        elif selected_type == 'Đồng hồ cơ':
+            # Show only mechanical watch filters
+            self.power_reserve_label.show()
+            self.power_reserve_input.show()
+            self.battery_life_label.hide()
+            self.battery_life_input.hide()
+            self.connectivity_label.hide()
+            self.connectivity_filter.hide()
+        elif selected_type == 'Đồng hồ điện tử':
+            # Show only digital watch filters
+            self.power_reserve_label.hide()
+            self.power_reserve_input.hide()
+            self.battery_life_label.show()
+            self.battery_life_input.show()
+            self.connectivity_label.show()
+            self.connectivity_filter.show()
 
     def handle_click(self, index):
         if not index.isValid():
