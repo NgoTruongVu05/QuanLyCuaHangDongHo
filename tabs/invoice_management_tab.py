@@ -2,6 +2,17 @@ from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QTableWidget,
                              QTableWidgetItem, QPushButton, QMessageBox,
                              QHeaderView, QHBoxLayout, QLabel)
 from PyQt6.QtCore import Qt
+from datetime import datetime
+
+def _format_date(val: str) -> str:
+    if not val:
+        return ''
+    for fmt in ('%Y-%m-%d', '%Y-%m-%d %H:%M:%S', '%Y/%m/%d'):
+        try:
+            return datetime.strptime(val, fmt).strftime('%d/%m/%Y')
+        except Exception:
+            continue
+    return val
 
 class InvoiceManagementTab(QWidget):
     def __init__(self, db, user_role):
@@ -149,6 +160,8 @@ class InvoiceManagementTab(QWidget):
             for col, value in enumerate(invoice):
                 if col == 3:  # Total amount
                     item = QTableWidgetItem(f"{value:,.0f} VND" if value else "0 VND")
+                elif col == 4:
+                    item = QTableWidgetItem(_format_date(value))
                 else:
                     item = QTableWidgetItem(str(value) if value else 'Khách lẻ')
                 item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
@@ -315,23 +328,61 @@ class InvoiceManagementTab(QWidget):
     
     def show_invoice_details(self, invoice_id):
         cursor = self.db.conn.cursor()
-        
+        # Lấy header hóa đơn
         cursor.execute('''
-            SELECT p.name, id.quantity, id.price, (id.quantity * id.price) as total
+            SELECT i.id, i.created_date, i.total_amount,
+                   c.name, c.phone, c.address, e.full_name
+            FROM invoices i
+            LEFT JOIN customers c ON i.customer_id = c.id
+            LEFT JOIN employees e ON i.employee_id = e.id
+            WHERE i.id = ?
+        ''', (invoice_id,))
+        header = cursor.fetchone()
+
+        if not header:
+            QMessageBox.warning(self, 'Lỗi', f'Không tìm thấy hóa đơn #{invoice_id}')
+            return
+
+        inv_id, created_date, total_amount, cust_name, cust_phone, cust_addr, emp_name = header
+        cust_name = cust_name
+        created_date_fmt = _format_date(created_date)
+        emp_name = emp_name or ''
+
+        # Lấy chi tiết sản phẩm
+        cursor.execute('''
+            SELECT p.name, id.quantity, id.price, (id.quantity * id.price) as line_total
             FROM invoice_details id
             JOIN products p ON id.product_id = p.id
             WHERE id.invoice_id = ?
         ''', (invoice_id,))
         details = cursor.fetchall()
-        
-        detail_text = f"Chi tiết hóa đơn #{invoice_id}:\n\n"
-        total_amount = 0
-        for detail in details:
-            detail_text += f"{detail[0]} - {detail[1]} x {detail[2]:,} = {detail[3]:,} VND\n"
-            total_amount += detail[3]
-        detail_text += f"\nTổng cộng: {total_amount:,} VND"
-        
-        QMessageBox.information(self, 'Chi tiết', detail_text)
+
+        lines = [
+            f"HÓA ĐƠN #{inv_id}",
+            f"Ngày tạo: {created_date_fmt}",
+            f"Khách hàng: {cust_name}",
+        ]
+        if cust_phone:
+            lines.append(f"SĐT: {cust_phone}")
+        if cust_addr:
+            lines.append(f"Địa chỉ: {cust_addr}")
+        lines.append(f"Nhân viên: {emp_name}")
+        lines.append("\n--- Chi tiết sản phẩm ---")
+
+        for i, (name, qty, price, line_total) in enumerate(details, 1):
+            lines.append(
+                f"\n{i}. {name}\n"
+                f"   Số lượng : {qty}\n"
+                f"   Đơn giá  : {price:,.0f} VND\n"
+                f"   Thành tiền: {line_total:,.0f} VND"
+            )
+
+        lines.append("\n-------------------------")
+        total_display = total_amount or sum(d[3] for d in details)
+        lines.append(f"TỔNG CỘNG: {total_display:,.0f} VND")
+
+        detail_text = "\n".join(lines)
+        QMessageBox.information(self, f'Hóa đơn #{inv_id}', detail_text)
     
     def view_repair_details(self, row):
         repair_id = int(self.table.item(row, 0).text())
