@@ -72,12 +72,12 @@ class EmployeeManagementTab(QWidget):
         
         # Table - BỎ cột position (chức vụ)
         self.table = QTableWidget()
-        self.table.setColumnCount(7)  # Giảm từ 8 xuống 7 cột
+        self.table.setColumnCount(7)
         self.table.setHorizontalHeaderLabels([
             'ID', 'Mã ĐD', 'Họ tên', 'Vai trò', 'Lương cơ bản', 'Điện thoại', 'Hành động'
         ])
         
-        # KHÔNG CHO CHỌN BẤT KỲ Ô NÀO - THÊM DÒNG NÀY
+        # KHÔNG CHO CHỌN BẤT KỲ Ô NÀO
         self.table.setSelectionMode(QTableWidget.SelectionMode.NoSelection)
         
         # Set column widths
@@ -140,7 +140,7 @@ class EmployeeManagementTab(QWidget):
                 WHERE LOWER(id) LIKE ? OR LOWER(ma_dinh_danh) LIKE ? OR LOWER(full_name) LIKE ? 
                    OR vaitro = ?
             ''', (f'%{search_text}%', f'%{search_text}%', f'%{search_text}%', 
-                  1 if search_text in ['quản lý', '1'] else 2))
+                  1 if search_text in ['quản lý', '1'] else 0))
         
         elif search_type == 'ID':
             search_text = self.search_input.text().strip().lower()
@@ -215,12 +215,12 @@ class EmployeeManagementTab(QWidget):
                 if col == 3:  # Cột vai trò
                     role_text = "Quản lý" if value == 1 else "Nhân viên"
                     item = QTableWidgetItem(role_text)
-                elif col == 4:  # Cột lương (đã dịch chuyển do bỏ position)
+                elif col == 4:  # Cột lương
                     item = QTableWidgetItem(f"{value:,.0f} VND" if value else "0 VND")
                 else:
                     item = QTableWidgetItem(str(value) if value else '')
                 
-                # KHÔNG CHO CHỌN VÀ CHỈNH SỬA - THÊM DÒNG NÀY
+                # KHÔNG CHO CHỌN VÀ CHỈNH SỬA
                 item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsSelectable & ~Qt.ItemFlag.ItemIsEditable)
                 
                 self.table.setItem(row, col, item)
@@ -271,7 +271,7 @@ class EmployeeManagementTab(QWidget):
                 action_layout.addWidget(delete_btn)
             
             action_layout.addStretch()
-            self.table.setCellWidget(row, 6, action_widget)  # Cột hành động là cột 6 (giảm từ 7)
+            self.table.setCellWidget(row, 6, action_widget)
         
         for row in range(self.table.rowCount()):
             self.table.setRowHeight(row, 40)

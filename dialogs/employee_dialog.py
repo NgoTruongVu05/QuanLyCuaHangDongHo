@@ -13,7 +13,7 @@ class EmployeeDialog(QDialog):
     
     def init_ui(self):
         self.setWindowTitle('Thêm/Sửa nhân viên' if not self.employee_id else 'Sửa nhân viên')
-        self.setFixedSize(450, 450)
+        self.setFixedSize(450, 400)
         
         form_layout = QFormLayout()
         
@@ -50,13 +50,10 @@ class EmployeeDialog(QDialog):
         self.role_combo.currentTextChanged.connect(self.on_role_changed)
         form_layout.addRow('Vai trò:', self.role_combo)
         
-        self.position_combo = QComboBox()
-        self.position_combo.addItems(['Bán hàng', 'Kỹ thuật', 'Quản lý'])
-        form_layout.addRow('Chức vụ:', self.position_combo)
-        
         self.base_salary_input = QDoubleSpinBox()
         self.base_salary_input.setMaximum(999999999)
         self.base_salary_input.setPrefix('VND ')
+        self.base_salary_input.setValue(8000000)  # Giá trị mặc định
         form_layout.addRow('Lương cơ bản:', self.base_salary_input)
         
         self.phone_input = QLineEdit()
@@ -85,7 +82,7 @@ class EmployeeDialog(QDialog):
     def on_ma_dinh_danh_changed(self, text):
         """Cập nhật ID khi mã định danh thay đổi"""
         if len(text) == 12 and text.isdigit():
-            role = self.role_combo.currentIndex()
+            role = 1 if self.role_combo.currentText() == 'Quản lý' else 0
             try:
                 employee_id = self.db.generate_employee_id(text, role)
                 self.id_label.setText(employee_id)
@@ -114,21 +111,15 @@ class EmployeeDialog(QDialog):
         if employee:
             self.full_name_input.setText(employee[3])
             self.role_combo.setCurrentIndex(employee[4])  # vaitro
-            self.position_combo.setCurrentText(self.get_position_text(employee[7]))
-            self.base_salary_input.setValue(employee[6] if employee[6] else 0)
+            self.base_salary_input.setValue(employee[7] if employee[7] else 0)
             self.phone_input.setText(employee[5] if employee[5] else '')
-            self.email_input.setText(employee[5] if employee[5] else '')
-    
-    def get_position_text(self, position):
-        position_map = {'sales': 'Bán hàng', 'technician': 'Kỹ thuật', 'manager': 'Quản lý'}
-        return position_map.get(position, 'Bán hàng')
+            self.email_input.setText(employee[6] if employee[6] else '')
     
     def save_employee(self):
         # Lấy dữ liệu từ form
         password = self.password_input.text()
         full_name = self.full_name_input.text().strip()
-        role = self.role_combo.currentIndex()  # 0=nhân viên, 1=quản lý
-        position = self.get_position_value(self.position_combo.currentText())
+        role = 1 if self.role_combo.currentText() == 'Quản lý' else 0
         base_salary = self.base_salary_input.value()
         phone = self.phone_input.text().strip()
         email = self.email_input.text().strip()
@@ -167,23 +158,23 @@ class EmployeeDialog(QDialog):
             
             hashed_password = self.db.hash_password(password)
             cursor.execute('''
-                INSERT INTO employees (id, ma_dinh_danh, password, full_name, vaitro, phone, email, base_salary, position)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (employee_id, ma_dinh_danh, hashed_password, full_name, role, phone, email, base_salary, position))
+                INSERT INTO employees (id, ma_dinh_danh, password, full_name, vaitro, phone, email, base_salary)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (employee_id, ma_dinh_danh, hashed_password, full_name, role, phone, email, base_salary))
         
         else:
             # SỬA
             if password:
                 hashed_password = self.db.hash_password(password)
                 cursor.execute('''
-                    UPDATE employees SET password=?, full_name=?, vaitro=?, phone=?, email=?, base_salary=?, position=?
+                    UPDATE employees SET password=?, full_name=?, vaitro=?, phone=?, email=?, base_salary=?
                     WHERE id=?
-                ''', (hashed_password, full_name, role, phone, email, base_salary, position, self.employee_id))
+                ''', (hashed_password, full_name, role, phone, email, base_salary, self.employee_id))
             else:
                 cursor.execute('''
-                    UPDATE employees SET full_name=?, vaitro=?, phone=?, email=?, base_salary=?, position=?
+                    UPDATE employees SET full_name=?, vaitro=?, phone=?, email=?, base_salary=?
                     WHERE id=?
-                ''', (full_name, role, phone, email, base_salary, position, self.employee_id))
+                ''', (full_name, role, phone, email, base_salary, self.employee_id))
         
         self.db.conn.commit()
         self.accept()

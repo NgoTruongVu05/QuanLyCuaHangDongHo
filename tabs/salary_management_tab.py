@@ -1,9 +1,8 @@
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton, 
                              QTableWidget, QTableWidgetItem, QMessageBox,
-                             QHeaderView, QComboBox, QSpinBox, QLabel, QFormLayout,
-                             QGroupBox)
-from PyQt6.QtCore import QDate
-from dialogs.salary_dialog import SalaryDialog
+                             QHeaderView, QSpinBox, QLabel, QGroupBox)
+from PyQt6.QtCore import QDate, Qt
+from PyQt6.QtGui import QColor, QFont
 
 class SalaryManagementTab(QWidget):
     def __init__(self, db, user_role):
@@ -11,6 +10,7 @@ class SalaryManagementTab(QWidget):
         self.db = db
         self.user_role = user_role
         self.init_ui()
+        # Tự động load data khi khởi tạo
         self.load_data()
     
     def init_ui(self):
@@ -35,138 +35,156 @@ class SalaryManagementTab(QWidget):
         filter_layout.addWidget(self.year_filter)
         
         filter_layout.addStretch()
+        
+        # Nút tính lương
+        calculate_btn = QPushButton('Tính lương tháng này')
+        calculate_btn.clicked.connect(self.calculate_all_salaries)
+        calculate_btn.setStyleSheet('''
+            QPushButton {
+                background-color: #27AE60;
+                color: white;
+                border: none;
+                border-radius: 3px;
+                padding: 5px 10px;
+            }
+            QPushButton:hover {
+                background-color: #229954;
+            }
+        ''')
+        filter_layout.addWidget(calculate_btn)
+        
         filter_group.setLayout(filter_layout)
         layout.addWidget(filter_group)
         
-        # Controls
-        controls_layout = QHBoxLayout()
-        
-        add_btn = QPushButton('Thêm bảng lương')
-        add_btn.clicked.connect(self.add_salary)
-        controls_layout.addWidget(add_btn)
-        
-        refresh_btn = QPushButton('Làm mới')
-        refresh_btn.clicked.connect(self.load_data)
-        controls_layout.addWidget(refresh_btn)
-        
-        controls_layout.addStretch()
-        layout.addLayout(controls_layout)
+       
         
         # Table
         self.table = QTableWidget()
-        self.table.setColumnCount(10)  # Thêm cột hành động
+        self.table.setColumnCount(7)
         self.table.setHorizontalHeaderLabels([
-            'ID', 'Nhân viên', 'Tháng', 'Năm', 'Lương cơ bản', 
-            'Thưởng', 'Khấu trừ', 'Tổng lương', 'Trạng thái', 'Hành động'
+            'ID NV', 'Họ tên', 'Vai trò', 'Lương cơ bản', 'Doanh số', 'Hoa hồng 10%', 'Tổng lương'
         ])
         
         # Set column widths
         header = self.table.horizontalHeader()
-        header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)  # ID
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)  # ID NV
         header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)  # Tên NV
-        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)  # Tháng
-        header.setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)  # Năm
-        header.setSectionResizeMode(4, QHeaderView.ResizeMode.ResizeToContents)  # Lương cơ bản
-        header.setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)  # Thưởng
-        header.setSectionResizeMode(6, QHeaderView.ResizeMode.ResizeToContents)  # Khấu trừ
-        header.setSectionResizeMode(7, QHeaderView.ResizeMode.ResizeToContents)  # Tổng lương
-        header.setSectionResizeMode(8, QHeaderView.ResizeMode.ResizeToContents)  # Trạng thái
-        header.setSectionResizeMode(9, QHeaderView.ResizeMode.ResizeToContents)  # Hành động
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)  # Vai trò
+        header.setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)  # Lương cơ bản
+        header.setSectionResizeMode(4, QHeaderView.ResizeMode.ResizeToContents)  # Doanh số
+        header.setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)  # Hoa hồng
+        header.setSectionResizeMode(6, QHeaderView.ResizeMode.ResizeToContents)  # Tổng lương
         
         layout.addWidget(self.table)
         
         self.setLayout(layout)
+    
+    def showEvent(self, event):
+        """Tự động làm mới dữ liệu khi tab được hiển thị"""
+        self.load_data()
+        super().showEvent(event)
+    
+    def calculate_all_salaries(self):
+        """Tính lương cho tất cả nhân viên"""
+        month = self.month_filter.value()
+        year = self.year_filter.value()
+        
+        QMessageBox.information(self, 'Thông báo', 
+                              f'Đã tính lương tự động cho tháng {month}/{year}!\n\n'
+                              f'Công thức: Tổng lương = Lương cơ bản + 10% doanh số bán hàng')
+        self.load_data()
+    
+    def debug_data(self):
+        """Kiểm tra dữ liệu để debug"""
+        month = self.month_filter.value()
+        year = self.year_filter.value()
+        
+        cursor = self.db.conn.cursor()
+        
+        # Kiểm tra nhân viên
+        cursor.execute('SELECT id, full_name, base_salary FROM employees')
+        employees = cursor.fetchall()
+        
+        debug_info = f"Tháng {month}/{year}\n\n"
+        debug_info += f"Tổng số nhân viên: {len(employees)}\n\n"
+        
+        for emp in employees:
+            emp_id, name, base_salary = emp
+            salary_data = self.db.calculate_salary(emp_id, month, year)
+            
+            debug_info += f"NV: {name} ({emp_id})\n"
+            debug_info += f"  - Lương cơ bản: {base_salary:,.0f} VND\n"
+            debug_info += f"  - Doanh số: {salary_data['total_sales']:,.0f} VND\n"
+            debug_info += f"  - Hoa hồng: {salary_data['commission']:,.0f} VND\n"
+            debug_info += f"  - Tổng lương: {salary_data['total_salary']:,.0f} VND\n\n"
+        
+        # Kiểm tra hóa đơn
+        cursor.execute('''
+            SELECT COUNT(*), COALESCE(SUM(total_amount), 0) 
+            FROM invoices 
+            WHERE strftime('%m', created_date) = ? 
+            AND strftime('%Y', created_date) = ?
+        ''', (f"{month:02d}", str(year)))
+        
+        invoice_result = cursor.fetchone()
+        debug_info += f"Hóa đơn tháng {month}/{year}:\n"
+        debug_info += f"  - Số hóa đơn: {invoice_result[0]}\n"
+        debug_info += f"  - Tổng doanh số: {invoice_result[1]:,.0f} VND"
+        
+        QMessageBox.information(self, 'Debug Info', debug_info)
     
     def load_data(self):
         month = self.month_filter.value()
         year = self.year_filter.value()
         
         cursor = self.db.conn.cursor()
-        cursor.execute('''
-            SELECT s.id, e.full_name, s.month, s.year, s.base_salary, 
-                   s.bonus, s.deductions, s.total_salary, s.status
-            FROM salaries s
-            JOIN employees e ON s.employee_id = e.id
-            WHERE s.month = ? AND s.year = ?
-            ORDER BY s.id DESC
-        ''', (month, year))
+        cursor.execute('SELECT id, full_name, vaitro, base_salary FROM employees')
+        employees = cursor.fetchall()
         
-        salaries = cursor.fetchall()
+        self.table.setRowCount(len(employees))
         
-        self.table.setRowCount(len(salaries))
-        for row, salary in enumerate(salaries):
-            for col, value in enumerate(salary):
-                if col in [4, 5, 6, 7]:  # Salary columns
-                    item = QTableWidgetItem(f"{value:,.0f} VND")
-                elif col == 8:  # Status column
-                    status_text = "Đã thanh toán" if value == 'paid' else "Chờ thanh toán"
-                    item = QTableWidgetItem(status_text)
-                else:
-                    item = QTableWidgetItem(str(value))
-                
-                self.table.setItem(row, col, item)
+        for row, employee in enumerate(employees):
+            employee_id, full_name, vaitro, base_salary = employee
             
-            # Nút hành động cho từng dòng
-            action_widget = QWidget()
-            action_layout = QHBoxLayout(action_widget)
-            action_layout.setContentsMargins(5, 2, 5, 2)
+            # Tính lương tự động
+            salary_data = self.db.calculate_salary(employee_id, month, year)
             
-            edit_btn = QPushButton('Sửa')
-            edit_btn.setStyleSheet('''
-                QPushButton {
-                    background-color: #3498DB;
-                    color: white;
-                    border: none;
-                    border-radius: 3px;
-                    padding: 3px 8px;
-                    font-size: 11px;
-                }
-                QPushButton:hover {
-                    background-color: #2980B9;
-                }
-            ''')
-            edit_btn.clicked.connect(lambda checked, r=row: self.edit_salary_row(r))
-            action_layout.addWidget(edit_btn)
+            # Hiển thị thông tin nhân viên
+            self.table.setItem(row, 0, QTableWidgetItem(employee_id))
+            self.table.setItem(row, 1, QTableWidgetItem(full_name))
             
-            delete_btn = QPushButton('Xóa')
-            delete_btn.setStyleSheet('''
-                QPushButton {
-                    background-color: #E74C3C;
-                    color: white;
-                    border: none;
-                    border-radius: 3px;
-                    padding: 3px 8px;
-                    font-size: 11px;
-                }
-                QPushButton:hover {
-                    background-color: #C0392B;
-                }
-            ''')
-            delete_btn.clicked.connect(lambda checked, r=row: self.delete_salary_row(r))
-            action_layout.addWidget(delete_btn)
+            # Vai trò
+            role_item = QTableWidgetItem("Quản lý" if vaitro == 1 else "Nhân viên")
+            self.table.setItem(row, 2, role_item)
             
-            action_layout.addStretch()
-            self.table.setCellWidget(row, 9, action_widget)
-    
-    def add_salary(self):
-        dialog = SalaryDialog(self.db)
-        if dialog.exec():
-            self.load_data()
-    
-    def edit_salary_row(self, row):
-        salary_id = int(self.table.item(row, 0).text())
-        dialog = SalaryDialog(self.db, salary_id)
-        if dialog.exec():
-            self.load_data()
-    
-    def delete_salary_row(self, row):
-        salary_id = int(self.table.item(row, 0).text())
-        employee_name = self.table.item(row, 1).text()
+            # Lương cơ bản
+            base_salary_item = QTableWidgetItem(f"{base_salary:,.0f} VND")
+            self.table.setItem(row, 3, base_salary_item)
+            
+            # Doanh số
+            sales_item = QTableWidgetItem(f"{salary_data['total_sales']:,.0f} VND")
+            self.table.setItem(row, 4, sales_item)
+            
+            # Hoa hồng 10%
+            commission_item = QTableWidgetItem(f"{salary_data['commission']:,.0f} VND")
+            self.table.setItem(row, 5, commission_item)
+            
+            # Tổng lương - với style đặc biệt
+            total_salary_item = QTableWidgetItem(f"{salary_data['total_salary']:,.0f} VND")
+            
+            # Sử dụng setForeground và setFont thay vì setStyleSheet
+            total_salary_item.setForeground(QColor('#27AE60'))  # Màu xanh
+            font = QFont()
+            font.setBold(True)
+            total_salary_item.setFont(font)
+            
+            self.table.setItem(row, 6, total_salary_item)
+            
+            # Đặt style cho các ô không được chọn/chỉnh sửa
+            for col in range(self.table.columnCount()):
+                item = self.table.item(row, col)
+                if item:
+                    item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsSelectable & ~Qt.ItemFlag.ItemIsEditable)
         
-        reply = QMessageBox.question(self, 'Xác nhận', 
-                                   f'Bạn có chắc muốn xóa bảng lương của "{employee_name}"?')
-        if reply == QMessageBox.StandardButton.Yes:
-            cursor = self.db.conn.cursor()
-            cursor.execute('DELETE FROM salaries WHERE id = ?', (salary_id,))
-            self.db.conn.commit()
-            self.load_data()
+        for row in range(self.table.rowCount()):
+            self.table.setRowHeight(row, 40)

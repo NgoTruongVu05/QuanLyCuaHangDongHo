@@ -5,8 +5,6 @@ from typing import Optional, List, Tuple
 class Database:
     def __init__(self, db_path: str = 'watch_store.db'):
         self.conn = sqlite3.connect(db_path)
-        # Để trả về dict thay vì tuple, bạn có thể dùng row_factory nếu muốn
-        # self.conn.row_factory = sqlite3.Row
         self.create_tables()
     
     def create_tables(self):
@@ -41,7 +39,7 @@ class Database:
             )
         ''')
 
-        # Bảng nhân viên - BỎ cột username
+        # Bảng nhân viên - BỎ cột position
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS employees (
                 id TEXT PRIMARY KEY,
@@ -74,7 +72,7 @@ class Database:
                 employee_id TEXT,
                 total_amount REAL NOT NULL,
                 created_date TEXT NOT NULL,
-                status TEXT DEFAULT 'pending',
+                status TEXT DEFAULT '',
                 FOREIGN KEY (customer_id) REFERENCES customers (id),
                 FOREIGN KEY (employee_id) REFERENCES employees (id)
             )
@@ -111,21 +109,8 @@ class Database:
             )
         ''')
         
-        # Bảng lương
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS salaries (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                employee_id TEXT,
-                month INTEGER NOT NULL,
-                year INTEGER NOT NULL,
-                base_salary REAL NOT NULL,
-                bonus REAL DEFAULT 0,
-                deductions REAL DEFAULT 0,
-                total_salary REAL NOT NULL,
-                status TEXT DEFAULT 'pending',
-                FOREIGN KEY (employee_id) REFERENCES employees (id)
-            )
-        ''')
+        # Bảng lương - BỎ vì tính tự động
+        cursor.execute('DROP TABLE IF EXISTS salaries')
         
         # Thêm dữ liệu mẫu cho brands
         cursor.executemany('''
@@ -143,14 +128,14 @@ class Database:
             INSERT OR IGNORE INTO employees 
             (id, ma_dinh_danh, password, full_name, vaitro, base_salary)
             VALUES (?, ?, ?, ?, ?, ?)
-        ''', ('ql123456', '123456789012', self.hash_password('admin123'), 'Quản trị viên', 1, 15000000))
+        ''', ('ql123456', '777777123456', self.hash_password('admin123'), 'Quản trị viên', 1, 15000000))
         
         # Thêm nhân viên mặc định - NV + 6 SỐ CUỐI
         cursor.execute('''
             INSERT OR IGNORE INTO employees 
             (id, ma_dinh_danh, password, full_name, vaitro, base_salary)
             VALUES (?, ?, ?, ?, ?, ?)
-        ''', ('nv654321', '987654321098', self.hash_password('123456'), 'Nhân Viên Mẫu', 0, 8000000))
+        ''', ('nv654321', '888888654321', self.hash_password('123456'), 'Nhân Viên Mẫu', 0, 8000000))
         
         self.conn.commit()
     
@@ -182,6 +167,63 @@ class Database:
         cursor = self.conn.cursor()
         cursor.execute('SELECT id FROM employees WHERE ma_dinh_danh = ?', (ma_dinh_danh,))
         return cursor.fetchone() is not None
+
+    def get_employee_sales_data(self, employee_id, month, year):
+        """Lấy dữ liệu bán hàng của nhân viên theo tháng/năm để tính lương"""
+        cursor = self.conn.cursor()
+        cursor.execute('''
+            SELECT SUM(total_amount) as total_sales
+            FROM invoices 
+            WHERE employee_id = ? 
+            AND strftime('%m', created_date) = ? 
+            AND strftime('%Y', created_date) = ?
+            AND status = ''
+        ''', (employee_id, f"{month:02d}", str(year)))
+        
+        result = cursor.fetchone()
+        return result[0] if result and result[0] else 0
+
+    def calculate_salary(self, employee_id, month, year):
+        """Tính lương tự động dựa trên lương cơ bản và hoa hồng 10%"""
+        cursor = self.conn.cursor()
+        
+        # Lấy lương cơ bản
+        cursor.execute('SELECT base_salary FROM employees WHERE id = ?', (employee_id,))
+        result = cursor.fetchone()
+        if not result:
+            return {
+                'base_salary': 0,
+                'total_sales': 0,
+                'commission': 0,
+                'total_salary': 0
+            }
+        
+        base_salary = result[0] if result[0] else 0
+        
+        # Tính tổng doanh số bán hàng - SỬA LẠI CÂU QUERY
+        cursor.execute('''
+            SELECT COALESCE(SUM(total_amount), 0) as total_sales
+            FROM invoices 
+            WHERE employee_id = ? 
+            AND strftime('%m', created_date) = ? 
+            AND strftime('%Y', created_date) = ?
+        ''', (employee_id, f"{month:02d}", str(year)))
+        
+        result = cursor.fetchone()
+        total_sales = result[0] if result else 0
+        
+        # Tính hoa hồng 10%
+        commission = total_sales * 0.1
+        
+        # Tổng lương = lương cơ bản + hoa hồng
+        total_salary = base_salary + commission
+        
+        return {
+            'base_salary': base_salary,
+            'total_sales': total_sales,
+            'commission': commission,
+            'total_salary': total_salary
+        }
 
     # Một vài hàm CRUD hữu ích cho brands và products
     def add_brand(self, name: str, country: Optional[str] = None) -> int:

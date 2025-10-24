@@ -2,7 +2,7 @@ from datetime import datetime
 
 class Invoice:
     def __init__(self, id=None, customer_id=None, employee_id=None, total_amount=0.0, 
-                 created_date=None, invoice_type="sale", status="pending"):
+                 created_date=None, invoice_type="sale", status=""):
         self.id = id
         self.customer_id = customer_id
         self.employee_id = employee_id
@@ -42,7 +42,7 @@ class InvoiceDetail:
 class RepairOrder:
     def __init__(self, id=None, customer_id=None, employee_id=None, watch_description="", 
                  issue_description="", estimated_cost=0.0, actual_cost=0.0,
-                 created_date=None, estimated_completion=None, status="pending"):
+                 created_date=None, estimated_completion=None, status=""):
         self.id = id
         self.customer_id = customer_id
         self.employee_id = employee_id
