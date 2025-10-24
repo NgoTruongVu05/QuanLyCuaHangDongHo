@@ -52,7 +52,7 @@ class ElectronicWatch(Product):
     def __init__(self, id=None, name="", brand="", price=0.0, quantity=0, description="",
                  battery_life=0, features=None, connectivity=""):
         super().__init__(id, name, brand, "electronic", price, quantity, description)
-        self.battery_life = battery_life  # tháng
+        self.battery_life = battery_life  # năm
         self.features = features or []  # ["heart_rate", "gps", ...]
         self.connectivity = connectivity  # "bluetooth", "wifi", "none"
     

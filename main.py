@@ -1,7 +1,7 @@
 import sys
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QPalette, QColor, QFont
+from PyQt6.QtGui import QPalette, QColor, QFont, QIcon
 from database import Database
 from dialogs.login_dialog import LoginDialog
 from main_window import MainWindow
@@ -106,7 +106,10 @@ def show_login(db):
 
 def main():
     app = QApplication(sys.argv)
-    
+
+    # Set application icon
+    app.setWindowIcon(QIcon('images/icon.png'))
+
     # Set application style
     set_app_style(app)
     

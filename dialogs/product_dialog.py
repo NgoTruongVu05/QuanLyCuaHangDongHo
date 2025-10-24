@@ -85,10 +85,15 @@ class ProductDialog(QDialog):
         self.elec_group = QGroupBox('Thông số đồng hồ điện tử')
         elec_layout = QFormLayout()
         
+        # Battery life input with hours label
+        battery_life_layout = QHBoxLayout()
         self.battery_life_input = QSpinBox()
         self.battery_life_input.setMaximum(60)
-        self.battery_life_input.setSuffix(' tháng')
-        elec_layout.addRow('Thời lượng pin:', self.battery_life_input)
+        battery_life_label = QLabel('năm')
+        battery_life_layout.addWidget(self.battery_life_input)
+        battery_life_layout.addWidget(battery_life_label)
+        battery_life_layout.addStretch()
+        elec_layout.addRow('Thời lượng pin:', battery_life_layout)
         
         self.features_layout = QVBoxLayout()
         self.heart_rate_check = QCheckBox('Theo dõi nhịp tim')

@@ -64,12 +64,12 @@ class ProductManagementTab(QWidget):
 
         # Advanced filters
         advanced_layout = QHBoxLayout()
-        self.power_reserve_label = QLabel('Thời gian trữ cót  (h):')
+        self.power_reserve_label = QLabel('Thời gian trữ cót  (giờ):')
         self.power_reserve_input = QLineEdit()
         self.power_reserve_input.setPlaceholderText('Min')
         self.power_reserve_input.textChanged.connect(self.filter_products)
 
-        self.battery_life_label = QLabel('Thời lượng pin (tháng):')
+        self.battery_life_label = QLabel('Thời lượng pin (năm):')
         self.battery_life_input = QLineEdit()
         self.battery_life_input.setPlaceholderText('Min')
         self.battery_life_input.textChanged.connect(self.filter_products)
@@ -422,7 +422,7 @@ class ProductManagementTab(QWidget):
                 specs['Chống nước'] = str(water_resistant)
         else:
             specs['Loại'] = ptype_raw or 'Điện tử'
-            specs['Thời lượng pin'] = f"{battery_life or 0} tháng"
+            specs['Thời lượng pin'] = f"{battery_life or 0} năm"
             if connectivity:
                 specs['Kết nối'] = connectivity
         if features:
