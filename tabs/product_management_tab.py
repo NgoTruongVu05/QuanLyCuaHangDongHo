@@ -828,7 +828,7 @@ class ProductManagementTab(QWidget):
                     if price < 500000 or price > 1000000000000:
                         errors.append(f"Dòng {i+2}: Giá phải từ 500,000 đến 1,000,000,000,000 VND")
                         continue
-                    quantity = int(row.get('quantity', 0)) if row.get('quantity') else 0
+                    quantity = int(float(row.get('quantity', 0))) if row.get('quantity') else 0
                     # Validate quantity: must be positive
                     if quantity < 0:
                         errors.append(f"Dòng {i+2}: Số lượng không được âm")
@@ -838,7 +838,7 @@ class ProductManagementTab(QWidget):
                     if power_reserve is not None and power_reserve > 999:
                         errors.append(f"Dòng {i+2}: Thời gian trữ cót không được vượt quá 999 giờ")
                         continue
-                    battery_life = int(row.get('battery_life', 0)) if row.get('battery_life') else None
+                    battery_life = int(float(row.get('battery_life', 0))) if row.get('battery_life') else None
                     # Validate battery life: max 99 years
                     if battery_life is not None and battery_life > 99:
                         errors.append(f"Dòng {i+2}: Thời lượng pin không được vượt quá 99 năm")
@@ -889,12 +889,12 @@ class ProductManagementTab(QWidget):
                     name = row.get('name', '').strip()
                     product_type = row.get('product_type', '').strip()
                     price = float(row.get('price', 0)) if row.get('price') else 0
-                    new_quantity = int(row.get('quantity', 0)) if row.get('quantity') else 0
+                    new_quantity = int(float(row.get('quantity', 0))) if row.get('quantity') else 0
                     description = row.get('description', '').strip()
                     movement_type = row.get('movement_type', '').strip()
                     power_reserve = float(row.get('power_reserve', 0)) if row.get('power_reserve') else None
                     water_resistant = row.get('water_resistant', '').strip() or None
-                    battery_life = int(row.get('battery_life', 0)) if row.get('battery_life') else None
+                    battery_life = int(float(row.get('battery_life', 0))) if row.get('battery_life') else None
                     features = row.get('features', '').strip()
                     connectivity = row.get('connectivity', '').strip()
 
