@@ -212,8 +212,8 @@ class Database:
         result = cursor.fetchone()
         total_sales = result[0] if result else 0
         
-        # Tính hoa hồng 10%
-        commission = total_sales * 0.1
+        # Tính hoa hồng %
+        commission = total_sales * 0.005
         
         # Tổng lương = lương cơ bản + hoa hồng
         total_salary = base_salary + commission
