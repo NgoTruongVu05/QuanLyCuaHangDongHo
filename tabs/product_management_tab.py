@@ -586,11 +586,20 @@ class ProductManagementTab(QWidget):
         product_id = int(self.products[row][0])
         product_name = self.products[row][1] or ''
 
+        # Check if product has been sold
+        cursor = self.db.conn.cursor()
+        cursor.execute('SELECT COUNT(*) FROM invoice_details WHERE product_id = ?', (product_id,))
+        sold_count = cursor.fetchone()[0]
+
+        if sold_count > 0:
+            QMessageBox.warning(self, 'Không thể xóa',
+                                f'Sản phẩm \"{product_name}\" đã được bán ra và không thể xóa!')
+            return
+
         reply = QMessageBox.question(self, 'Xác nhận',
                                      f'Bạn có chắc muốn xóa sản phẩm \"{product_name}\"?',
                                      QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         if reply == QMessageBox.StandardButton.Yes:
-            cursor = self.db.conn.cursor()
             cursor.execute('DELETE FROM products WHERE id = ?', (product_id,))
             self.db.conn.commit()
             self.load_data()
