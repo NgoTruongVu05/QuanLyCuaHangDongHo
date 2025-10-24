@@ -62,7 +62,7 @@ class SalaryManagementTab(QWidget):
         self.table = QTableWidget()
         self.table.setColumnCount(7)
         self.table.setHorizontalHeaderLabels([
-            'ID NV', 'Họ tên', 'Vai trò', 'Lương cơ bản', 'Doanh số', 'Hoa hồng 10%', 'Tổng lương'
+            'ID NV', 'Họ tên', 'Vai trò', 'Lương cơ bản', 'Doanh số', 'Hoa hồng 0.5%', 'Tổng lương'
         ])
         
         # Set column widths

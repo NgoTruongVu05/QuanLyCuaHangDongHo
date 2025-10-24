@@ -236,6 +236,10 @@ class CreateInvoiceTab(QWidget):
             QMessageBox.warning(self, 'Lỗi', 'Giỏ hàng trống!')
             return
 
+        if not self.selected_customer:
+            QMessageBox.warning(self, 'Lỗi', 'Vui lòng chọn khách hàng!')
+            return
+        
         cursor = self.db.conn.cursor()
 
         # Lấy ID khách hàng nếu có
@@ -243,18 +247,20 @@ class CreateInvoiceTab(QWidget):
         if self.selected_customer:
             cursor.execute('SELECT id FROM customers WHERE phone = ?', (self.selected_customer['phone'],))
             res = cursor.fetchone()
-            if res:
-                customer_id = res[0]
+            if not res:
+                QMessageBox.warning(self, 'Lỗi', 'Không tìm thấy thông tin khách hàng!')
+                return
 
-        employee_id = self.user_id if self.user_id else 1
+        customer_id = res[0]
+        employee_id = self.user_id
         total = sum(item['price'] * item['quantity'] for item in self.cart)
 
-        cursor.execute('''
-            INSERT INTO invoices (customer_id, employee_id, total_amount, created_date)
-            VALUES (?, ?, ?, ?)
-        ''', (customer_id, employee_id, total, QDate.currentDate().toString('yyyy-MM-dd')))
+        invoice_id = self.db.generate_invoice_id()
 
-        invoice_id = cursor.lastrowid
+        cursor.execute('''
+            INSERT INTO invoices (id, customer_id, employee_id, total_amount, created_date)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (invoice_id, customer_id, employee_id, total, QDate.currentDate().toString('yyyy-MM-dd')))
 
         for item in self.cart:
             cursor.execute('''
@@ -270,12 +276,9 @@ class CreateInvoiceTab(QWidget):
         self.reset_form()
 
     def load_data(self):
-        """Refresh both product and customer data"""
-        # Clear search boxes to show all data
-        self.product_search.clear()
-        self.customer_search.clear()
-        
-        # Reload products
+        self.reset_form()
+
+        # Load fresh data
         cursor = self.db.conn.cursor()
         cursor.execute('''
             SELECT id, name, price, quantity
@@ -313,9 +316,9 @@ class CreateInvoiceTab(QWidget):
         self.cart.clear()
         self.selected_customer = None
         self.product_search.clear()
-        self.customer_search.clear()
+        self.customer_search.clear()      
+        self.quantity_spin.setValue(1)
         self.update_cart_display()
-        self.load_data()
 
     def remove_item_from_cart(self, row):
         if 0 <= row < len(self.cart):

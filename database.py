@@ -67,7 +67,7 @@ class Database:
         # Bảng hóa đơn
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS invoices (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id TEXT PRIMARY KEY,
                 customer_id INTEGER,
                 employee_id TEXT,
                 total_amount REAL NOT NULL,
@@ -82,7 +82,7 @@ class Database:
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS invoice_details (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                invoice_id INTEGER,
+                invoice_id TEXT,
                 product_id INTEGER,
                 quantity INTEGER NOT NULL,
                 price REAL NOT NULL,
@@ -274,3 +274,16 @@ class Database:
             JOIN brands b ON p.brand_id = b.id
         ''')
         return cursor.fetchall()
+    
+    def generate_invoice_id(self) -> str:
+        """Tạo ID hóa đơn theo format HD001, HD002,..."""
+        cursor = self.conn.cursor()
+        cursor.execute('SELECT id FROM invoices ORDER BY id DESC LIMIT 1')
+        result = cursor.fetchone()
+        
+        if result is None:
+            return 'HD001'
+        
+        last_id = result[0]  # VD: HD001
+        num = int(last_id[2:]) + 1  # Lấy phần số và tăng 1
+        return f'HD{num:03d}'
