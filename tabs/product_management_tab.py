@@ -14,8 +14,12 @@ class ProductManagementTab(QWidget):
         super().__init__()
         self.db = db
         self.user_role = user_role
-        self.products = []  # Lưu products khi load_data để lấy info khi cần
-        self.proxy_model = None  # For sorting and filtering
+        self.products = []  # Current page products
+        self.page_size = 50  # Items per page
+        self.current_page = 1
+        self.total_pages = 1
+        self.total_products = 0
+        self.current_filters = {}  # Store current filter state
         self.init_ui()
         self.load_data()
 
@@ -183,6 +187,27 @@ class ProductManagementTab(QWidget):
         self.table.clicked.connect(self.handle_click)
 
         layout.addWidget(self.table)
+
+        # Pagination controls
+        pagination_layout = QHBoxLayout()
+        pagination_layout.addStretch()
+
+        self.page_label = QLabel("Trang 1 / 1")
+        pagination_layout.addWidget(self.page_label)
+
+        self.prev_btn = QPushButton('Trước')
+        self.prev_btn.clicked.connect(self.prev_page)
+        self.prev_btn.setEnabled(False)
+        pagination_layout.addWidget(self.prev_btn)
+
+        self.next_btn = QPushButton('Sau')
+        self.next_btn.clicked.connect(self.next_page)
+        self.next_btn.setEnabled(False)
+        pagination_layout.addWidget(self.next_btn)
+
+        pagination_layout.addStretch()
+        layout.addLayout(pagination_layout)
+
         self.setLayout(layout)
 
     def _create_qty_widget(self, quantity: int):
@@ -269,32 +294,58 @@ class ProductManagementTab(QWidget):
 
     def load_data(self):
         """
-        Lấy dữ liệu sản phẩm kèm tên brand qua JOIN,
+        Lấy dữ liệu sản phẩm kèm tên brand qua JOIN với pagination,
         rồi fill vào 8 cột của table: ID, Tên, Thương hiệu, Loại, Giá, Số lượng, Chi tiết sản phẩm, Hành động
         """
-        cursor = self.db.conn.cursor()
-        cursor.execute('''
-            SELECT p.id, p.name, b.name AS brand, p.product_type, p.price, p.quantity,
-                   p.description, p.movement_type, p.power_reserve, p.water_resistant,
-                   p.battery_life, p.features, p.connectivity
-            FROM products p
-            LEFT JOIN brands b ON p.brand_id = b.id
-            ORDER BY p.id
-        ''')
-        products = cursor.fetchall()
-        # Lưu lại danh sách products để dùng khi hiển thị dialog
-        self.products = products
+        try:
+            cursor = self.db.conn.cursor()
 
-        # Populate brand filter with all brands from database
-        cursor = self.db.conn.cursor()
-        cursor.execute('SELECT name FROM brands ORDER BY name')
-        all_brands = cursor.fetchall()
-        self.brand_filter.clear()
-        self.brand_filter.addItem('Tất cả')
-        for brand_row in all_brands:
-            brand_name = brand_row[0]
-            if brand_name:
-                self.brand_filter.addItem(brand_name)
+            # Get total count for pagination
+            cursor.execute('SELECT COUNT(*) FROM products')
+            result = cursor.fetchone()
+            if result is None:
+                self.total_products = 0
+            else:
+                self.total_products = result[0]
+            self.total_pages = (self.total_products + self.page_size - 1) // self.page_size
+            if self.total_pages == 0:
+                self.total_pages = 1
+
+            # Ensure current_page is within bounds
+            if self.current_page > self.total_pages:
+                self.current_page = self.total_pages
+            if self.current_page < 1:
+                self.current_page = 1
+
+            # Fetch paginated products
+            offset = (self.current_page - 1) * self.page_size
+            cursor.execute('''
+                SELECT p.id, p.name, b.name AS brand, p.product_type, p.price, p.quantity,
+                       p.description, p.movement_type, p.power_reserve, p.water_resistant,
+                       p.battery_life, p.features, p.connectivity
+                FROM products p
+                LEFT JOIN brands b ON p.brand_id = b.id
+                ORDER BY p.quantity ASC, p.id ASC
+                LIMIT ? OFFSET ?
+            ''', (self.page_size, offset))
+            products = cursor.fetchall()
+            # Lưu lại danh sách products cho trang hiện tại để dùng khi hiển thị dialog
+            self.products = products
+
+            # Populate brand filter with all brands from database (only if not already done)
+            if self.brand_filter.count() == 1:  # Only 'Tất cả' means not populated yet
+                cursor.execute('SELECT name FROM brands ORDER BY name')
+                all_brands = cursor.fetchall()
+                for brand_row in all_brands:
+                    brand_name = brand_row[0]
+                    if brand_name:
+                        self.brand_filter.addItem(brand_name)
+        except Exception as e:
+            QMessageBox.critical(self, 'Lỗi tải dữ liệu', f'Không thể tải dữ liệu sản phẩm từ cơ sở dữ liệu.\nChi tiết lỗi: {str(e)}')
+            self.products = []
+            self.total_products = 0
+            self.total_pages = 1
+            self.current_page = 1
 
         self.table.setRowCount(len(products))
 
@@ -430,6 +481,11 @@ class ProductManagementTab(QWidget):
         for r in range(self.table.rowCount()):
             self.table.setRowHeight(r, 40)
 
+        # Update pagination controls
+        self.page_label.setText(f"Trang {self.current_page} / {self.total_pages}")
+        self.prev_btn.setEnabled(self.current_page > 1)
+        self.next_btn.setEnabled(self.current_page < self.total_pages)
+
     # --- Hiển thị dialog chi tiết ---
     def show_details_dialog(self, row):
         """
@@ -451,20 +507,40 @@ class ProductManagementTab(QWidget):
         features = prod[11] or ''
         connectivity = prod[12] or ''
 
+        # Dictionary for translating features to Vietnamese
+        feature_translations = {
+            'gps': 'GPS',
+            'step_counter': 'Đếm bước',
+            'waterproof': 'Chống nước',
+            'heart_rate': 'Đo nhịp tim',
+            'music_control': 'Điều khiển nhạc'
+        }
+
+        # Dictionary for translating movement types to Vietnamese
+        movement_translations = {
+            'automatic': 'Tự động',
+            'manual': 'Thủ công',
+            'quartz': 'Quartz',
+            'kinetic': 'Kinetic'
+        }
+
         specs = {}
         if (ptype_raw or '').lower() in ('mechanical', 'm', 'coil'):
-            specs['Loại'] = f"Đồng hồ cơ ({movement_type or 'Automatic'})"
+            movement_vn = movement_translations.get((movement_type or 'automatic').lower(), movement_type or 'Tự động')
+            specs['Loại máy'] = f"Đồng hồ cơ ({movement_vn})"
             if power_reserve:
                 specs['Thời gian trữ cót'] = f"{power_reserve} giờ"
             if water_resistant:
                 specs['Chống nước'] = str(water_resistant)
         else:
-            specs['Loại'] = ptype_raw or 'Điện tử'
+            specs['Loại máy'] = 'Điện tử'
             specs['Thời lượng pin'] = f"{battery_life or 0} năm"
             if connectivity:
                 specs['Kết nối'] = connectivity
         if features:
-            specs['Tính năng khác'] = features
+            feature_list = [feature_translations.get(f.strip(), f.strip()) for f in features.split(';') if f.strip()]
+            if feature_list:
+                specs['Tính năng khác'] = '<ul style="margin: 0; padding-left: 20px; color: #f0f0f0;"><li>' + '</li><li>'.join(feature_list) + '</li></ul>'
         specs['Mã sản phẩm'] = str(pid)
 
         # --- dialog setup ---
@@ -501,7 +577,7 @@ class ProductManagementTab(QWidget):
 
         # ----- body (mô tả + thông số) -----
         body_widget = QWidget()
-        body_layout = QHBoxLayout(body_widget)
+        body_layout = QVBoxLayout(body_widget)
         body_layout.setContentsMargins(0, 0, 0, 0)
         body_layout.setSpacing(12)
 
@@ -536,7 +612,7 @@ class ProductManagementTab(QWidget):
         desc_layout.addWidget(desc_text)
         desc_widget.setLayout(desc_layout)
         desc_container.setWidget(desc_widget)
-        desc_container.setMinimumWidth(320)
+        desc_container.setMinimumHeight(200)
         body_layout.addWidget(desc_container, stretch=2)
 
         # Thông số kỹ thuật
@@ -554,6 +630,7 @@ class ProductManagementTab(QWidget):
             label_key.setStyleSheet("color: #cccccc; font-weight: 500;")
             label_val = QLabel(str(val))
             label_val.setWordWrap(True)
+            label_val.setTextFormat(Qt.TextFormat.RichText)
             label_val.setStyleSheet("color: #f0f0f0;")
             specs_layout.addRow(label_key, label_val)
 
@@ -562,7 +639,7 @@ class ProductManagementTab(QWidget):
 
         specs_widget.setLayout(specs_layout)
         specs_container.setWidget(specs_widget)
-        specs_container.setMinimumWidth(220)
+        specs_container.setMinimumHeight(150)
         body_layout.addWidget(specs_container, stretch=1)
 
         main_layout.addWidget(body_widget)
@@ -624,24 +701,31 @@ class ProductManagementTab(QWidget):
         product_id = int(self.products[row][0])
         product_name = self.products[row][1] or ''
 
-        # Check if product has been sold
-        cursor = self.db.conn.cursor()
-        cursor.execute('SELECT COUNT(*) FROM invoice_details WHERE product_id = ?', (product_id,))
-        sold_count = cursor.fetchone()[0]
+        try:
+            # Check if product has been sold
+            cursor = self.db.conn.cursor()
+            cursor.execute('SELECT COUNT(*) FROM invoice_details WHERE product_id = ?', (product_id,))
+            result = cursor.fetchone()
+            if result is None:
+                sold_count = 0
+            else:
+                sold_count = result[0]
 
-        if sold_count > 0:
-            QMessageBox.warning(self, 'Không thể xóa',
-                                f'Sản phẩm \"{product_name}\" đã được bán ra và không thể xóa!')
-            return
+            if sold_count > 0:
+                QMessageBox.warning(self, 'Không thể xóa',
+                                    f'Sản phẩm \"{product_name}\" đã được bán ra và không thể xóa!')
+                return
 
-        reply = QMessageBox.question(self, 'Xác nhận',
-                                     f'Bạn có chắc muốn xóa sản phẩm \"{product_name}\"?',
-                                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-        if reply == QMessageBox.StandardButton.Yes:
-            cursor.execute('DELETE FROM products WHERE id = ?', (product_id,))
-            self.db.conn.commit()
-            self.load_data()
-            QMessageBox.information(self, 'Thành công', 'Đã xóa sản phẩm!')
+            reply = QMessageBox.question(self, 'Xác nhận',
+                                         f'Bạn có chắc muốn xóa sản phẩm \"{product_name}\"?',
+                                         QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            if reply == QMessageBox.StandardButton.Yes:
+                cursor.execute('DELETE FROM products WHERE id = ?', (product_id,))
+                self.db.conn.commit()
+                self.load_data()
+                QMessageBox.information(self, 'Thành công', 'Đã xóa sản phẩm!')
+        except Exception as e:
+            QMessageBox.critical(self, 'Lỗi xóa sản phẩm', f'Không thể xóa sản phẩm \"{product_name}\".\nChi tiết lỗi: {str(e)}')
 
     def filter_products(self):
         """
@@ -953,3 +1037,13 @@ class ProductManagementTab(QWidget):
         selected = self.table.selectedItems()
         if selected and selected[0].row() == index.row():
             self.table.clearSelection()
+
+    def prev_page(self):
+        if self.current_page > 1:
+            self.current_page -= 1
+            self.load_data()
+
+    def next_page(self):
+        if self.current_page < self.total_pages:
+            self.current_page += 1
+            self.load_data()
