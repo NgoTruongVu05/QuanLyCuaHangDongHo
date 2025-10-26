@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QTableWidget, QLineEdit, QTableWidgetItem, QSpinBox,
-    QGroupBox, QMessageBox, QCheckBox
+    QGroupBox, QMessageBox, QCheckBox, QHeaderView
 )
 from PyQt6.QtCore import QDate, Qt
 
@@ -17,6 +17,8 @@ class CreateInvoiceTab(QWidget):
 
     def init_ui(self):
         layout = QHBoxLayout()
+        layout.setContentsMargins(8, 8, 8, 8)
+        layout.setSpacing(12)
 
         # ===== LEFT SIDE =====
         left_layout = QVBoxLayout()
@@ -25,6 +27,7 @@ class CreateInvoiceTab(QWidget):
         product_group = QGroupBox('Chọn sản phẩm')
         product_layout = QVBoxLayout()
 
+        # Search bar
         search_layout = QHBoxLayout()
         self.product_search = QLineEdit()
         self.product_search.setPlaceholderText("Tìm kiếm sản phẩm...")
@@ -32,18 +35,35 @@ class CreateInvoiceTab(QWidget):
         search_layout.addWidget(self.product_search)
         product_layout.addLayout(search_layout)
 
+        # Product table
         self.product_table = QTableWidget()
         self.product_table.setColumnCount(5)
         self.product_table.setHorizontalHeaderLabels(['Chọn', 'Tên', 'Giá', 'Tồn kho', 'ID'])
         self.product_table.setColumnHidden(4, True)  # Ẩn ID
         self.product_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+        self.product_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
+        self.product_table.setAlternatingRowColors(True)
+
+        header = self.product_table.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)
+
+        header.setMinimumSectionSize(50)  # Độ rộng tối thiểu cho mỗi cột
+        self.product_table.setColumnWidth(0, 50)
+
+        self.product_table.setVerticalScrollMode(QTableWidget.ScrollMode.ScrollPerPixel)
+        self.product_table.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.product_table.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
         product_layout.addWidget(self.product_table)
 
         qty_layout = QHBoxLayout()
         qty_layout.addWidget(QLabel('Số lượng mỗi sản phẩm:'))
         self.quantity_spin = QSpinBox()
         self.quantity_spin.setMinimum(1)
-        self.quantity_spin.setMaximum(100)
+        self.quantity_spin.setMaximum(10)
         qty_layout.addWidget(self.quantity_spin)
 
         add_to_cart_btn = QPushButton('Thêm')
@@ -67,17 +87,38 @@ class CreateInvoiceTab(QWidget):
         self.customer_table.setColumnCount(4)
         self.customer_table.setHorizontalHeaderLabels(['Chọn', 'Tên', 'Số điện thoại', 'Địa chỉ'])
         self.customer_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
-        customer_layout.addWidget(self.customer_table)
+        self.customer_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
+        self.customer_table.setAlternatingRowColors(True)
 
+        header = self.customer_table.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
+        
+        header.setMinimumSectionSize(50)
+        self.customer_table.setColumnWidth(0, 50)
+
+        self.customer_table.setVerticalScrollMode(QTableWidget.ScrollMode.ScrollPerPixel)
+        self.customer_table.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.customer_table.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
+        customer_layout.addWidget(self.customer_table)
         customer_group.setLayout(customer_layout)
         left_layout.addWidget(customer_group)
 
         # ===== RIGHT SIDE =====
         right_layout = QVBoxLayout()
+
+        self.customer_label = QLabel("Khách hàng: (chưa chọn)")
+        self.customer_label.setStyleSheet("font-weight: bold; color: white; margin-bottom: 4px;")
+        right_layout.addWidget(self.customer_label)
+
         self.cart_table = QTableWidget()
         self.cart_table.setColumnCount(5)
         self.cart_table.setHorizontalHeaderLabels(['Sản phẩm', 'Đơn giá', 'Số lượng', 'Thành tiền', 'Hành động'])
         self.cart_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+        self.cart_table.setAlternatingRowColors(True)
         right_layout.addWidget(self.cart_table)
 
         total_layout = QHBoxLayout()
@@ -87,15 +128,31 @@ class CreateInvoiceTab(QWidget):
         total_layout.addStretch()
 
         create_invoice_btn = QPushButton('Tạo hóa đơn')
+        create_invoice_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #388E3C;
+                color: white;
+                border-radius: 4px;
+                padding: 6px 12px;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #2E7D32;
+            }
+        """)
         create_invoice_btn.clicked.connect(self.create_invoice)
         total_layout.addWidget(create_invoice_btn)
-
         right_layout.addLayout(total_layout)
 
         # Gắn hai cột vào layout chính
         layout.addLayout(left_layout, 1)
         layout.addLayout(right_layout, 1)
         self.setLayout(layout)
+
+        self.product_table.resizeColumnsToContents()
+        self.customer_table.resizeColumnsToContents()
+        self.cart_table.resizeColumnsToContents()
+        self.cart_table.horizontalHeader().setStretchLastSection(True)
 
     # ==============================
     def search_products(self):
@@ -155,8 +212,10 @@ class CreateInvoiceTab(QWidget):
                 'name': self.customer_table.item(selected_row, 1).text(),
                 'phone': self.customer_table.item(selected_row, 2).text()
             }
+            self.customer_label.setText(f"Khách hàng: {self.selected_customer['name']}")
         else:
             self.selected_customer = None
+            self.customer_label.setText("Khách hàng: (chưa chọn)")
 
     def add_selected_products_to_cart(self):
         selected_any = False
@@ -273,7 +332,7 @@ class CreateInvoiceTab(QWidget):
         self.db.conn.commit()
 
         QMessageBox.information(self, 'Thành công', f'Hóa đơn #{invoice_id} đã được tạo thành công!')
-        self.reset_form()
+        self.load_data()
 
     def load_data(self):
         self.reset_form()
@@ -319,6 +378,7 @@ class CreateInvoiceTab(QWidget):
         self.customer_search.clear()      
         self.quantity_spin.setValue(1)
         self.update_cart_display()
+        self.customer_label.setText("Khách hàng: (chưa chọn)")
 
     def remove_item_from_cart(self, row):
         if 0 <= row < len(self.cart):

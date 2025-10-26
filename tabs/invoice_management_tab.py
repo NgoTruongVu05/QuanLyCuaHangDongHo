@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QTableWidget, 
                              QTableWidgetItem, QPushButton, QMessageBox,
-                             QHeaderView, QHBoxLayout, QLabel)
+                             QHeaderView, QHBoxLayout, QLabel, QSizePolicy)
 from PyQt6.QtCore import Qt
 from datetime import datetime
 
@@ -169,29 +169,33 @@ class InvoiceManagementTab(QWidget):
 
             detail_widget = QWidget()
             detail_layout = QHBoxLayout(detail_widget)
-            detail_layout.setContentsMargins(5, 2, 5, 2)
+            detail_layout.setContentsMargins(4, 0, 4, 0)
+            detail_layout.setSpacing(0)
             
             # Nút chi tiết
             detail_btn = QPushButton('Xem chi tiết')
+            detail_btn.setFixedSize(72, 26)
+            detail_btn.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
             detail_btn.setStyleSheet('''
                 QPushButton {
-                    background-color: #3498DB;
+                    background-color: #1E88E5;
                     color: white;
                     border: none;
-                    border-radius: 3px;
-                    padding: 3px 8px;
+                    border-radius: 5px;
+                    padding: 3px 6px;
                     font-size: 11px;
-                    margin: 0 3px;
                 }
                 QPushButton:hover {
-                    background-color: #2980B9;
+                    background-color: #1565C0;
                 }
             ''')
-            detail_btn.clicked.connect(lambda checked, inv_id=invoice[0]: 
-                                     self.show_invoice_details(inv_id))
+            detail_btn.clicked.connect(lambda checked, inv_id=invoice[0]:
+                                    self.show_invoice_details(inv_id))
+            detail_layout.addStretch()
             detail_layout.addWidget(detail_btn, alignment=Qt.AlignmentFlag.AlignCenter)
             detail_layout.addStretch()
             self.table.setCellWidget(row, 5, detail_widget)
+            self.table.setRowHeight(row, max(self.table.rowHeight(row), 36))
             
             # Nút xóa (chỉ cho admin)
             action_widget = QWidget()
@@ -304,6 +308,7 @@ class InvoiceManagementTab(QWidget):
         header.setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)  # Tổng tiền
         header.setSectionResizeMode(4, QHeaderView.ResizeMode.ResizeToContents)  # Ngày tạo
         header.setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)  # Chi tiết
+        self.table.verticalHeader().setDefaultSectionSize(40)
     
     def setup_repairs_table(self):
         """Thiết lập bảng cho chế độ sửa chữa"""
