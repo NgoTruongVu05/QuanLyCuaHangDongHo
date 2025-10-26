@@ -17,8 +17,8 @@ class ProductDialog(QDialog):
         text = line_edit.text()
         if text:
             try:
-                num = float(text.replace(',', ''))
-                formatted = f"{num:,.0f}"
+                num = float(text.replace('.', ''))
+                formatted = f"{num:,.0f}".replace(',', '.')
                 if formatted != text:
                     line_edit.setText(formatted)
                     line_edit.setCursorPosition(len(formatted))
@@ -51,12 +51,8 @@ class ProductDialog(QDialog):
         # Price input with VND label
         price_layout = QHBoxLayout()
         self.price_input = QLineEdit()
-        self.price_input.setMaxLength(20)  # Allow more for commas
+        self.price_input.setMaxLength(20)  # Allow more for dots
         self.price_input.textChanged.connect(lambda: self._format_input(self.price_input))
-        # Set validator for price range
-        price_validator = QDoubleValidator(500000, 1000000000000, 0)  # Min 500k, Max 1 trillion
-        price_validator.setNotation(QDoubleValidator.Notation.StandardNotation)
-        self.price_input.setValidator(price_validator)
         price_label = QLabel('VND')
         price_layout.addWidget(self.price_input)
         price_layout.addWidget(price_label)
@@ -183,7 +179,7 @@ class ProductDialog(QDialog):
             # Basic info
             self.name_input.setText(product_data[1])
             self.brand_combo.setCurrentText(product_data[-1])  # Set brand from joined query
-            self.price_input.setText(f"{product_data[4]:,.0f}")
+            self.price_input.setText(f"{product_data[4]:,.0f}".replace(',', '.'))
             self.quantity_input.setValue(product_data[5])
             self.description_input.setText(product_data[6] if product_data[6] else '')
             
@@ -216,7 +212,7 @@ class ProductDialog(QDialog):
         brand_id = cursor.fetchone()[0]
         
         try:
-            price_text = self.price_input.text().replace(',', '')
+            price_text = self.price_input.text().replace('.', '')
             price = float(price_text)
         except ValueError:
             QMessageBox.warning(self, 'Lỗi', 'Giá phải là số hợp lệ!')
