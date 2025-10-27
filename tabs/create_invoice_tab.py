@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QTableWidget, QLineEdit, QTableWidgetItem, QSpinBox,
-    QGroupBox, QMessageBox, QCheckBox, QHeaderView
+    QGroupBox, QMessageBox, QCheckBox, QHeaderView, QMessageBox
 )
 from PyQt6.QtCore import QDate, Qt
 
@@ -13,6 +13,10 @@ class CreateInvoiceTab(QWidget):
         self.user_id = user_id
         self.cart = []
         self.selected_customer = None
+        self.current_page = 1
+        self.items_per_page = 10
+        self.all_products = []
+        self.filtered_products = []
         self.init_ui()
 
     def init_ui(self):
@@ -37,39 +41,40 @@ class CreateInvoiceTab(QWidget):
 
         # Product table
         self.product_table = QTableWidget()
-        self.product_table.setColumnCount(5)
-        self.product_table.setHorizontalHeaderLabels(['Chọn', 'Tên', 'Giá', 'Tồn kho', 'ID'])
-        self.product_table.setColumnHidden(4, True)  # Ẩn ID
+        self.product_table.setColumnCount(6)
+        self.product_table.setHorizontalHeaderLabels(['Chọn', 'Tên', 'Giá', 'Tồn kho', 'Số lượng', 'ID'])
+        self.product_table.setColumnHidden(5, True)
         self.product_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self.product_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
         self.product_table.setAlternatingRowColors(True)
+        self.product_table.verticalHeader().setDefaultSectionSize(36)
 
         header = self.product_table.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
         header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
         header.setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)
-
-        header.setMinimumSectionSize(50)  # Độ rộng tối thiểu cho mỗi cột
+        header.setSectionResizeMode(4, QHeaderView.ResizeMode.ResizeToContents)
         self.product_table.setColumnWidth(0, 50)
-
-        self.product_table.setVerticalScrollMode(QTableWidget.ScrollMode.ScrollPerPixel)
-        self.product_table.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-        self.product_table.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
         product_layout.addWidget(self.product_table)
 
-        qty_layout = QHBoxLayout()
-        qty_layout.addWidget(QLabel('Số lượng mỗi sản phẩm:'))
-        self.quantity_spin = QSpinBox()
-        self.quantity_spin.setMinimum(1)
-        self.quantity_spin.setMaximum(10)
-        qty_layout.addWidget(self.quantity_spin)
+        # Pagination
+        pagination_layout = QHBoxLayout()
+        pagination_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.prev_btn = QPushButton("◀ Trước")
+        self.next_btn = QPushButton("Sau ▶")
+        self.page_label = QLabel("Trang 1/1")
+        self.prev_btn.clicked.connect(self.prev_page)
+        self.next_btn.clicked.connect(self.next_page)
+        pagination_layout.addWidget(self.prev_btn)
+        pagination_layout.addWidget(self.page_label)
+        pagination_layout.addWidget(self.next_btn)
+        product_layout.addLayout(pagination_layout)
 
-        add_to_cart_btn = QPushButton('Thêm')
+        add_to_cart_btn = QPushButton('Thêm vào giỏ')
         add_to_cart_btn.clicked.connect(self.add_selected_products_to_cart)
-        qty_layout.addWidget(add_to_cart_btn)
-        product_layout.addLayout(qty_layout)
+        product_layout.addWidget(add_to_cart_btn)
 
         product_group.setLayout(product_layout)
         left_layout.addWidget(product_group)
@@ -156,26 +161,21 @@ class CreateInvoiceTab(QWidget):
 
     # ==============================
     def search_products(self):
-        search_text = self.product_search.text().lower()
-        cursor = self.db.conn.cursor()
-        cursor.execute('''
-            SELECT id, name, price, quantity
-            FROM products
-            WHERE LOWER(name) LIKE ? AND quantity > 0
-        ''', (f'%{search_text}%',))
-        products = cursor.fetchall()
+        search_text = self.product_search.text().strip().lower()
 
-        self.product_table.setRowCount(len(products))
-        for row, (pid, name, price, qty) in enumerate(products):
-            # Checkbox chọn sản phẩm
-            checkbox = QCheckBox()
-            checkbox.setStyleSheet("margin-left:20px;")
-            self.product_table.setCellWidget(row, 0, checkbox)
+        if search_text:
+            # Lọc từ danh sách self.all_products đã có sẵn
+            self.filtered_products = [
+                p for p in self.all_products
+                if search_text in p[1].lower()  # p[1] là tên sản phẩm
+            ]
+        else:
+            # Nếu không nhập gì thì hiển thị lại toàn bộ
+            self.filtered_products = self.all_products[:]
 
-            self.product_table.setItem(row, 1, QTableWidgetItem(name))
-            self.product_table.setItem(row, 2, QTableWidgetItem(f"{price:,} VND"))
-            self.product_table.setItem(row, 3, QTableWidgetItem(str(qty)))
-            self.product_table.setItem(row, 4, QTableWidgetItem(str(pid)))
+        # Sau khi lọc, luôn quay về trang đầu tiên
+        self.current_page = 1
+        self.display_page(self.current_page)
 
     def search_customers(self):
         search_text = self.customer_search.text()
@@ -218,40 +218,49 @@ class CreateInvoiceTab(QWidget):
             self.customer_label.setText("Khách hàng: (chưa chọn)")
 
     def add_selected_products_to_cart(self):
+        total_qty_in_cart = sum(item['quantity'] for item in self.cart)
         selected_any = False
+
         for row in range(self.product_table.rowCount()):
             checkbox = self.product_table.cellWidget(row, 0)
             if checkbox and checkbox.isChecked():
                 selected_any = True
-                pid = int(self.product_table.item(row, 4).text())
+
+                pid = int(self.product_table.item(row, 5).text())
                 name = self.product_table.item(row, 1).text()
                 price = float(self.product_table.item(row, 2).text().replace(' VND', '').replace(',', ''))
                 available_qty = int(self.product_table.item(row, 3).text())
-                qty = self.quantity_spin.value()
 
-                existing = next((item for item in self.cart if item['id'] == pid), None)
+                spin = self.product_table.cellWidget(row, 4)
+                qty = spin.value()
 
-                # Nếu sản phẩm đã có trong giỏ, tính tổng dự kiến
-                current_in_cart = existing['quantity'] if existing else 0
-                new_total_qty = current_in_cart + qty
+                # Tính số lượng nếu thêm vào
+                new_total_qty = total_qty_in_cart + qty
 
-                if new_total_qty > available_qty:
+                if new_total_qty > 5:
+                    remaining = max(0, 5 - total_qty_in_cart)
                     QMessageBox.warning(
                         self,
-                        'Lỗi',
-                        f'Sản phẩm "{name}" chỉ còn {available_qty} trong kho.\n'
-                        f'Hiện đã có {current_in_cart} trong giỏ, bạn chỉ có thể thêm tối đa {available_qty - current_in_cart}.'
+                        "Giới hạn giỏ hàng",
+                        f"Tổng số lượng sản phẩm trong giỏ hàng không được vượt quá 5.\n"
+                        f"Hiện tại bạn còn có thể thêm tối đa {remaining} sản phẩm."
                     )
-                    continue
+                    return  # Dừng lại, không thêm
 
-                # Cập nhật giỏ hàng hợp lệ
+                # Kiểm tra sản phẩm đã tồn tại trong giỏ
+                existing = next((item for item in self.cart if item['id'] == pid), None)
                 if existing:
-                    existing['quantity'] = new_total_qty
+                    if existing['quantity'] + qty > available_qty:
+                        QMessageBox.warning(self, "Lỗi", f"Sản phẩm '{name}' chỉ còn {available_qty} trong kho.")
+                        continue
+                    existing['quantity'] += qty
                 else:
                     self.cart.append({'id': pid, 'name': name, 'price': price, 'quantity': qty})
 
+                total_qty_in_cart += qty  # Cập nhật tổng hiện tại
+
         if not selected_any:
-            QMessageBox.warning(self, 'Lỗi', 'Vui lòng chọn ít nhất 1 sản phẩm!')
+            QMessageBox.warning(self, "Lỗi", "Vui lòng chọn ít nhất một sản phẩm!")
             return
 
         self.update_cart_display()
@@ -262,9 +271,9 @@ class CreateInvoiceTab(QWidget):
 
         for row, item in enumerate(self.cart):
             self.cart_table.setItem(row, 0, QTableWidgetItem(item['name']))
-            self.cart_table.setItem(row, 1, QTableWidgetItem(f"{item['price']:,} VND"))
+            self.cart_table.setItem(row, 1, QTableWidgetItem(f"{int(item['price']):,} VND"))
             self.cart_table.setItem(row, 2, QTableWidgetItem(str(item['quantity'])))
-            total_item = item['price'] * item['quantity']
+            total_item = int(item['price'] * item['quantity'])
             self.cart_table.setItem(row, 3, QTableWidgetItem(f"{total_item:,} VND"))
             total += total_item
 
@@ -286,7 +295,7 @@ class CreateInvoiceTab(QWidget):
             remove_btn.clicked.connect(lambda _, r=row: self.remove_item_from_cart(r))
             self.cart_table.setCellWidget(row, 4, remove_btn)
 
-        self.total_label.setText(f"{total:,} VND")
+        self.total_label.setText(f"{int(total):,} VND")
         self.cart_table.resizeColumnsToContents()
         self.cart_table.horizontalHeader().setStretchLastSection(True)
 
@@ -337,36 +346,25 @@ class CreateInvoiceTab(QWidget):
     def load_data(self):
         self.reset_form()
 
-        # Load fresh data
         cursor = self.db.conn.cursor()
         cursor.execute('''
             SELECT id, name, price, quantity
             FROM products
             WHERE quantity > 0
         ''')
-        products = cursor.fetchall()
+        self.all_products = cursor.fetchall()
+        self.filtered_products = self.all_products[:]
+        self.current_page = 1
+        self.display_page(self.current_page)
 
-        self.product_table.setRowCount(len(products))
-        for row, (pid, name, price, qty) in enumerate(products):
-            checkbox = QCheckBox()
-            checkbox.setStyleSheet("margin-left:20px;")
-            self.product_table.setCellWidget(row, 0, checkbox)
-
-            self.product_table.setItem(row, 1, QTableWidgetItem(name))
-            self.product_table.setItem(row, 2, QTableWidgetItem(f"{price:,} VND"))
-            self.product_table.setItem(row, 3, QTableWidgetItem(str(qty)))
-            self.product_table.setItem(row, 4, QTableWidgetItem(str(pid)))
-
-        # Reload customers
+        # Load lại khách hàng
         cursor.execute('SELECT name, phone, address FROM customers')
         customers = cursor.fetchall()
-
         self.customer_table.setRowCount(len(customers))
         for row, (name, phone, address) in enumerate(customers):
             checkbox = QCheckBox()
             checkbox.stateChanged.connect(lambda _, r=row: self.select_single_customer(r))
             self.customer_table.setCellWidget(row, 0, checkbox)
-
             self.customer_table.setItem(row, 1, QTableWidgetItem(name))
             self.customer_table.setItem(row, 2, QTableWidgetItem(phone))
             self.customer_table.setItem(row, 3, QTableWidgetItem(address))
@@ -375,8 +373,7 @@ class CreateInvoiceTab(QWidget):
         self.cart.clear()
         self.selected_customer = None
         self.product_search.clear()
-        self.customer_search.clear()      
-        self.quantity_spin.setValue(1)
+        self.customer_search.clear()
         self.update_cart_display()
         self.customer_label.setText("Khách hàng: (chưa chọn)")
 
@@ -391,3 +388,49 @@ class CreateInvoiceTab(QWidget):
             if reply == QMessageBox.StandardButton.Yes:
                 del self.cart[row]
                 self.update_cart_display()
+
+    def display_page(self, page):
+        self.product_table.setRowCount(0)
+
+        data_source = self.filtered_products
+        start = (page - 1) * self.items_per_page
+        end = start + self.items_per_page
+        page_items = data_source[start:end]
+
+        self.product_table.setRowCount(len(page_items))
+        self.product_table.verticalHeader().setDefaultSectionSize(30)
+
+        for row, (pid, name, price, qty) in enumerate(page_items):
+            checkbox = QCheckBox()
+            checkbox.setStyleSheet("margin-left:10px;")
+            self.product_table.setCellWidget(row, 0, checkbox)
+
+            self.product_table.setItem(row, 1, QTableWidgetItem(name))
+            self.product_table.setItem(row, 2, QTableWidgetItem(f"{int(price):,} VND"))
+            self.product_table.setItem(row, 3, QTableWidgetItem(str(qty)))
+
+            spin = QSpinBox()
+            spin.setRange(1, qty)
+            spin.setValue(1)
+            spin.setFixedHeight(24)
+            spin.setStyleSheet("QSpinBox { padding: 0 2px; font-size: 13px; }")
+            self.product_table.setCellWidget(row, 4, spin)
+
+            self.product_table.setItem(row, 5, QTableWidgetItem(str(pid)))
+
+        total_pages = max(1, (len(data_source) + self.items_per_page - 1) // self.items_per_page)
+        self.page_label.setText(f"Trang {self.current_page}/{total_pages}")
+
+        self.prev_btn.setEnabled(self.current_page > 1)
+        self.next_btn.setEnabled(self.current_page < total_pages)
+
+    def next_page(self):
+        total_pages = (len(self.all_products) + self.items_per_page - 1) // self.items_per_page
+        if self.current_page < total_pages:
+            self.current_page += 1
+            self.display_page(self.current_page)
+
+    def prev_page(self):
+        if self.current_page > 1:
+            self.current_page -= 1
+            self.display_page(self.current_page)
