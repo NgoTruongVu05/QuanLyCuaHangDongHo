@@ -1,0 +1,1001 @@
+﻿id,name,brand,product_type,price,quantity,description,battery_life,features,connectivity,movement_type,power_reserve,water_resistant
+1,Seiko Prime 251 Line,Seiko,electronic,2523300,13,Mẫu Seiko Prime 251 Line của Seiko - thiết kế hiện đại.,7.0,gps;step_counter;waterproof;heart_rate;music_control,bluetooth,,,
+2,Invicta Voyager 28 Z,Invicta,mechanical,3383146,83,Mẫu Invicta Voyager 28 Z của Invicta - thiết kế cổ điển.,,,,manual,40.0,0.0
+3,Seiko Master 715 X,Seiko,electronic,5433632,19,Mẫu Seiko Master 715 X của Seiko - thiết kế hiện đại.,2.0,gps;heart_rate;waterproof,bluetooth,,,
+4,Swatch Voyager 271 Edition,Swatch,mechanical,11081111,68,Mẫu Swatch Voyager 271 Edition của Swatch - thiết kế cổ điển.,,,,automatic,48.0,1.0
+5,Citizen Eco-Drive Urban 592 Line,Citizen Eco-Drive,electronic,10716292,5,Mẫu Citizen Eco-Drive Urban 592 Line của Citizen Eco-Drive - thiết kế hiện đại.,7.0,step_counter;heart_rate,wifi,,,
+6,Hublot Prime 465 Lite,Hublot,electronic,2858484,45,Mẫu Hublot Prime 465 Lite của Hublot - thiết kế hiện đại.,2.0,gps;step_counter;sleep_tracking,wifi,,,
+7,Timex Master 474 X,Timex,electronic,4414243,81,Mẫu Timex Master 474 X của Timex - thiết kế hiện đại.,7.0,waterproof;sleep_tracking;nfc;heart_rate;gps,bluetooth,,,
+8,Hublot Prime 68 Line,Hublot,electronic,13740474,72,Mẫu Hublot Prime 68 Line của Hublot - thiết kế hiện đại.,7.0,waterproof;sleep_tracking;notifications,gps,,,
+9,Longines Master 272 Model,Longines,electronic,4076099,71,Mẫu Longines Master 272 Model của Longines - thiết kế hiện đại.,5.0,music_control;step_counter;waterproof,none,,,
+10,Tissot Pilot 506 Series,Tissot,mechanical,11458841,14,Mẫu Tissot Pilot 506 Series của Tissot - thiết kế cổ điển.,,,,automatic,72.0,1.0
+11,Patek Philippe Voyager 66 X,Patek Philippe,electronic,6033480,59,Mẫu Patek Philippe Voyager 66 X của Patek Philippe - thiết kế hiện đại.,5.0,heart_rate;sleep_tracking;music_control,bluetooth,,,
+12,Skagen Prime 788 Lite,Skagen,electronic,2117507,55,Mẫu Skagen Prime 788 Lite của Skagen - thiết kế hiện đại.,2.0,heart_rate;sleep_tracking;music_control;nfc,wifi,,,
+13,Orient Prime 862 Z,Orient,electronic,9330068,19,Mẫu Orient Prime 862 Z của Orient - thiết kế hiện đại.,3.0,heart_rate;step_counter,none,,,
+14,Orient Urban 900 Pro,Orient,electronic,3972058,30,Mẫu Orient Urban 900 Pro của Orient - thiết kế hiện đại.,5.0,gps,gps,,,
+15,Skagen Master 132 S,Skagen,electronic,14229306,21,Mẫu Skagen Master 132 S của Skagen - thiết kế hiện đại.,3.0,music_control;gps;step_counter;notifications;nfc,gps,,,
+16,Swatch Apex 922 Z,Swatch,electronic,7046549,31,Mẫu Swatch Apex 922 Z của Swatch - thiết kế hiện đại.,2.0,sleep_tracking,bluetooth,,,
+17,Timex Voyager 226 Edition,Timex,electronic,1529400,80,Mẫu Timex Voyager 226 Edition của Timex - thiết kế hiện đại.,1.0,gps;heart_rate,none,,,
+18,Timex Prime 686 S,Timex,mechanical,3606434,16,Mẫu Timex Prime 686 S của Timex - thiết kế cổ điển.,,,,manual,40.0,0.0
+19,Fossil Sport 100 X,Fossil,electronic,5637315,52,Mẫu Fossil Sport 100 X của Fossil - thiết kế hiện đại.,4.0,gps,bluetooth,,,
+20,Tag Heuer Sport 255 Line,Tag Heuer,mechanical,3258029,57,Mẫu Tag Heuer Sport 255 Line của Tag Heuer - thiết kế cổ điển.,,,,automatic,48.0,1.0
+21,Timex Sport 454 Z,Timex,mechanical,1919677,83,Mẫu Timex Sport 454 Z của Timex - thiết kế cổ điển.,,,,automatic,36.0,1.0
+22,Bulova Apex 219 X,Bulova,mechanical,13585422,21,Mẫu Bulova Apex 219 X của Bulova - thiết kế cổ điển.,,,,manual,36.0,0.0
+23,Longines Prime 434 Z,Longines,mechanical,10097134,62,Mẫu Longines Prime 434 Z của Longines - thiết kế cổ điển.,,,,automatic,40.0,0.0
+24,Casio Voyager 754 Z,Casio,mechanical,1383885,40,Mẫu Casio Voyager 754 Z của Casio - thiết kế cổ điển.,,,,automatic,36.0,0.0
+25,Invicta Master 59 Z,Invicta,electronic,1661616,23,Mẫu Invicta Master 59 Z của Invicta - thiết kế hiện đại.,1.0,gps;sleep_tracking;notifications;waterproof;heart_rate,wifi,,,
+26,Casio Voyager 84 X,Casio,electronic,10031911,72,Mẫu Casio Voyager 84 X của Casio - thiết kế hiện đại.,5.0,step_counter;gps;sleep_tracking,none,,,
+27,Hublot Master 688 Pro,Hublot,mechanical,7129756,96,Mẫu Hublot Master 688 Pro của Hublot - thiết kế cổ điển.,,,,automatic,36.0,0.0
+28,Movado Sport 76 Z,Movado,electronic,3590738,33,Mẫu Movado Sport 76 Z của Movado - thiết kế hiện đại.,2.0,gps;notifications;nfc,none,,,
+29,Skagen Prime 627 Z,Skagen,mechanical,613435,70,Mẫu Skagen Prime 627 Z của Skagen - thiết kế cổ điển.,,,,manual,72.0,1.0
+30,Tissot Prime 119 Series,Tissot,electronic,11265042,19,Mẫu Tissot Prime 119 Series của Tissot - thiết kế hiện đại.,3.0,waterproof;sleep_tracking;nfc,wifi,,,
+31,Rolex Pilot 501 Pro,Rolex,electronic,13627379,6,Mẫu Rolex Pilot 501 Pro của Rolex - thiết kế hiện đại.,1.0,step_counter;heart_rate;music_control;nfc,wifi,,,
+32,Rolex Master 760 S,Rolex,electronic,8499366,54,Mẫu Rolex Master 760 S của Rolex - thiết kế hiện đại.,5.0,gps,bluetooth,,,
+33,Tissot Pilot 37 Lite,Tissot,electronic,8946389,18,Mẫu Tissot Pilot 37 Lite của Tissot - thiết kế hiện đại.,4.0,heart_rate;nfc,none,,,
+34,Casio Urban 216 Line,Casio,electronic,10170534,45,Mẫu Casio Urban 216 Line của Casio - thiết kế hiện đại.,10.0,music_control;step_counter;sleep_tracking;gps;notifications,wifi,,,
+35,Hamilton Heritage 26 Model,Hamilton,electronic,11180185,42,Mẫu Hamilton Heritage 26 Model của Hamilton - thiết kế hiện đại.,10.0,waterproof;nfc;gps;heart_rate,gps,,,
+36,Bulova Elite 205 S,Bulova,electronic,5570047,29,Mẫu Bulova Elite 205 S của Bulova - thiết kế hiện đại.,2.0,waterproof,gps,,,
+37,Citizen Prime 360 Z,Citizen,mechanical,6295337,68,Mẫu Citizen Prime 360 Z của Citizen - thiết kế cổ điển.,,,,manual,36.0,1.0
+38,Rolex Master 595 Pro,Rolex,electronic,1054729,76,Mẫu Rolex Master 595 Pro của Rolex - thiết kế hiện đại.,4.0,sleep_tracking;waterproof;step_counter,bluetooth,,,
+39,Movado Elite 261 Edition,Movado,mechanical,10777387,0,Mẫu Movado Elite 261 Edition của Movado - thiết kế cổ điển.,,,,automatic,42.0,0.0
+40,Tag Heuer Voyager 322 Series,Tag Heuer,mechanical,10936437,38,Mẫu Tag Heuer Voyager 322 Series của Tag Heuer - thiết kế cổ điển.,,,,manual,72.0,0.0
+41,Omega Pilot 131 Line,Omega,mechanical,6596472,48,Mẫu Omega Pilot 131 Line của Omega - thiết kế cổ điển.,,,,automatic,60.0,0.0
+42,Skagen Classic 312 Pro,Skagen,mechanical,3547649,100,Mẫu Skagen Classic 312 Pro của Skagen - thiết kế cổ điển.,,,,manual,48.0,0.0
+43,Fossil Pilot 485 Model,Fossil,mechanical,10053336,36,Mẫu Fossil Pilot 485 Model của Fossil - thiết kế cổ điển.,,,,manual,36.0,1.0
+44,Timex Elite 151 Edition,Timex,electronic,1170099,60,Mẫu Timex Elite 151 Edition của Timex - thiết kế hiện đại.,5.0,notifications,gps,,,
+45,Movado Elite 736 X,Movado,electronic,7668469,31,Mẫu Movado Elite 736 X của Movado - thiết kế hiện đại.,2.0,gps,gps,,,
+46,Invicta Apex 52 Z,Invicta,mechanical,4113375,15,Mẫu Invicta Apex 52 Z của Invicta - thiết kế cổ điển.,,,,manual,40.0,0.0
+47,Skagen Voyager 325 S,Skagen,electronic,9383459,92,Mẫu Skagen Voyager 325 S của Skagen - thiết kế hiện đại.,5.0,notifications;gps;sleep_tracking;waterproof,gps,,,
+48,Timex Prime 785 Z,Timex,mechanical,7526657,30,Mẫu Timex Prime 785 Z của Timex - thiết kế cổ điển.,,,,manual,48.0,1.0
+49,Timex Prime 344 Lite,Timex,electronic,13448889,10,Mẫu Timex Prime 344 Lite của Timex - thiết kế hiện đại.,2.0,waterproof;notifications,wifi,,,
+50,Citizen Heritage 418 Lite,Citizen,electronic,8367862,53,Mẫu Citizen Heritage 418 Lite của Citizen - thiết kế hiện đại.,1.0,music_control;waterproof,bluetooth,,,
+51,Movado Heritage 489 Edition,Movado,electronic,14169754,38,Mẫu Movado Heritage 489 Edition của Movado - thiết kế hiện đại.,10.0,music_control;step_counter;sleep_tracking;notifications,wifi,,,
+52,Rolex Heritage 498 Edition,Rolex,electronic,6138429,85,Mẫu Rolex Heritage 498 Edition của Rolex - thiết kế hiện đại.,7.0,nfc;music_control;waterproof;gps,bluetooth,,,
+53,Movado Voyager 679 Edition,Movado,electronic,1717238,54,Mẫu Movado Voyager 679 Edition của Movado - thiết kế hiện đại.,2.0,nfc;heart_rate;notifications;waterproof,none,,,
+54,Tag Heuer Urban 780 X,Tag Heuer,mechanical,4534721,53,Mẫu Tag Heuer Urban 780 X của Tag Heuer - thiết kế cổ điển.,,,,manual,80.0,1.0
+55,Skagen Classic 975 Lite,Skagen,electronic,3751221,8,Mẫu Skagen Classic 975 Lite của Skagen - thiết kế hiện đại.,10.0,heart_rate,wifi,,,
+56,Seiko Voyager 157 Line,Seiko,mechanical,2330204,85,Mẫu Seiko Voyager 157 Line của Seiko - thiết kế cổ điển.,,,,automatic,60.0,1.0
+57,Rolex Urban 172 One,Rolex,electronic,9305089,95,Mẫu Rolex Urban 172 One của Rolex - thiết kế hiện đại.,7.0,nfc,none,,,
+58,Seiko Prime 590 X,Seiko,mechanical,6251489,91,Mẫu Seiko Prime 590 X của Seiko - thiết kế cổ điển.,,,,automatic,36.0,0.0
+59,Timex Sport 714 Pro,Timex,electronic,12829252,76,Mẫu Timex Sport 714 Pro của Timex - thiết kế hiện đại.,10.0,heart_rate,none,,,
+60,Swatch Sport 519 Lite,Swatch,electronic,683456,53,Mẫu Swatch Sport 519 Lite của Swatch - thiết kế hiện đại.,10.0,gps;waterproof;nfc;music_control,wifi,,,
+61,Invicta Prime 631 Z,Invicta,mechanical,11732301,59,Mẫu Invicta Prime 631 Z của Invicta - thiết kế cổ điển.,,,,manual,80.0,0.0
+62,Tag Heuer Elite 851 Series,Tag Heuer,electronic,4544460,57,Mẫu Tag Heuer Elite 851 Series của Tag Heuer - thiết kế hiện đại.,2.0,music_control;nfc;heart_rate;waterproof,none,,,
+63,Fossil Urban 817 Pro,Fossil,mechanical,5434913,76,Mẫu Fossil Urban 817 Pro của Fossil - thiết kế cổ điển.,,,,manual,60.0,1.0
+64,Fossil Sport 248 X,Fossil,electronic,7584379,97,Mẫu Fossil Sport 248 X của Fossil - thiết kế hiện đại.,2.0,notifications;waterproof;heart_rate;sleep_tracking,none,,,
+65,Timex Prime 680 One,Timex,mechanical,5850797,70,Mẫu Timex Prime 680 One của Timex - thiết kế cổ điển.,,,,manual,48.0,0.0
+66,Swatch Apex 278 Pro,Swatch,electronic,4145353,15,Mẫu Swatch Apex 278 Pro của Swatch - thiết kế hiện đại.,7.0,sleep_tracking;heart_rate,wifi,,,
+67,Bulova Prime 742 One,Bulova,mechanical,14660802,67,Mẫu Bulova Prime 742 One của Bulova - thiết kế cổ điển.,,,,manual,36.0,1.0
+68,Swatch Master 310 Edition,Swatch,mechanical,10766268,16,Mẫu Swatch Master 310 Edition của Swatch - thiết kế cổ điển.,,,,manual,36.0,1.0
+69,Tissot Apex 106 Edition,Tissot,electronic,8823931,60,Mẫu Tissot Apex 106 Edition của Tissot - thiết kế hiện đại.,4.0,sleep_tracking;gps;heart_rate;nfc,gps,,,
+70,Citizen Heritage 504 Series,Citizen,mechanical,8866807,87,Mẫu Citizen Heritage 504 Series của Citizen - thiết kế cổ điển.,,,,automatic,40.0,1.0
+71,Omega Sport 255 Series,Omega,electronic,8592059,53,Mẫu Omega Sport 255 Series của Omega - thiết kế hiện đại.,5.0,waterproof;music_control;step_counter;notifications;sleep_tracking,gps,,,
+72,Movado Heritage 313 One,Movado,mechanical,9504896,78,Mẫu Movado Heritage 313 One của Movado - thiết kế cổ điển.,,,,automatic,80.0,1.0
+73,Rolex Sport 161 Line,Rolex,electronic,3020296,9,Mẫu Rolex Sport 161 Line của Rolex - thiết kế hiện đại.,2.0,music_control,gps,,,
+74,Bulova Prime 34 Line,Bulova,electronic,4677521,36,Mẫu Bulova Prime 34 Line của Bulova - thiết kế hiện đại.,7.0,gps;sleep_tracking;notifications;nfc,wifi,,,
+75,Skagen Elite 664 Model,Skagen,mechanical,13671966,18,Mẫu Skagen Elite 664 Model của Skagen - thiết kế cổ điển.,,,,automatic,36.0,1.0
+76,Citizen Eco-Drive Voyager 944 Pro,Citizen Eco-Drive,electronic,6867725,59,Mẫu Citizen Eco-Drive Voyager 944 Pro của Citizen Eco-Drive - thiết kế hiện đại.,7.0,music_control;nfc;step_counter,gps,,,
+77,Citizen Eco-Drive Classic 911 X,Citizen Eco-Drive,mechanical,11150742,77,Mẫu Citizen Eco-Drive Classic 911 X của Citizen Eco-Drive - thiết kế cổ điển.,,,,manual,36.0,1.0
+78,Movado Voyager 974 Edition,Movado,mechanical,14993800,86,Mẫu Movado Voyager 974 Edition của Movado - thiết kế cổ điển.,,,,manual,60.0,1.0
+79,Hamilton Apex 532 S,Hamilton,electronic,13783055,23,Mẫu Hamilton Apex 532 S của Hamilton - thiết kế hiện đại.,5.0,notifications;heart_rate;waterproof;nfc,gps,,,
+80,Orient Master 338 X,Orient,mechanical,10558268,36,Mẫu Orient Master 338 X của Orient - thiết kế cổ điển.,,,,manual,80.0,0.0
+81,Citizen Urban 259 Lite,Citizen,mechanical,2180863,98,Mẫu Citizen Urban 259 Lite của Citizen - thiết kế cổ điển.,,,,manual,80.0,0.0
+82,Seiko Pilot 474 X,Seiko,electronic,1285959,66,Mẫu Seiko Pilot 474 X của Seiko - thiết kế hiện đại.,3.0,notifications;sleep_tracking;waterproof;heart_rate;gps,none,,,
+83,Omega Apex 902 S,Omega,electronic,2260678,80,Mẫu Omega Apex 902 S của Omega - thiết kế hiện đại.,5.0,nfc;notifications,bluetooth,,,
+84,Citizen Elite 862 Series,Citizen,electronic,7190994,15,Mẫu Citizen Elite 862 Series của Citizen - thiết kế hiện đại.,7.0,notifications;sleep_tracking,none,,,
+85,Rolex Heritage 855 S,Rolex,electronic,14713547,31,Mẫu Rolex Heritage 855 S của Rolex - thiết kế hiện đại.,4.0,nfc;waterproof;gps;step_counter;sleep_tracking,bluetooth,,,
+86,Patek Philippe Urban 957 Z,Patek Philippe,mechanical,4374004,0,Mẫu Patek Philippe Urban 957 Z của Patek Philippe - thiết kế cổ điển.,,,,manual,72.0,0.0
+87,Movado Apex 887 Model,Movado,electronic,6974937,61,Mẫu Movado Apex 887 Model của Movado - thiết kế hiện đại.,3.0,music_control;waterproof;nfc,wifi,,,
+88,Timex Voyager 393 Line,Timex,electronic,12912188,52,Mẫu Timex Voyager 393 Line của Timex - thiết kế hiện đại.,1.0,notifications;sleep_tracking;waterproof,gps,,,
+89,Tissot Apex 988 Edition,Tissot,electronic,2330571,75,Mẫu Tissot Apex 988 Edition của Tissot - thiết kế hiện đại.,3.0,notifications,bluetooth,,,
+90,Longines Classic 740 Model,Longines,electronic,6444690,83,Mẫu Longines Classic 740 Model của Longines - thiết kế hiện đại.,2.0,notifications,none,,,
+91,Hublot Sport 873 Lite,Hublot,mechanical,12858949,68,Mẫu Hublot Sport 873 Lite của Hublot - thiết kế cổ điển.,,,,manual,42.0,0.0
+92,Bulova Pilot 37 One,Bulova,electronic,1492101,80,Mẫu Bulova Pilot 37 One của Bulova - thiết kế hiện đại.,7.0,waterproof;sleep_tracking;heart_rate,gps,,,
+93,Orient Apex 171 Pro,Orient,electronic,13599649,5,Mẫu Orient Apex 171 Pro của Orient - thiết kế hiện đại.,3.0,step_counter,none,,,
+94,Tissot Elite 544 X,Tissot,mechanical,8705957,23,Mẫu Tissot Elite 544 X của Tissot - thiết kế cổ điển.,,,,automatic,40.0,1.0
+95,Hublot Voyager 700 Line,Hublot,electronic,7716175,74,Mẫu Hublot Voyager 700 Line của Hublot - thiết kế hiện đại.,2.0,notifications;sleep_tracking,none,,,
+96,Seiko Apex 923 Pro,Seiko,electronic,10325358,20,Mẫu Seiko Apex 923 Pro của Seiko - thiết kế hiện đại.,1.0,sleep_tracking;step_counter;nfc;waterproof,none,,,
+97,Omega Elite 394 S,Omega,electronic,2046472,48,Mẫu Omega Elite 394 S của Omega - thiết kế hiện đại.,5.0,step_counter;sleep_tracking;nfc,bluetooth,,,
+98,Hublot Prime 9 One,Hublot,electronic,13043477,99,Mẫu Hublot Prime 9 One của Hublot - thiết kế hiện đại.,7.0,notifications,none,,,
+99,Timex Voyager 822 Lite,Timex,electronic,3675566,24,Mẫu Timex Voyager 822 Lite của Timex - thiết kế hiện đại.,5.0,nfc;sleep_tracking;heart_rate,bluetooth,,,
+100,Longines Classic 594 Lite,Longines,mechanical,11119217,11,Mẫu Longines Classic 594 Lite của Longines - thiết kế cổ điển.,,,,manual,42.0,0.0
+101,Fossil Master 806 Z,Fossil,mechanical,13208679,46,Mẫu Fossil Master 806 Z của Fossil - thiết kế cổ điển.,,,,manual,80.0,1.0
+102,Bulova Prime 765 Lite,Bulova,mechanical,12161372,59,Mẫu Bulova Prime 765 Lite của Bulova - thiết kế cổ điển.,,,,automatic,40.0,1.0
+103,Hublot Pilot 375 Series,Hublot,electronic,11964889,1,Mẫu Hublot Pilot 375 Series của Hublot - thiết kế hiện đại.,3.0,gps;waterproof;nfc;sleep_tracking;music_control,none,,,
+104,Timex Apex 26 One,Timex,mechanical,13321405,71,Mẫu Timex Apex 26 One của Timex - thiết kế cổ điển.,,,,manual,60.0,1.0
+105,Longines Prime 665 X,Longines,electronic,2191801,5,Mẫu Longines Prime 665 X của Longines - thiết kế hiện đại.,1.0,notifications;heart_rate;music_control,wifi,,,
+106,Tissot Heritage 465 Lite,Tissot,electronic,10222050,95,Mẫu Tissot Heritage 465 Lite của Tissot - thiết kế hiện đại.,7.0,music_control;step_counter;sleep_tracking;gps;waterproof,bluetooth,,,
+107,Citizen Eco-Drive Heritage 962 Pro,Citizen Eco-Drive,electronic,974386,47,Mẫu Citizen Eco-Drive Heritage 962 Pro của Citizen Eco-Drive - thiết kế hiện đại.,2.0,notifications;gps;nfc;heart_rate,none,,,
+108,Swatch Classic 408 Pro,Swatch,electronic,3252224,15,Mẫu Swatch Classic 408 Pro của Swatch - thiết kế hiện đại.,10.0,gps;sleep_tracking;notifications;step_counter,bluetooth,,,
+109,Tag Heuer Elite 129 One,Tag Heuer,mechanical,3475481,97,Mẫu Tag Heuer Elite 129 One của Tag Heuer - thiết kế cổ điển.,,,,automatic,60.0,1.0
+110,Timex Urban 793 Model,Timex,electronic,11935334,76,Mẫu Timex Urban 793 Model của Timex - thiết kế hiện đại.,1.0,nfc;gps;step_counter,none,,,
+111,Orient Classic 135 Edition,Orient,electronic,5694513,100,Mẫu Orient Classic 135 Edition của Orient - thiết kế hiện đại.,2.0,sleep_tracking;heart_rate;gps;nfc;music_control,wifi,,,
+112,Invicta Sport 764 Series,Invicta,electronic,7405566,99,Mẫu Invicta Sport 764 Series của Invicta - thiết kế hiện đại.,3.0,gps;waterproof;step_counter;notifications;heart_rate,none,,,
+113,Seiko Classic 491 X,Seiko,electronic,6680967,13,Mẫu Seiko Classic 491 X của Seiko - thiết kế hiện đại.,4.0,gps;heart_rate;nfc;step_counter,wifi,,,
+114,Rolex Voyager 649 One,Rolex,mechanical,8451168,41,Mẫu Rolex Voyager 649 One của Rolex - thiết kế cổ điển.,,,,manual,60.0,0.0
+115,Invicta Voyager 441 Series,Invicta,mechanical,11999893,14,Mẫu Invicta Voyager 441 Series của Invicta - thiết kế cổ điển.,,,,automatic,48.0,0.0
+116,Patek Philippe Urban 848 S,Patek Philippe,electronic,6281588,93,Mẫu Patek Philippe Urban 848 S của Patek Philippe - thiết kế hiện đại.,1.0,music_control;nfc;sleep_tracking,none,,,
+117,Tissot Apex 69 Series,Tissot,mechanical,12560692,11,Mẫu Tissot Apex 69 Series của Tissot - thiết kế cổ điển.,,,,manual,36.0,0.0
+118,Tissot Pilot 62 One,Tissot,electronic,14371057,71,Mẫu Tissot Pilot 62 One của Tissot - thiết kế hiện đại.,3.0,music_control,none,,,
+119,Patek Philippe Classic 992 Pro,Patek Philippe,electronic,9205946,45,Mẫu Patek Philippe Classic 992 Pro của Patek Philippe - thiết kế hiện đại.,1.0,waterproof;gps;sleep_tracking;notifications;music_control,bluetooth,,,
+120,Skagen Urban 118 Pro,Skagen,mechanical,8824450,54,Mẫu Skagen Urban 118 Pro của Skagen - thiết kế cổ điển.,,,,automatic,60.0,0.0
+121,Rolex Classic 185 Pro,Rolex,electronic,10689132,39,Mẫu Rolex Classic 185 Pro của Rolex - thiết kế hiện đại.,3.0,heart_rate;gps;music_control,gps,,,
+122,Seiko Sport 765 Z,Seiko,mechanical,3619427,53,Mẫu Seiko Sport 765 Z của Seiko - thiết kế cổ điển.,,,,manual,42.0,1.0
+123,Tag Heuer Voyager 611 Series,Tag Heuer,mechanical,13308462,19,Mẫu Tag Heuer Voyager 611 Series của Tag Heuer - thiết kế cổ điển.,,,,automatic,80.0,0.0
+124,Citizen Prime 454 X,Citizen,mechanical,7542095,56,Mẫu Citizen Prime 454 X của Citizen - thiết kế cổ điển.,,,,manual,42.0,1.0
+125,Orient Urban 441 Series,Orient,electronic,4607074,86,Mẫu Orient Urban 441 Series của Orient - thiết kế hiện đại.,5.0,step_counter;heart_rate;gps;waterproof,bluetooth,,,
+126,Omega Elite 786 Model,Omega,mechanical,11580333,37,Mẫu Omega Elite 786 Model của Omega - thiết kế cổ điển.,,,,manual,36.0,1.0
+127,Patek Philippe Master 133 X,Patek Philippe,electronic,8222444,29,Mẫu Patek Philippe Master 133 X của Patek Philippe - thiết kế hiện đại.,5.0,sleep_tracking;heart_rate;waterproof;music_control;notifications,bluetooth,,,
+128,Citizen Urban 590 X,Citizen,electronic,8814295,90,Mẫu Citizen Urban 590 X của Citizen - thiết kế hiện đại.,7.0,step_counter;heart_rate;waterproof;music_control,none,,,
+129,Citizen Eco-Drive Apex 852 Lite,Citizen Eco-Drive,mechanical,1777883,13,Mẫu Citizen Eco-Drive Apex 852 Lite của Citizen Eco-Drive - thiết kế cổ điển.,,,,automatic,48.0,0.0
+130,Citizen Heritage 892 Pro,Citizen,mechanical,11314170,28,Mẫu Citizen Heritage 892 Pro của Citizen - thiết kế cổ điển.,,,,manual,80.0,1.0
+131,Orient Pilot 523 Line,Orient,mechanical,13635880,44,Mẫu Orient Pilot 523 Line của Orient - thiết kế cổ điển.,,,,manual,72.0,0.0
+132,Timex Sport 150 Pro,Timex,electronic,3360441,77,Mẫu Timex Sport 150 Pro của Timex - thiết kế hiện đại.,2.0,nfc,gps,,,
+133,Movado Voyager 460 One,Movado,electronic,9823382,79,Mẫu Movado Voyager 460 One của Movado - thiết kế hiện đại.,3.0,nfc;waterproof;heart_rate,gps,,,
+134,Omega Prime 606 Edition,Omega,mechanical,5603162,9,Mẫu Omega Prime 606 Edition của Omega - thiết kế cổ điển.,,,,manual,48.0,0.0
+135,Swatch Prime 79 Series,Swatch,mechanical,9417622,64,Mẫu Swatch Prime 79 Series của Swatch - thiết kế cổ điển.,,,,manual,48.0,0.0
+136,Casio Apex 931 One,Casio,electronic,9951643,41,Mẫu Casio Apex 931 One của Casio - thiết kế hiện đại.,5.0,nfc;heart_rate;waterproof;music_control,none,,,
+137,Citizen Pilot 662 Model,Citizen,electronic,1067561,90,Mẫu Citizen Pilot 662 Model của Citizen - thiết kế hiện đại.,4.0,nfc;notifications;music_control;sleep_tracking,gps,,,
+138,Tag Heuer Voyager 54 Lite,Tag Heuer,mechanical,1455722,12,Mẫu Tag Heuer Voyager 54 Lite của Tag Heuer - thiết kế cổ điển.,,,,manual,42.0,0.0
+139,Citizen Eco-Drive Master 342 Series,Citizen Eco-Drive,electronic,8949723,18,Mẫu Citizen Eco-Drive Master 342 Series của Citizen Eco-Drive - thiết kế hiện đại.,3.0,music_control;gps;step_counter,bluetooth,,,
+140,Hublot Urban 833 Model,Hublot,mechanical,10216688,94,Mẫu Hublot Urban 833 Model của Hublot - thiết kế cổ điển.,,,,automatic,72.0,0.0
+141,Swatch Classic 372 Pro,Swatch,mechanical,3113812,27,Mẫu Swatch Classic 372 Pro của Swatch - thiết kế cổ điển.,,,,manual,80.0,0.0
+142,Tissot Master 80 Pro,Tissot,mechanical,12744212,12,Mẫu Tissot Master 80 Pro của Tissot - thiết kế cổ điển.,,,,automatic,72.0,0.0
+143,Citizen Eco-Drive Master 612 X,Citizen Eco-Drive,electronic,2736665,23,Mẫu Citizen Eco-Drive Master 612 X của Citizen Eco-Drive - thiết kế hiện đại.,10.0,nfc;sleep_tracking;waterproof;heart_rate;music_control,none,,,
+144,Timex Apex 626 Pro,Timex,electronic,11409672,100,Mẫu Timex Apex 626 Pro của Timex - thiết kế hiện đại.,4.0,waterproof;nfc,gps,,,
+145,Fossil Urban 695 One,Fossil,electronic,14774377,59,Mẫu Fossil Urban 695 One của Fossil - thiết kế hiện đại.,10.0,music_control;step_counter;notifications,gps,,,
+146,Fossil Voyager 142 Pro,Fossil,electronic,1256607,61,Mẫu Fossil Voyager 142 Pro của Fossil - thiết kế hiện đại.,10.0,gps;sleep_tracking;step_counter,bluetooth,,,
+147,Hamilton Prime 461 Z,Hamilton,mechanical,2636556,55,Mẫu Hamilton Prime 461 Z của Hamilton - thiết kế cổ điển.,,,,automatic,40.0,0.0
+148,Seiko Heritage 55 X,Seiko,electronic,7779103,30,Mẫu Seiko Heritage 55 X của Seiko - thiết kế hiện đại.,4.0,sleep_tracking,wifi,,,
+149,Orient Urban 811 Model,Orient,mechanical,2495194,36,Mẫu Orient Urban 811 Model của Orient - thiết kế cổ điển.,,,,manual,72.0,1.0
+150,Bulova Apex 631 Edition,Bulova,electronic,13634934,2,Mẫu Bulova Apex 631 Edition của Bulova - thiết kế hiện đại.,3.0,nfc;step_counter,gps,,,
+151,Omega Elite 309 Series,Omega,mechanical,1192367,53,Mẫu Omega Elite 309 Series của Omega - thiết kế cổ điển.,,,,manual,36.0,1.0
+152,Bulova Voyager 549 Edition,Bulova,electronic,9663347,73,Mẫu Bulova Voyager 549 Edition của Bulova - thiết kế hiện đại.,2.0,step_counter;waterproof,bluetooth,,,
+153,Timex Voyager 427 Model,Timex,electronic,10133384,10,Mẫu Timex Voyager 427 Model của Timex - thiết kế hiện đại.,5.0,gps;step_counter;music_control,bluetooth,,,
+154,Bulova Classic 651 X,Bulova,mechanical,14725072,32,Mẫu Bulova Classic 651 X của Bulova - thiết kế cổ điển.,,,,automatic,42.0,1.0
+155,Orient Voyager 753 Lite,Orient,mechanical,2434439,45,Mẫu Orient Voyager 753 Lite của Orient - thiết kế cổ điển.,,,,manual,80.0,0.0
+156,Longines Apex 647 Model,Longines,mechanical,12266716,8,Mẫu Longines Apex 647 Model của Longines - thiết kế cổ điển.,,,,manual,36.0,0.0
+157,Fossil Classic 324 Pro,Fossil,mechanical,7973062,69,Mẫu Fossil Classic 324 Pro của Fossil - thiết kế cổ điển.,,,,manual,42.0,1.0
+158,Fossil Prime 366 Edition,Fossil,electronic,13054075,42,Mẫu Fossil Prime 366 Edition của Fossil - thiết kế hiện đại.,3.0,sleep_tracking,gps,,,
+159,Longines Heritage 348 Model,Longines,electronic,7694947,63,Mẫu Longines Heritage 348 Model của Longines - thiết kế hiện đại.,3.0,step_counter;music_control;heart_rate;waterproof;sleep_tracking,gps,,,
+160,Hamilton Pilot 301 Lite,Hamilton,electronic,1987670,41,Mẫu Hamilton Pilot 301 Lite của Hamilton - thiết kế hiện đại.,7.0,step_counter;waterproof;notifications,gps,,,
+161,Longines Urban 458 Edition,Longines,mechanical,11038809,45,Mẫu Longines Urban 458 Edition của Longines - thiết kế cổ điển.,,,,manual,42.0,0.0
+162,Casio Sport 688 X,Casio,electronic,5768011,95,Mẫu Casio Sport 688 X của Casio - thiết kế hiện đại.,7.0,heart_rate;gps,gps,,,
+163,Citizen Elite 798 Lite,Citizen,mechanical,5751183,72,Mẫu Citizen Elite 798 Lite của Citizen - thiết kế cổ điển.,,,,automatic,60.0,1.0
+164,Swatch Urban 455 Series,Swatch,electronic,8821866,67,Mẫu Swatch Urban 455 Series của Swatch - thiết kế hiện đại.,3.0,sleep_tracking;notifications;nfc;gps,bluetooth,,,
+165,Hamilton Apex 531 X,Hamilton,mechanical,13746366,15,Mẫu Hamilton Apex 531 X của Hamilton - thiết kế cổ điển.,,,,manual,80.0,0.0
+166,Fossil Voyager 293 S,Fossil,electronic,3402586,17,Mẫu Fossil Voyager 293 S của Fossil - thiết kế hiện đại.,10.0,notifications,wifi,,,
+167,Longines Sport 830 Lite,Longines,electronic,10183677,90,Mẫu Longines Sport 830 Lite của Longines - thiết kế hiện đại.,1.0,step_counter;nfc;gps;sleep_tracking;music_control,wifi,,,
+168,Fossil Master 243 S,Fossil,mechanical,881118,70,Mẫu Fossil Master 243 S của Fossil - thiết kế cổ điển.,,,,manual,48.0,0.0
+169,Citizen Sport 317 X,Citizen,mechanical,14994128,92,Mẫu Citizen Sport 317 X của Citizen - thiết kế cổ điển.,,,,manual,60.0,0.0
+170,Movado Sport 129 Lite,Movado,electronic,9813910,57,Mẫu Movado Sport 129 Lite của Movado - thiết kế hiện đại.,4.0,sleep_tracking;gps;step_counter;notifications;music_control,wifi,,,
+171,Casio Sport 531 Model,Casio,mechanical,4909806,20,Mẫu Casio Sport 531 Model của Casio - thiết kế cổ điển.,,,,manual,72.0,1.0
+172,Invicta Prime 867 Series,Invicta,mechanical,4133777,81,Mẫu Invicta Prime 867 Series của Invicta - thiết kế cổ điển.,,,,manual,40.0,0.0
+173,Skagen Sport 515 Model,Skagen,mechanical,9081222,74,Mẫu Skagen Sport 515 Model của Skagen - thiết kế cổ điển.,,,,automatic,40.0,0.0
+174,Citizen Eco-Drive Urban 863 One,Citizen Eco-Drive,electronic,1097317,3,Mẫu Citizen Eco-Drive Urban 863 One của Citizen Eco-Drive - thiết kế hiện đại.,1.0,step_counter,wifi,,,
+175,Patek Philippe Voyager 655 Edition,Patek Philippe,electronic,7721552,80,Mẫu Patek Philippe Voyager 655 Edition của Patek Philippe - thiết kế hiện đại.,5.0,step_counter;waterproof;gps,gps,,,
+176,Citizen Classic 162 S,Citizen,mechanical,6526515,59,Mẫu Citizen Classic 162 S của Citizen - thiết kế cổ điển.,,,,automatic,42.0,0.0
+177,Tag Heuer Urban 999 X,Tag Heuer,mechanical,2396109,47,Mẫu Tag Heuer Urban 999 X của Tag Heuer - thiết kế cổ điển.,,,,automatic,42.0,1.0
+178,Rolex Apex 254 Model,Rolex,electronic,1903769,37,Mẫu Rolex Apex 254 Model của Rolex - thiết kế hiện đại.,4.0,music_control;gps;notifications;nfc;step_counter,wifi,,,
+179,Bulova Pilot 479 S,Bulova,electronic,13246597,63,Mẫu Bulova Pilot 479 S của Bulova - thiết kế hiện đại.,1.0,music_control,gps,,,
+180,Fossil Voyager 362 Edition,Fossil,electronic,1232836,63,Mẫu Fossil Voyager 362 Edition của Fossil - thiết kế hiện đại.,5.0,step_counter;notifications;heart_rate;sleep_tracking,gps,,,
+181,Rolex Urban 783 X,Rolex,mechanical,5806092,51,Mẫu Rolex Urban 783 X của Rolex - thiết kế cổ điển.,,,,automatic,60.0,0.0
+182,Skagen Prime 76 X,Skagen,mechanical,7811705,97,Mẫu Skagen Prime 76 X của Skagen - thiết kế cổ điển.,,,,manual,80.0,0.0
+183,Orient Master 999 Series,Orient,electronic,6211604,43,Mẫu Orient Master 999 Series của Orient - thiết kế hiện đại.,5.0,nfc;gps;step_counter,gps,,,
+184,Casio Classic 141 Lite,Casio,electronic,12157505,66,Mẫu Casio Classic 141 Lite của Casio - thiết kế hiện đại.,4.0,nfc;notifications,none,,,
+185,Citizen Eco-Drive Prime 608 Lite,Citizen Eco-Drive,mechanical,7856067,65,Mẫu Citizen Eco-Drive Prime 608 Lite của Citizen Eco-Drive - thiết kế cổ điển.,,,,manual,72.0,0.0
+186,Seiko Urban 340 Series,Seiko,mechanical,14708521,74,Mẫu Seiko Urban 340 Series của Seiko - thiết kế cổ điển.,,,,manual,80.0,0.0
+187,Seiko Voyager 486 Pro,Seiko,electronic,14522525,100,Mẫu Seiko Voyager 486 Pro của Seiko - thiết kế hiện đại.,10.0,waterproof;sleep_tracking;heart_rate;step_counter;notifications,wifi,,,
+188,Citizen Eco-Drive Heritage 152 Line,Citizen Eco-Drive,electronic,957772,89,Mẫu Citizen Eco-Drive Heritage 152 Line của Citizen Eco-Drive - thiết kế hiện đại.,1.0,heart_rate;waterproof,none,,,
+189,Patek Philippe Elite 421 Z,Patek Philippe,mechanical,11737098,60,Mẫu Patek Philippe Elite 421 Z của Patek Philippe - thiết kế cổ điển.,,,,automatic,72.0,1.0
+190,Skagen Urban 679 S,Skagen,electronic,8119419,40,Mẫu Skagen Urban 679 S của Skagen - thiết kế hiện đại.,2.0,sleep_tracking;step_counter;nfc;notifications,gps,,,
+191,Timex Prime 572 Pro,Timex,mechanical,3760572,38,Mẫu Timex Prime 572 Pro của Timex - thiết kế cổ điển.,,,,manual,72.0,1.0
+192,Bulova Urban 492 Lite,Bulova,electronic,8627070,92,Mẫu Bulova Urban 492 Lite của Bulova - thiết kế hiện đại.,3.0,gps;step_counter;sleep_tracking,gps,,,
+193,Hublot Urban 978 Model,Hublot,electronic,4711563,36,Mẫu Hublot Urban 978 Model của Hublot - thiết kế hiện đại.,7.0,sleep_tracking,gps,,,
+194,Bulova Elite 207 Z,Bulova,electronic,4431424,71,Mẫu Bulova Elite 207 Z của Bulova - thiết kế hiện đại.,7.0,nfc;heart_rate;step_counter,wifi,,,
+195,Invicta Elite 654 Line,Invicta,mechanical,1261121,52,Mẫu Invicta Elite 654 Line của Invicta - thiết kế cổ điển.,,,,manual,72.0,0.0
+196,Tissot Classic 988 Z,Tissot,mechanical,14679705,20,Mẫu Tissot Classic 988 Z của Tissot - thiết kế cổ điển.,,,,manual,72.0,0.0
+197,Fossil Prime 329 Pro,Fossil,electronic,9865520,98,Mẫu Fossil Prime 329 Pro của Fossil - thiết kế hiện đại.,1.0,waterproof;step_counter;sleep_tracking;heart_rate;gps,gps,,,
+198,Hamilton Classic 857 X,Hamilton,electronic,11925429,23,Mẫu Hamilton Classic 857 X của Hamilton - thiết kế hiện đại.,7.0,heart_rate;notifications;nfc,bluetooth,,,
+199,Tag Heuer Prime 466 Z,Tag Heuer,electronic,8102619,17,Mẫu Tag Heuer Prime 466 Z của Tag Heuer - thiết kế hiện đại.,10.0,notifications;nfc;gps;heart_rate;music_control,wifi,,,
+200,Rolex Master 15 Lite,Rolex,electronic,11966131,72,Mẫu Rolex Master 15 Lite của Rolex - thiết kế hiện đại.,7.0,nfc;step_counter,gps,,,
+201,Invicta Urban 89 X,Invicta,electronic,10204210,23,Mẫu Invicta Urban 89 X của Invicta - thiết kế hiện đại.,2.0,sleep_tracking;gps;heart_rate;nfc,gps,,,
+202,Rolex Urban 310 One,Rolex,mechanical,10981797,1,Mẫu Rolex Urban 310 One của Rolex - thiết kế cổ điển.,,,,manual,72.0,0.0
+203,Casio Sport 477 Pro,Casio,electronic,2815894,87,Mẫu Casio Sport 477 Pro của Casio - thiết kế hiện đại.,5.0,gps;sleep_tracking;nfc,none,,,
+204,Timex Master 490 Model,Timex,electronic,7097191,77,Mẫu Timex Master 490 Model của Timex - thiết kế hiện đại.,3.0,notifications;music_control;step_counter;gps,wifi,,,
+205,Citizen Eco-Drive Sport 539 S,Citizen Eco-Drive,electronic,8158510,46,Mẫu Citizen Eco-Drive Sport 539 S của Citizen Eco-Drive - thiết kế hiện đại.,1.0,gps;heart_rate;step_counter;sleep_tracking;notifications,wifi,,,
+206,Invicta Apex 120 Line,Invicta,mechanical,10895311,62,Mẫu Invicta Apex 120 Line của Invicta - thiết kế cổ điển.,,,,automatic,60.0,0.0
+207,Longines Master 526 X,Longines,electronic,7123578,7,Mẫu Longines Master 526 X của Longines - thiết kế hiện đại.,5.0,step_counter;sleep_tracking;heart_rate;waterproof,none,,,
+208,Fossil Voyager 75 Edition,Fossil,electronic,6643612,89,Mẫu Fossil Voyager 75 Edition của Fossil - thiết kế hiện đại.,1.0,heart_rate;notifications;waterproof;music_control;nfc,gps,,,
+209,Tissot Heritage 384 X,Tissot,mechanical,7003788,48,Mẫu Tissot Heritage 384 X của Tissot - thiết kế cổ điển.,,,,manual,36.0,0.0
+210,Skagen Master 670 Lite,Skagen,electronic,2220181,68,Mẫu Skagen Master 670 Lite của Skagen - thiết kế hiện đại.,4.0,nfc;sleep_tracking;gps;heart_rate;step_counter,none,,,
+211,Skagen Heritage 545 X,Skagen,electronic,12438726,31,Mẫu Skagen Heritage 545 X của Skagen - thiết kế hiện đại.,4.0,nfc;notifications;gps,bluetooth,,,
+212,Patek Philippe Voyager 785 Edition,Patek Philippe,mechanical,3989661,8,Mẫu Patek Philippe Voyager 785 Edition của Patek Philippe - thiết kế cổ điển.,,,,automatic,60.0,1.0
+213,Casio Elite 759 Edition,Casio,mechanical,6332848,29,Mẫu Casio Elite 759 Edition của Casio - thiết kế cổ điển.,,,,automatic,80.0,1.0
+214,Omega Elite 836 One,Omega,mechanical,5124104,76,Mẫu Omega Elite 836 One của Omega - thiết kế cổ điển.,,,,manual,40.0,0.0
+215,Invicta Elite 424 Pro,Invicta,electronic,4489732,71,Mẫu Invicta Elite 424 Pro của Invicta - thiết kế hiện đại.,5.0,music_control;step_counter,gps,,,
+216,Swatch Heritage 805 Z,Swatch,mechanical,5121650,53,Mẫu Swatch Heritage 805 Z của Swatch - thiết kế cổ điển.,,,,manual,40.0,0.0
+217,Skagen Apex 247 Line,Skagen,mechanical,4860678,90,Mẫu Skagen Apex 247 Line của Skagen - thiết kế cổ điển.,,,,automatic,80.0,0.0
+218,Skagen Heritage 992 X,Skagen,electronic,8580658,17,Mẫu Skagen Heritage 992 X của Skagen - thiết kế hiện đại.,4.0,step_counter;gps,none,,,
+219,Longines Urban 95 Z,Longines,electronic,11006478,24,Mẫu Longines Urban 95 Z của Longines - thiết kế hiện đại.,1.0,music_control;sleep_tracking;step_counter,bluetooth,,,
+220,Fossil Voyager 742 Z,Fossil,electronic,3646740,26,Mẫu Fossil Voyager 742 Z của Fossil - thiết kế hiện đại.,10.0,step_counter;heart_rate;gps,wifi,,,
+221,Orient Apex 937 Line,Orient,electronic,10586581,90,Mẫu Orient Apex 937 Line của Orient - thiết kế hiện đại.,2.0,waterproof;step_counter;nfc;sleep_tracking,gps,,,
+222,Swatch Prime 268 Lite,Swatch,electronic,7935840,63,Mẫu Swatch Prime 268 Lite của Swatch - thiết kế hiện đại.,4.0,notifications,none,,,
+223,Swatch Urban 424 Edition,Swatch,electronic,8656609,28,Mẫu Swatch Urban 424 Edition của Swatch - thiết kế hiện đại.,7.0,heart_rate;nfc,gps,,,
+224,Fossil Urban 236 X,Fossil,mechanical,8761948,31,Mẫu Fossil Urban 236 X của Fossil - thiết kế cổ điển.,,,,manual,60.0,0.0
+225,Tag Heuer Prime 782 S,Tag Heuer,electronic,14514370,82,Mẫu Tag Heuer Prime 782 S của Tag Heuer - thiết kế hiện đại.,7.0,notifications;gps;sleep_tracking;nfc,wifi,,,
+226,Skagen Apex 189 Z,Skagen,mechanical,14859691,7,Mẫu Skagen Apex 189 Z của Skagen - thiết kế cổ điển.,,,,automatic,80.0,1.0
+227,Casio Classic 423 Model,Casio,electronic,12716898,29,Mẫu Casio Classic 423 Model của Casio - thiết kế hiện đại.,1.0,heart_rate;gps,gps,,,
+228,Citizen Eco-Drive Voyager 935 S,Citizen Eco-Drive,mechanical,10059623,2,Mẫu Citizen Eco-Drive Voyager 935 S của Citizen Eco-Drive - thiết kế cổ điển.,,,,automatic,60.0,0.0
+229,Seiko Pilot 740 Pro,Seiko,mechanical,8268202,36,Mẫu Seiko Pilot 740 Pro của Seiko - thiết kế cổ điển.,,,,automatic,60.0,0.0
+230,Hamilton Sport 941 Series,Hamilton,electronic,8103588,30,Mẫu Hamilton Sport 941 Series của Hamilton - thiết kế hiện đại.,2.0,step_counter;music_control;nfc;sleep_tracking;waterproof,bluetooth,,,
+231,Hublot Apex 579 Line,Hublot,mechanical,14858379,28,Mẫu Hublot Apex 579 Line của Hublot - thiết kế cổ điển.,,,,manual,72.0,1.0
+232,Casio Sport 416 X,Casio,electronic,5968959,60,Mẫu Casio Sport 416 X của Casio - thiết kế hiện đại.,1.0,nfc,bluetooth,,,
+233,Patek Philippe Urban 580 Series,Patek Philippe,electronic,13474473,5,Mẫu Patek Philippe Urban 580 Series của Patek Philippe - thiết kế hiện đại.,2.0,notifications;nfc,bluetooth,,,
+234,Rolex Pilot 578 Edition,Rolex,electronic,3100640,40,Mẫu Rolex Pilot 578 Edition của Rolex - thiết kế hiện đại.,1.0,nfc;music_control,gps,,,
+235,Omega Master 578 Line,Omega,electronic,8717091,49,Mẫu Omega Master 578 Line của Omega - thiết kế hiện đại.,7.0,sleep_tracking;waterproof;notifications;gps;heart_rate,none,,,
+236,Patek Philippe Elite 859 Series,Patek Philippe,mechanical,5438595,98,Mẫu Patek Philippe Elite 859 Series của Patek Philippe - thiết kế cổ điển.,,,,manual,80.0,0.0
+237,Rolex Apex 503 Line,Rolex,mechanical,5659262,48,Mẫu Rolex Apex 503 Line của Rolex - thiết kế cổ điển.,,,,manual,40.0,0.0
+238,Hublot Sport 791 One,Hublot,electronic,4783002,31,Mẫu Hublot Sport 791 One của Hublot - thiết kế hiện đại.,7.0,gps,none,,,
+239,Tissot Heritage 325 Lite,Tissot,mechanical,2044988,0,Mẫu Tissot Heritage 325 Lite của Tissot - thiết kế cổ điển.,,,,manual,48.0,0.0
+240,Orient Master 90 Model,Orient,electronic,6749203,71,Mẫu Orient Master 90 Model của Orient - thiết kế hiện đại.,5.0,music_control;heart_rate;notifications;sleep_tracking;nfc,bluetooth,,,
+241,Tag Heuer Heritage 13 Pro,Tag Heuer,electronic,6500246,99,Mẫu Tag Heuer Heritage 13 Pro của Tag Heuer - thiết kế hiện đại.,1.0,waterproof;step_counter;music_control;gps;notifications,wifi,,,
+242,Omega Prime 505 Model,Omega,mechanical,1417374,55,Mẫu Omega Prime 505 Model của Omega - thiết kế cổ điển.,,,,manual,48.0,0.0
+243,Citizen Urban 258 Line,Citizen,electronic,10953042,63,Mẫu Citizen Urban 258 Line của Citizen - thiết kế hiện đại.,5.0,waterproof;notifications;heart_rate;gps;nfc,bluetooth,,,
+244,Tag Heuer Voyager 390 Lite,Tag Heuer,electronic,6883232,55,Mẫu Tag Heuer Voyager 390 Lite của Tag Heuer - thiết kế hiện đại.,10.0,nfc;notifications;music_control;step_counter;gps,gps,,,
+245,Hublot Urban 299 S,Hublot,mechanical,14532565,100,Mẫu Hublot Urban 299 S của Hublot - thiết kế cổ điển.,,,,automatic,42.0,0.0
+246,Hublot Urban 117 One,Hublot,mechanical,3397101,69,Mẫu Hublot Urban 117 One của Hublot - thiết kế cổ điển.,,,,automatic,72.0,0.0
+247,Longines Elite 449 Pro,Longines,mechanical,12553586,8,Mẫu Longines Elite 449 Pro của Longines - thiết kế cổ điển.,,,,manual,72.0,0.0
+248,Omega Elite 259 Model,Omega,mechanical,10870928,48,Mẫu Omega Elite 259 Model của Omega - thiết kế cổ điển.,,,,automatic,48.0,0.0
+249,Hublot Pilot 519 X,Hublot,electronic,8382855,46,Mẫu Hublot Pilot 519 X của Hublot - thiết kế hiện đại.,7.0,gps;heart_rate;notifications;nfc;sleep_tracking,bluetooth,,,
+250,Hublot Urban 989 X,Hublot,electronic,2036196,12,Mẫu Hublot Urban 989 X của Hublot - thiết kế hiện đại.,3.0,waterproof;notifications,none,,,
+251,Movado Pilot 155 Lite,Movado,mechanical,14966690,61,Mẫu Movado Pilot 155 Lite của Movado - thiết kế cổ điển.,,,,automatic,42.0,0.0
+252,Citizen Sport 852 Model,Citizen,electronic,5550765,43,Mẫu Citizen Sport 852 Model của Citizen - thiết kế hiện đại.,4.0,notifications;nfc,gps,,,
+253,Longines Urban 69 Pro,Longines,mechanical,1147904,90,Mẫu Longines Urban 69 Pro của Longines - thiết kế cổ điển.,,,,automatic,36.0,0.0
+254,Hamilton Elite 529 Model,Hamilton,electronic,8502699,42,Mẫu Hamilton Elite 529 Model của Hamilton - thiết kế hiện đại.,5.0,notifications;gps;waterproof;music_control,wifi,,,
+255,Patek Philippe Heritage 30 One,Patek Philippe,electronic,13304912,57,Mẫu Patek Philippe Heritage 30 One của Patek Philippe - thiết kế hiện đại.,5.0,music_control;heart_rate;sleep_tracking;gps,wifi,,,
+256,Citizen Voyager 105 Z,Citizen,mechanical,3210918,41,Mẫu Citizen Voyager 105 Z của Citizen - thiết kế cổ điển.,,,,automatic,48.0,1.0
+257,Bulova Pilot 990 Lite,Bulova,mechanical,9156077,78,Mẫu Bulova Pilot 990 Lite của Bulova - thiết kế cổ điển.,,,,manual,60.0,1.0
+258,Longines Voyager 177 Pro,Longines,mechanical,13820897,75,Mẫu Longines Voyager 177 Pro của Longines - thiết kế cổ điển.,,,,automatic,72.0,1.0
+259,Timex Prime 120 Model,Timex,mechanical,5912938,18,Mẫu Timex Prime 120 Model của Timex - thiết kế cổ điển.,,,,manual,48.0,0.0
+260,Hublot Heritage 191 S,Hublot,mechanical,9714774,88,Mẫu Hublot Heritage 191 S của Hublot - thiết kế cổ điển.,,,,automatic,60.0,1.0
+261,Tissot Master 323 S,Tissot,electronic,9481445,45,Mẫu Tissot Master 323 S của Tissot - thiết kế hiện đại.,1.0,nfc;gps;waterproof;step_counter,gps,,,
+262,Bulova Heritage 728 S,Bulova,mechanical,7586143,10,Mẫu Bulova Heritage 728 S của Bulova - thiết kế cổ điển.,,,,automatic,80.0,1.0
+263,Rolex Elite 551 Pro,Rolex,mechanical,2939030,58,Mẫu Rolex Elite 551 Pro của Rolex - thiết kế cổ điển.,,,,manual,60.0,0.0
+264,Orient Prime 794 Z,Orient,mechanical,12437601,46,Mẫu Orient Prime 794 Z của Orient - thiết kế cổ điển.,,,,automatic,80.0,0.0
+265,Fossil Heritage 105 Line,Fossil,mechanical,4816780,4,Mẫu Fossil Heritage 105 Line của Fossil - thiết kế cổ điển.,,,,manual,42.0,0.0
+266,Citizen Apex 887 Series,Citizen,electronic,11746659,30,Mẫu Citizen Apex 887 Series của Citizen - thiết kế hiện đại.,2.0,sleep_tracking;music_control;notifications;step_counter;waterproof,wifi,,,
+267,Fossil Elite 825 Edition,Fossil,electronic,8766078,68,Mẫu Fossil Elite 825 Edition của Fossil - thiết kế hiện đại.,3.0,nfc;notifications;sleep_tracking;music_control;step_counter,none,,,
+268,Invicta Sport 139 X,Invicta,electronic,13822146,35,Mẫu Invicta Sport 139 X của Invicta - thiết kế hiện đại.,10.0,nfc;gps,wifi,,,
+269,Timex Heritage 502 Model,Timex,electronic,8872670,34,Mẫu Timex Heritage 502 Model của Timex - thiết kế hiện đại.,7.0,music_control;waterproof;heart_rate;sleep_tracking,gps,,,
+270,Rolex Urban 466 S,Rolex,electronic,5245695,0,Mẫu Rolex Urban 466 S của Rolex - thiết kế hiện đại.,10.0,notifications,none,,,
+271,Skagen Heritage 224 X,Skagen,electronic,12460291,63,Mẫu Skagen Heritage 224 X của Skagen - thiết kế hiện đại.,3.0,step_counter;nfc;notifications,wifi,,,
+272,Bulova Urban 916 Edition,Bulova,electronic,1166172,80,Mẫu Bulova Urban 916 Edition của Bulova - thiết kế hiện đại.,10.0,heart_rate;notifications;gps;waterproof,gps,,,
+273,Patek Philippe Elite 706 Model,Patek Philippe,mechanical,13291143,38,Mẫu Patek Philippe Elite 706 Model của Patek Philippe - thiết kế cổ điển.,,,,automatic,80.0,0.0
+274,Swatch Prime 85 Lite,Swatch,mechanical,10135378,83,Mẫu Swatch Prime 85 Lite của Swatch - thiết kế cổ điển.,,,,automatic,36.0,0.0
+275,Timex Heritage 672 Series,Timex,electronic,10703622,0,Mẫu Timex Heritage 672 Series của Timex - thiết kế hiện đại.,2.0,gps;notifications;step_counter;music_control,gps,,,
+276,Tag Heuer Sport 881 X,Tag Heuer,mechanical,10563450,61,Mẫu Tag Heuer Sport 881 X của Tag Heuer - thiết kế cổ điển.,,,,automatic,40.0,0.0
+277,Orient Sport 321 Lite,Orient,mechanical,13274340,17,Mẫu Orient Sport 321 Lite của Orient - thiết kế cổ điển.,,,,manual,80.0,1.0
+278,Tissot Sport 544 One,Tissot,electronic,622884,83,Mẫu Tissot Sport 544 One của Tissot - thiết kế hiện đại.,2.0,sleep_tracking;notifications;gps;music_control,gps,,,
+279,Longines Elite 89 Series,Longines,electronic,2530191,15,Mẫu Longines Elite 89 Series của Longines - thiết kế hiện đại.,5.0,sleep_tracking;waterproof;nfc;gps,wifi,,,
+280,Citizen Elite 567 One,Citizen,mechanical,9200114,77,Mẫu Citizen Elite 567 One của Citizen - thiết kế cổ điển.,,,,manual,80.0,0.0
+281,Omega Elite 531 One,Omega,mechanical,7888077,95,Mẫu Omega Elite 531 One của Omega - thiết kế cổ điển.,,,,manual,42.0,0.0
+282,Timex Apex 396 Series,Timex,mechanical,3995685,81,Mẫu Timex Apex 396 Series của Timex - thiết kế cổ điển.,,,,automatic,60.0,1.0
+283,Tag Heuer Master 397 One,Tag Heuer,electronic,6602521,69,Mẫu Tag Heuer Master 397 One của Tag Heuer - thiết kế hiện đại.,7.0,notifications;music_control,bluetooth,,,
+284,Citizen Classic 269 Line,Citizen,mechanical,1077490,7,Mẫu Citizen Classic 269 Line của Citizen - thiết kế cổ điển.,,,,manual,60.0,0.0
+285,Invicta Heritage 434 X,Invicta,electronic,1695203,68,Mẫu Invicta Heritage 434 X của Invicta - thiết kế hiện đại.,5.0,nfc;notifications;heart_rate;music_control;sleep_tracking,wifi,,,
+286,Tissot Pilot 335 X,Tissot,electronic,9003339,97,Mẫu Tissot Pilot 335 X của Tissot - thiết kế hiện đại.,10.0,step_counter,gps,,,
+287,Timex Classic 251 Series,Timex,electronic,13907102,14,Mẫu Timex Classic 251 Series của Timex - thiết kế hiện đại.,4.0,heart_rate;nfc;sleep_tracking;gps;notifications,bluetooth,,,
+288,Seiko Master 509 Lite,Seiko,electronic,8083578,100,Mẫu Seiko Master 509 Lite của Seiko - thiết kế hiện đại.,10.0,nfc;notifications;gps,none,,,
+289,Orient Classic 344 X,Orient,electronic,4443719,8,Mẫu Orient Classic 344 X của Orient - thiết kế hiện đại.,3.0,gps;waterproof;music_control;step_counter;nfc,bluetooth,,,
+290,Movado Master 377 Model,Movado,electronic,4199183,13,Mẫu Movado Master 377 Model của Movado - thiết kế hiện đại.,5.0,waterproof,bluetooth,,,
+291,Seiko Elite 48 S,Seiko,mechanical,5777659,19,Mẫu Seiko Elite 48 S của Seiko - thiết kế cổ điển.,,,,automatic,80.0,1.0
+292,Patek Philippe Elite 330 Line,Patek Philippe,electronic,6535721,92,Mẫu Patek Philippe Elite 330 Line của Patek Philippe - thiết kế hiện đại.,3.0,gps;step_counter;nfc,bluetooth,,,
+293,Casio Master 229 Z,Casio,electronic,14730501,51,Mẫu Casio Master 229 Z của Casio - thiết kế hiện đại.,1.0,step_counter;music_control;nfc;sleep_tracking,bluetooth,,,
+294,Seiko Urban 206 Pro,Seiko,electronic,8675198,38,Mẫu Seiko Urban 206 Pro của Seiko - thiết kế hiện đại.,7.0,waterproof;notifications;nfc;step_counter;music_control,wifi,,,
+295,Skagen Elite 155 Edition,Skagen,electronic,14019764,3,Mẫu Skagen Elite 155 Edition của Skagen - thiết kế hiện đại.,2.0,sleep_tracking;notifications;music_control;heart_rate;nfc,bluetooth,,,
+296,Hublot Prime 107 Line,Hublot,electronic,8182310,30,Mẫu Hublot Prime 107 Line của Hublot - thiết kế hiện đại.,4.0,heart_rate;gps;sleep_tracking;nfc,bluetooth,,,
+297,Timex Pilot 423 Lite,Timex,mechanical,7147641,95,Mẫu Timex Pilot 423 Lite của Timex - thiết kế cổ điển.,,,,automatic,60.0,1.0
+298,Hublot Sport 607 One,Hublot,electronic,1403102,84,Mẫu Hublot Sport 607 One của Hublot - thiết kế hiện đại.,2.0,step_counter;nfc,none,,,
+299,Hublot Urban 326 S,Hublot,electronic,4443360,9,Mẫu Hublot Urban 326 S của Hublot - thiết kế hiện đại.,2.0,gps;notifications,bluetooth,,,
+300,Longines Urban 417 Series,Longines,mechanical,8270906,98,Mẫu Longines Urban 417 Series của Longines - thiết kế cổ điển.,,,,automatic,48.0,0.0
+301,Orient Sport 162 Pro,Orient,electronic,12482607,89,Mẫu Orient Sport 162 Pro của Orient - thiết kế hiện đại.,5.0,waterproof,none,,,
+302,Timex Urban 406 Z,Timex,mechanical,1209784,38,Mẫu Timex Urban 406 Z của Timex - thiết kế cổ điển.,,,,manual,80.0,1.0
+303,Hublot Apex 570 Z,Hublot,mechanical,4122863,59,Mẫu Hublot Apex 570 Z của Hublot - thiết kế cổ điển.,,,,automatic,80.0,1.0
+304,Casio Elite 134 Line,Casio,mechanical,12443265,47,Mẫu Casio Elite 134 Line của Casio - thiết kế cổ điển.,,,,automatic,60.0,0.0
+305,Citizen Classic 67 Line,Citizen,mechanical,13586193,56,Mẫu Citizen Classic 67 Line của Citizen - thiết kế cổ điển.,,,,automatic,36.0,0.0
+306,Longines Classic 173 One,Longines,mechanical,6780767,92,Mẫu Longines Classic 173 One của Longines - thiết kế cổ điển.,,,,manual,48.0,1.0
+307,Patek Philippe Master 363 Line,Patek Philippe,mechanical,13670411,35,Mẫu Patek Philippe Master 363 Line của Patek Philippe - thiết kế cổ điển.,,,,manual,48.0,1.0
+308,Citizen Eco-Drive Voyager 252 Pro,Citizen Eco-Drive,mechanical,7733928,70,Mẫu Citizen Eco-Drive Voyager 252 Pro của Citizen Eco-Drive - thiết kế cổ điển.,,,,manual,36.0,1.0
+309,Tissot Heritage 205 Z,Tissot,mechanical,4112642,69,Mẫu Tissot Heritage 205 Z của Tissot - thiết kế cổ điển.,,,,automatic,48.0,0.0
+310,Skagen Apex 353 One,Skagen,mechanical,7784702,49,Mẫu Skagen Apex 353 One của Skagen - thiết kế cổ điển.,,,,manual,40.0,1.0
+311,Timex Classic 918 Pro,Timex,mechanical,1349573,60,Mẫu Timex Classic 918 Pro của Timex - thiết kế cổ điển.,,,,manual,80.0,0.0
+312,Hamilton Sport 254 Line,Hamilton,electronic,4364642,94,Mẫu Hamilton Sport 254 Line của Hamilton - thiết kế hiện đại.,1.0,music_control;nfc,wifi,,,
+313,Movado Urban 826 Lite,Movado,mechanical,13752710,3,Mẫu Movado Urban 826 Lite của Movado - thiết kế cổ điển.,,,,manual,60.0,0.0
+314,Fossil Apex 556 Pro,Fossil,mechanical,3045573,4,Mẫu Fossil Apex 556 Pro của Fossil - thiết kế cổ điển.,,,,automatic,36.0,1.0
+315,Seiko Pilot 490 Edition,Seiko,electronic,5310143,78,Mẫu Seiko Pilot 490 Edition của Seiko - thiết kế hiện đại.,2.0,sleep_tracking;notifications,wifi,,,
+316,Tag Heuer Classic 23 Model,Tag Heuer,electronic,9005833,18,Mẫu Tag Heuer Classic 23 Model của Tag Heuer - thiết kế hiện đại.,10.0,sleep_tracking,bluetooth,,,
+317,Hublot Voyager 104 Lite,Hublot,mechanical,4875595,17,Mẫu Hublot Voyager 104 Lite của Hublot - thiết kế cổ điển.,,,,automatic,72.0,0.0
+318,Bulova Urban 179 Z,Bulova,electronic,10556626,78,Mẫu Bulova Urban 179 Z của Bulova - thiết kế hiện đại.,10.0,waterproof;sleep_tracking;step_counter,wifi,,,
+319,Omega Master 182 Edition,Omega,mechanical,14257428,73,Mẫu Omega Master 182 Edition của Omega - thiết kế cổ điển.,,,,manual,80.0,0.0
+320,Citizen Eco-Drive Urban 944 One,Citizen Eco-Drive,mechanical,3702981,72,Mẫu Citizen Eco-Drive Urban 944 One của Citizen Eco-Drive - thiết kế cổ điển.,,,,automatic,48.0,1.0
+321,Citizen Elite 356 Lite,Citizen,mechanical,2934368,11,Mẫu Citizen Elite 356 Lite của Citizen - thiết kế cổ điển.,,,,manual,48.0,1.0
+322,Timex Sport 359 Pro,Timex,mechanical,11911790,92,Mẫu Timex Sport 359 Pro của Timex - thiết kế cổ điển.,,,,automatic,36.0,0.0
+323,Patek Philippe Master 906 X,Patek Philippe,mechanical,7649689,48,Mẫu Patek Philippe Master 906 X của Patek Philippe - thiết kế cổ điển.,,,,manual,60.0,0.0
+324,Bulova Voyager 667 Line,Bulova,mechanical,2858519,9,Mẫu Bulova Voyager 667 Line của Bulova - thiết kế cổ điển.,,,,automatic,42.0,1.0
+325,Orient Sport 351 Model,Orient,mechanical,13375003,20,Mẫu Orient Sport 351 Model của Orient - thiết kế cổ điển.,,,,automatic,60.0,1.0
+326,Citizen Eco-Drive Apex 722 Edition,Citizen Eco-Drive,mechanical,6754188,83,Mẫu Citizen Eco-Drive Apex 722 Edition của Citizen Eco-Drive - thiết kế cổ điển.,,,,automatic,60.0,0.0
+327,Orient Urban 211 Line,Orient,mechanical,6434558,70,Mẫu Orient Urban 211 Line của Orient - thiết kế cổ điển.,,,,manual,72.0,0.0
+328,Orient Classic 403 One,Orient,mechanical,8470108,62,Mẫu Orient Classic 403 One của Orient - thiết kế cổ điển.,,,,automatic,36.0,0.0
+329,Citizen Prime 844 One,Citizen,mechanical,7464762,12,Mẫu Citizen Prime 844 One của Citizen - thiết kế cổ điển.,,,,automatic,40.0,1.0
+330,Citizen Apex 865 Series,Citizen,electronic,4971124,50,Mẫu Citizen Apex 865 Series của Citizen - thiết kế hiện đại.,4.0,step_counter;heart_rate;sleep_tracking;notifications,gps,,,
+331,Hublot Urban 192 S,Hublot,mechanical,1146945,56,Mẫu Hublot Urban 192 S của Hublot - thiết kế cổ điển.,,,,manual,42.0,1.0
+332,Movado Classic 155 Series,Movado,electronic,1742756,44,Mẫu Movado Classic 155 Series của Movado - thiết kế hiện đại.,10.0,music_control;notifications;step_counter;gps;heart_rate,gps,,,
+333,Patek Philippe Pilot 704 S,Patek Philippe,electronic,8804357,30,Mẫu Patek Philippe Pilot 704 S của Patek Philippe - thiết kế hiện đại.,4.0,gps;waterproof;sleep_tracking,bluetooth,,,
+334,Invicta Voyager 694 One,Invicta,electronic,2637991,96,Mẫu Invicta Voyager 694 One của Invicta - thiết kế hiện đại.,4.0,nfc;gps,wifi,,,
+335,Patek Philippe Sport 700 X,Patek Philippe,mechanical,3427830,80,Mẫu Patek Philippe Sport 700 X của Patek Philippe - thiết kế cổ điển.,,,,automatic,80.0,0.0
+336,Citizen Sport 398 Z,Citizen,mechanical,6261647,41,Mẫu Citizen Sport 398 Z của Citizen - thiết kế cổ điển.,,,,manual,60.0,0.0
+337,Seiko Voyager 602 Z,Seiko,electronic,11834442,14,Mẫu Seiko Voyager 602 Z của Seiko - thiết kế hiện đại.,4.0,nfc;step_counter,bluetooth,,,
+338,Movado Sport 805 Pro,Movado,electronic,13078391,44,Mẫu Movado Sport 805 Pro của Movado - thiết kế hiện đại.,4.0,music_control;sleep_tracking;waterproof,gps,,,
+339,Rolex Heritage 148 One,Rolex,mechanical,9325501,88,Mẫu Rolex Heritage 148 One của Rolex - thiết kế cổ điển.,,,,manual,36.0,0.0
+340,Tag Heuer Elite 51 S,Tag Heuer,electronic,13852107,47,Mẫu Tag Heuer Elite 51 S của Tag Heuer - thiết kế hiện đại.,1.0,step_counter;nfc;music_control,gps,,,
+341,Orient Elite 138 Pro,Orient,electronic,14626182,56,Mẫu Orient Elite 138 Pro của Orient - thiết kế hiện đại.,10.0,step_counter;sleep_tracking;waterproof,bluetooth,,,
+342,Fossil Heritage 759 S,Fossil,mechanical,11512653,47,Mẫu Fossil Heritage 759 S của Fossil - thiết kế cổ điển.,,,,automatic,60.0,1.0
+343,Invicta Heritage 139 Z,Invicta,mechanical,13250323,3,Mẫu Invicta Heritage 139 Z của Invicta - thiết kế cổ điển.,,,,automatic,40.0,1.0
+344,Timex Classic 468 Edition,Timex,electronic,13811451,90,Mẫu Timex Classic 468 Edition của Timex - thiết kế hiện đại.,2.0,sleep_tracking;music_control;waterproof,gps,,,
+345,Orient Classic 248 Lite,Orient,electronic,7587408,57,Mẫu Orient Classic 248 Lite của Orient - thiết kế hiện đại.,2.0,sleep_tracking;nfc;gps;music_control,bluetooth,,,
+346,Hublot Classic 167 One,Hublot,mechanical,11807537,27,Mẫu Hublot Classic 167 One của Hublot - thiết kế cổ điển.,,,,automatic,72.0,1.0
+347,Rolex Heritage 526 Edition,Rolex,electronic,13037134,98,Mẫu Rolex Heritage 526 Edition của Rolex - thiết kế hiện đại.,7.0,notifications,wifi,,,
+348,Citizen Eco-Drive Classic 230 Pro,Citizen Eco-Drive,electronic,9320986,39,Mẫu Citizen Eco-Drive Classic 230 Pro của Citizen Eco-Drive - thiết kế hiện đại.,7.0,music_control;waterproof;nfc,gps,,,
+349,Longines Prime 694 Z,Longines,mechanical,12452507,50,Mẫu Longines Prime 694 Z của Longines - thiết kế cổ điển.,,,,automatic,36.0,0.0
+350,Swatch Pilot 663 One,Swatch,electronic,9331227,38,Mẫu Swatch Pilot 663 One của Swatch - thiết kế hiện đại.,7.0,notifications,bluetooth,,,
+351,Rolex Urban 883 Pro,Rolex,mechanical,4286630,91,Mẫu Rolex Urban 883 Pro của Rolex - thiết kế cổ điển.,,,,manual,40.0,1.0
+352,Timex Classic 825 One,Timex,electronic,6359427,40,Mẫu Timex Classic 825 One của Timex - thiết kế hiện đại.,7.0,heart_rate;sleep_tracking,gps,,,
+353,Rolex Heritage 415 X,Rolex,electronic,11182615,74,Mẫu Rolex Heritage 415 X của Rolex - thiết kế hiện đại.,7.0,waterproof;nfc;sleep_tracking;gps;notifications,none,,,
+354,Hamilton Pilot 186 Pro,Hamilton,electronic,1915244,16,Mẫu Hamilton Pilot 186 Pro của Hamilton - thiết kế hiện đại.,7.0,nfc;sleep_tracking;notifications,bluetooth,,,
+355,Timex Prime 431 Lite,Timex,mechanical,5889395,74,Mẫu Timex Prime 431 Lite của Timex - thiết kế cổ điển.,,,,manual,48.0,1.0
+356,Movado Voyager 967 One,Movado,electronic,1532628,24,Mẫu Movado Voyager 967 One của Movado - thiết kế hiện đại.,5.0,music_control,none,,,
+357,Tissot Master 206 Lite,Tissot,mechanical,6433282,72,Mẫu Tissot Master 206 Lite của Tissot - thiết kế cổ điển.,,,,manual,40.0,0.0
+358,Hamilton Sport 500 Lite,Hamilton,electronic,9649975,22,Mẫu Hamilton Sport 500 Lite của Hamilton - thiết kế hiện đại.,3.0,heart_rate,gps,,,
+359,Hamilton Voyager 783 Model,Hamilton,mechanical,7598868,97,Mẫu Hamilton Voyager 783 Model của Hamilton - thiết kế cổ điển.,,,,automatic,40.0,0.0
+360,Patek Philippe Heritage 440 S,Patek Philippe,mechanical,6058088,4,Mẫu Patek Philippe Heritage 440 S của Patek Philippe - thiết kế cổ điển.,,,,automatic,72.0,0.0
+361,Tag Heuer Pilot 196 Edition,Tag Heuer,electronic,10312848,80,Mẫu Tag Heuer Pilot 196 Edition của Tag Heuer - thiết kế hiện đại.,7.0,waterproof;sleep_tracking,none,,,
+362,Orient Heritage 516 One,Orient,mechanical,4938669,8,Mẫu Orient Heritage 516 One của Orient - thiết kế cổ điển.,,,,automatic,42.0,0.0
+363,Invicta Voyager 537 Lite,Invicta,electronic,6788146,87,Mẫu Invicta Voyager 537 Lite của Invicta - thiết kế hiện đại.,2.0,notifications;nfc;gps,wifi,,,
+364,Hublot Classic 234 Line,Hublot,electronic,11043948,16,Mẫu Hublot Classic 234 Line của Hublot - thiết kế hiện đại.,2.0,nfc,bluetooth,,,
+365,Casio Heritage 898 Pro,Casio,mechanical,11683120,79,Mẫu Casio Heritage 898 Pro của Casio - thiết kế cổ điển.,,,,automatic,60.0,1.0
+366,Seiko Classic 707 Series,Seiko,electronic,6543246,48,Mẫu Seiko Classic 707 Series của Seiko - thiết kế hiện đại.,1.0,step_counter;waterproof;sleep_tracking;gps;notifications,bluetooth,,,
+367,Orient Pilot 277 One,Orient,mechanical,9281698,17,Mẫu Orient Pilot 277 One của Orient - thiết kế cổ điển.,,,,manual,80.0,1.0
+368,Citizen Eco-Drive Sport 290 Series,Citizen Eco-Drive,electronic,11879021,63,Mẫu Citizen Eco-Drive Sport 290 Series của Citizen Eco-Drive - thiết kế hiện đại.,2.0,waterproof;music_control;nfc;step_counter;gps,none,,,
+369,Omega Master 41 Z,Omega,electronic,7697143,26,Mẫu Omega Master 41 Z của Omega - thiết kế hiện đại.,7.0,sleep_tracking;gps;heart_rate;notifications,bluetooth,,,
+370,Movado Apex 153 Series,Movado,electronic,11803130,9,Mẫu Movado Apex 153 Series của Movado - thiết kế hiện đại.,7.0,step_counter,wifi,,,
+371,Omega Prime 476 Edition,Omega,electronic,1947229,22,Mẫu Omega Prime 476 Edition của Omega - thiết kế hiện đại.,10.0,step_counter,none,,,
+372,Tag Heuer Heritage 757 Series,Tag Heuer,electronic,1877478,97,Mẫu Tag Heuer Heritage 757 Series của Tag Heuer - thiết kế hiện đại.,1.0,nfc,wifi,,,
+373,Longines Voyager 275 Series,Longines,mechanical,5903021,43,Mẫu Longines Voyager 275 Series của Longines - thiết kế cổ điển.,,,,automatic,36.0,0.0
+374,Longines Prime 856 X,Longines,mechanical,10503585,61,Mẫu Longines Prime 856 X của Longines - thiết kế cổ điển.,,,,manual,72.0,1.0
+375,Casio Master 107 X,Casio,mechanical,13712788,61,Mẫu Casio Master 107 X của Casio - thiết kế cổ điển.,,,,manual,40.0,0.0
+376,Swatch Voyager 30 Model,Swatch,mechanical,7504655,62,Mẫu Swatch Voyager 30 Model của Swatch - thiết kế cổ điển.,,,,automatic,48.0,0.0
+377,Rolex Urban 13 Z,Rolex,mechanical,11629166,73,Mẫu Rolex Urban 13 Z của Rolex - thiết kế cổ điển.,,,,automatic,72.0,0.0
+378,Citizen Eco-Drive Sport 444 Line,Citizen Eco-Drive,electronic,7487980,84,Mẫu Citizen Eco-Drive Sport 444 Line của Citizen Eco-Drive - thiết kế hiện đại.,7.0,nfc;music_control;step_counter;sleep_tracking,bluetooth,,,
+379,Hamilton Pilot 870 S,Hamilton,mechanical,12852132,21,Mẫu Hamilton Pilot 870 S của Hamilton - thiết kế cổ điển.,,,,automatic,80.0,0.0
+380,Tag Heuer Prime 52 Z,Tag Heuer,mechanical,3729245,82,Mẫu Tag Heuer Prime 52 Z của Tag Heuer - thiết kế cổ điển.,,,,manual,48.0,1.0
+381,Longines Voyager 459 Series,Longines,mechanical,12920544,57,Mẫu Longines Voyager 459 Series của Longines - thiết kế cổ điển.,,,,manual,36.0,0.0
+382,Seiko Sport 414 X,Seiko,electronic,1019563,70,Mẫu Seiko Sport 414 X của Seiko - thiết kế hiện đại.,1.0,step_counter,wifi,,,
+383,Longines Urban 373 Edition,Longines,electronic,12340536,58,Mẫu Longines Urban 373 Edition của Longines - thiết kế hiện đại.,3.0,notifications;sleep_tracking;music_control;nfc;waterproof,bluetooth,,,
+384,Timex Classic 350 Lite,Timex,mechanical,12533316,37,Mẫu Timex Classic 350 Lite của Timex - thiết kế cổ điển.,,,,manual,72.0,1.0
+385,Hamilton Apex 144 X,Hamilton,mechanical,2050942,78,Mẫu Hamilton Apex 144 X của Hamilton - thiết kế cổ điển.,,,,automatic,40.0,1.0
+386,Hublot Elite 469 Line,Hublot,electronic,10893425,13,Mẫu Hublot Elite 469 Line của Hublot - thiết kế hiện đại.,10.0,heart_rate;sleep_tracking;music_control;step_counter,bluetooth,,,
+387,Longines Apex 675 One,Longines,electronic,14364760,17,Mẫu Longines Apex 675 One của Longines - thiết kế hiện đại.,4.0,heart_rate,gps,,,
+388,Bulova Pilot 800 Model,Bulova,electronic,10531357,22,Mẫu Bulova Pilot 800 Model của Bulova - thiết kế hiện đại.,7.0,gps;waterproof,none,,,
+389,Hublot Heritage 624 Line,Hublot,electronic,4467140,43,Mẫu Hublot Heritage 624 Line của Hublot - thiết kế hiện đại.,3.0,nfc;gps;waterproof;step_counter,none,,,
+390,Skagen Urban 729 Z,Skagen,electronic,9672458,25,Mẫu Skagen Urban 729 Z của Skagen - thiết kế hiện đại.,2.0,step_counter;sleep_tracking;nfc;gps;notifications,none,,,
+391,Swatch Pilot 492 One,Swatch,electronic,8774254,85,Mẫu Swatch Pilot 492 One của Swatch - thiết kế hiện đại.,7.0,step_counter;music_control;waterproof;heart_rate,bluetooth,,,
+392,Tissot Classic 687 Edition,Tissot,mechanical,3398585,96,Mẫu Tissot Classic 687 Edition của Tissot - thiết kế cổ điển.,,,,automatic,42.0,0.0
+393,Casio Prime 209 Z,Casio,mechanical,968443,57,Mẫu Casio Prime 209 Z của Casio - thiết kế cổ điển.,,,,automatic,60.0,0.0
+394,Timex Pilot 399 Line,Timex,electronic,7908373,89,Mẫu Timex Pilot 399 Line của Timex - thiết kế hiện đại.,3.0,music_control,gps,,,
+395,Tag Heuer Pilot 56 Edition,Tag Heuer,mechanical,11283215,25,Mẫu Tag Heuer Pilot 56 Edition của Tag Heuer - thiết kế cổ điển.,,,,manual,80.0,1.0
+396,Swatch Voyager 560 One,Swatch,electronic,3348802,92,Mẫu Swatch Voyager 560 One của Swatch - thiết kế hiện đại.,2.0,notifications;gps;sleep_tracking,bluetooth,,,
+397,Hamilton Pilot 123 X,Hamilton,mechanical,1089196,35,Mẫu Hamilton Pilot 123 X của Hamilton - thiết kế cổ điển.,,,,manual,40.0,1.0
+398,Rolex Classic 339 S,Rolex,electronic,10790495,19,Mẫu Rolex Classic 339 S của Rolex - thiết kế hiện đại.,1.0,sleep_tracking;step_counter,bluetooth,,,
+399,Citizen Eco-Drive Prime 503 One,Citizen Eco-Drive,electronic,8477323,9,Mẫu Citizen Eco-Drive Prime 503 One của Citizen Eco-Drive - thiết kế hiện đại.,10.0,waterproof;gps;step_counter,bluetooth,,,
+400,Hamilton Heritage 557 Z,Hamilton,electronic,6349547,44,Mẫu Hamilton Heritage 557 Z của Hamilton - thiết kế hiện đại.,2.0,sleep_tracking;nfc,none,,,
+401,Citizen Eco-Drive Pilot 487 Z,Citizen Eco-Drive,mechanical,12443482,83,Mẫu Citizen Eco-Drive Pilot 487 Z của Citizen Eco-Drive - thiết kế cổ điển.,,,,automatic,36.0,0.0
+402,Timex Voyager 941 One,Timex,mechanical,4035494,5,Mẫu Timex Voyager 941 One của Timex - thiết kế cổ điển.,,,,manual,48.0,1.0
+403,Skagen Prime 26 Z,Skagen,mechanical,12420581,47,Mẫu Skagen Prime 26 Z của Skagen - thiết kế cổ điển.,,,,manual,48.0,1.0
+404,Fossil Urban 527 Series,Fossil,mechanical,14249071,21,Mẫu Fossil Urban 527 Series của Fossil - thiết kế cổ điển.,,,,automatic,72.0,1.0
+405,Fossil Heritage 856 Series,Fossil,mechanical,3480904,89,Mẫu Fossil Heritage 856 Series của Fossil - thiết kế cổ điển.,,,,manual,72.0,1.0
+406,Tissot Classic 471 Lite,Tissot,electronic,1049352,9,Mẫu Tissot Classic 471 Lite của Tissot - thiết kế hiện đại.,1.0,step_counter;notifications,bluetooth,,,
+407,Timex Prime 418 X,Timex,electronic,7041322,51,Mẫu Timex Prime 418 X của Timex - thiết kế hiện đại.,4.0,heart_rate;waterproof;sleep_tracking,bluetooth,,,
+408,Citizen Eco-Drive Sport 775 One,Citizen Eco-Drive,electronic,1159994,9,Mẫu Citizen Eco-Drive Sport 775 One của Citizen Eco-Drive - thiết kế hiện đại.,3.0,gps;nfc;sleep_tracking;music_control;heart_rate,none,,,
+409,Longines Heritage 405 Edition,Longines,electronic,7372821,68,Mẫu Longines Heritage 405 Edition của Longines - thiết kế hiện đại.,2.0,music_control;notifications,none,,,
+410,Tissot Prime 694 Lite,Tissot,electronic,14382179,1,Mẫu Tissot Prime 694 Lite của Tissot - thiết kế hiện đại.,5.0,nfc;heart_rate;music_control;sleep_tracking;waterproof,bluetooth,,,
+411,Swatch Elite 423 Z,Swatch,mechanical,2565599,23,Mẫu Swatch Elite 423 Z của Swatch - thiết kế cổ điển.,,,,automatic,60.0,0.0
+412,Hamilton Voyager 873 Edition,Hamilton,mechanical,12845122,70,Mẫu Hamilton Voyager 873 Edition của Hamilton - thiết kế cổ điển.,,,,manual,72.0,0.0
+413,Citizen Prime 101 Line,Citizen,mechanical,11021044,62,Mẫu Citizen Prime 101 Line của Citizen - thiết kế cổ điển.,,,,manual,42.0,1.0
+414,Timex Sport 292 One,Timex,electronic,1512229,24,Mẫu Timex Sport 292 One của Timex - thiết kế hiện đại.,3.0,notifications;nfc;step_counter;music_control,wifi,,,
+415,Swatch Urban 982 X,Swatch,electronic,2945273,40,Mẫu Swatch Urban 982 X của Swatch - thiết kế hiện đại.,2.0,music_control;nfc,none,,,
+416,Tag Heuer Apex 474 S,Tag Heuer,mechanical,5701753,39,Mẫu Tag Heuer Apex 474 S của Tag Heuer - thiết kế cổ điển.,,,,manual,60.0,1.0
+417,Citizen Eco-Drive Sport 862 Pro,Citizen Eco-Drive,mechanical,12951348,17,Mẫu Citizen Eco-Drive Sport 862 Pro của Citizen Eco-Drive - thiết kế cổ điển.,,,,automatic,42.0,0.0
+418,Citizen Sport 914 Edition,Citizen,electronic,12819015,80,Mẫu Citizen Sport 914 Edition của Citizen - thiết kế hiện đại.,1.0,music_control;notifications;step_counter;gps;heart_rate,none,,,
+419,Skagen Apex 670 Model,Skagen,electronic,5804370,28,Mẫu Skagen Apex 670 Model của Skagen - thiết kế hiện đại.,10.0,step_counter;gps;waterproof;notifications;heart_rate,gps,,,
+420,Seiko Elite 869 One,Seiko,mechanical,10420344,96,Mẫu Seiko Elite 869 One của Seiko - thiết kế cổ điển.,,,,automatic,48.0,1.0
+421,Movado Master 754 S,Movado,mechanical,14118041,5,Mẫu Movado Master 754 S của Movado - thiết kế cổ điển.,,,,automatic,80.0,0.0
+422,Rolex Urban 240 Edition,Rolex,mechanical,10194491,66,Mẫu Rolex Urban 240 Edition của Rolex - thiết kế cổ điển.,,,,manual,48.0,0.0
+423,Casio Classic 665 Lite,Casio,electronic,1996763,66,Mẫu Casio Classic 665 Lite của Casio - thiết kế hiện đại.,7.0,step_counter;notifications;music_control,wifi,,,
+424,Hublot Urban 602 Series,Hublot,mechanical,7991612,48,Mẫu Hublot Urban 602 Series của Hublot - thiết kế cổ điển.,,,,automatic,60.0,0.0
+425,Swatch Apex 812 S,Swatch,mechanical,13363993,0,Mẫu Swatch Apex 812 S của Swatch - thiết kế cổ điển.,,,,automatic,48.0,1.0
+426,Invicta Prime 217 Model,Invicta,mechanical,3210132,46,Mẫu Invicta Prime 217 Model của Invicta - thiết kế cổ điển.,,,,automatic,72.0,1.0
+427,Tag Heuer Sport 494 S,Tag Heuer,mechanical,7445807,75,Mẫu Tag Heuer Sport 494 S của Tag Heuer - thiết kế cổ điển.,,,,automatic,72.0,0.0
+428,Casio Master 588 One,Casio,mechanical,2836373,80,Mẫu Casio Master 588 One của Casio - thiết kế cổ điển.,,,,automatic,60.0,1.0
+429,Rolex Master 530 X,Rolex,mechanical,9190684,72,Mẫu Rolex Master 530 X của Rolex - thiết kế cổ điển.,,,,automatic,72.0,0.0
+430,Omega Sport 222 S,Omega,electronic,9294626,60,Mẫu Omega Sport 222 S của Omega - thiết kế hiện đại.,10.0,nfc;gps;waterproof;step_counter,wifi,,,
+431,Hamilton Voyager 676 Z,Hamilton,electronic,4335550,92,Mẫu Hamilton Voyager 676 Z của Hamilton - thiết kế hiện đại.,7.0,notifications;step_counter;music_control,bluetooth,,,
+432,Hublot Master 112 Edition,Hublot,mechanical,3434054,64,Mẫu Hublot Master 112 Edition của Hublot - thiết kế cổ điển.,,,,manual,80.0,1.0
+433,Hamilton Apex 924 One,Hamilton,electronic,9197300,100,Mẫu Hamilton Apex 924 One của Hamilton - thiết kế hiện đại.,5.0,gps;heart_rate;waterproof;notifications;music_control,gps,,,
+434,Swatch Classic 715 Z,Swatch,electronic,6719866,61,Mẫu Swatch Classic 715 Z của Swatch - thiết kế hiện đại.,10.0,sleep_tracking;step_counter;notifications;music_control,bluetooth,,,
+435,Rolex Apex 785 Line,Rolex,mechanical,13696238,10,Mẫu Rolex Apex 785 Line của Rolex - thiết kế cổ điển.,,,,manual,60.0,0.0
+436,Fossil Classic 727 Edition,Fossil,mechanical,8880814,15,Mẫu Fossil Classic 727 Edition của Fossil - thiết kế cổ điển.,,,,automatic,48.0,0.0
+437,Tag Heuer Heritage 371 Series,Tag Heuer,mechanical,2744289,83,Mẫu Tag Heuer Heritage 371 Series của Tag Heuer - thiết kế cổ điển.,,,,manual,42.0,0.0
+438,Swatch Voyager 283 X,Swatch,mechanical,11447093,52,Mẫu Swatch Voyager 283 X của Swatch - thiết kế cổ điển.,,,,manual,40.0,0.0
+439,Bulova Prime 315 One,Bulova,electronic,5493166,90,Mẫu Bulova Prime 315 One của Bulova - thiết kế hiện đại.,4.0,gps;sleep_tracking,wifi,,,
+440,Hamilton Sport 220 Z,Hamilton,mechanical,6308133,43,Mẫu Hamilton Sport 220 Z của Hamilton - thiết kế cổ điển.,,,,automatic,40.0,0.0
+441,Seiko Sport 844 Model,Seiko,electronic,7339196,76,Mẫu Seiko Sport 844 Model của Seiko - thiết kế hiện đại.,4.0,gps,none,,,
+442,Citizen Voyager 39 X,Citizen,mechanical,13994932,51,Mẫu Citizen Voyager 39 X của Citizen - thiết kế cổ điển.,,,,manual,72.0,0.0
+443,Hamilton Apex 450 Edition,Hamilton,mechanical,3424755,84,Mẫu Hamilton Apex 450 Edition của Hamilton - thiết kế cổ điển.,,,,manual,40.0,1.0
+444,Invicta Pilot 716 Line,Invicta,electronic,9420255,86,Mẫu Invicta Pilot 716 Line của Invicta - thiết kế hiện đại.,1.0,waterproof;sleep_tracking;heart_rate,wifi,,,
+445,Rolex Heritage 362 X,Rolex,mechanical,6379039,25,Mẫu Rolex Heritage 362 X của Rolex - thiết kế cổ điển.,,,,automatic,72.0,0.0
+446,Citizen Pilot 292 Z,Citizen,mechanical,13767630,44,Mẫu Citizen Pilot 292 Z của Citizen - thiết kế cổ điển.,,,,manual,80.0,0.0
+447,Fossil Apex 953 X,Fossil,mechanical,8836147,33,Mẫu Fossil Apex 953 X của Fossil - thiết kế cổ điển.,,,,automatic,48.0,0.0
+448,Citizen Pilot 302 Lite,Citizen,mechanical,14231724,65,Mẫu Citizen Pilot 302 Lite của Citizen - thiết kế cổ điển.,,,,manual,60.0,0.0
+449,Longines Heritage 577 S,Longines,mechanical,11664524,96,Mẫu Longines Heritage 577 S của Longines - thiết kế cổ điển.,,,,manual,80.0,0.0
+450,Movado Classic 494 Series,Movado,electronic,4238387,48,Mẫu Movado Classic 494 Series của Movado - thiết kế hiện đại.,7.0,waterproof;music_control,none,,,
+451,Swatch Pilot 549 Edition,Swatch,mechanical,10661869,33,Mẫu Swatch Pilot 549 Edition của Swatch - thiết kế cổ điển.,,,,automatic,42.0,1.0
+452,Tag Heuer Sport 568 Model,Tag Heuer,mechanical,7410054,45,Mẫu Tag Heuer Sport 568 Model của Tag Heuer - thiết kế cổ điển.,,,,automatic,60.0,0.0
+453,Fossil Apex 755 Line,Fossil,mechanical,3905490,30,Mẫu Fossil Apex 755 Line của Fossil - thiết kế cổ điển.,,,,manual,40.0,1.0
+454,Timex Voyager 365 Model,Timex,mechanical,11794608,15,Mẫu Timex Voyager 365 Model của Timex - thiết kế cổ điển.,,,,automatic,72.0,0.0
+455,Seiko Pilot 981 Edition,Seiko,electronic,12796154,47,Mẫu Seiko Pilot 981 Edition của Seiko - thiết kế hiện đại.,5.0,notifications;step_counter;nfc,gps,,,
+456,Invicta Prime 408 Line,Invicta,mechanical,11377456,16,Mẫu Invicta Prime 408 Line của Invicta - thiết kế cổ điển.,,,,automatic,60.0,0.0
+457,Skagen Classic 515 Lite,Skagen,electronic,6208895,87,Mẫu Skagen Classic 515 Lite của Skagen - thiết kế hiện đại.,10.0,notifications;heart_rate,gps,,,
+458,Seiko Classic 691 Line,Seiko,mechanical,6001706,12,Mẫu Seiko Classic 691 Line của Seiko - thiết kế cổ điển.,,,,manual,42.0,0.0
+459,Hamilton Pilot 270 Line,Hamilton,electronic,4406419,78,Mẫu Hamilton Pilot 270 Line của Hamilton - thiết kế hiện đại.,3.0,nfc;waterproof;music_control,wifi,,,
+460,Swatch Urban 875 X,Swatch,mechanical,4554628,23,Mẫu Swatch Urban 875 X của Swatch - thiết kế cổ điển.,,,,automatic,60.0,0.0
+461,Orient Prime 824 Line,Orient,mechanical,8552431,48,Mẫu Orient Prime 824 Line của Orient - thiết kế cổ điển.,,,,automatic,40.0,0.0
+462,Seiko Master 432 S,Seiko,mechanical,2449839,80,Mẫu Seiko Master 432 S của Seiko - thiết kế cổ điển.,,,,manual,80.0,0.0
+463,Skagen Voyager 49 X,Skagen,mechanical,1935135,20,Mẫu Skagen Voyager 49 X của Skagen - thiết kế cổ điển.,,,,automatic,40.0,0.0
+464,Orient Apex 763 Lite,Orient,electronic,4266652,46,Mẫu Orient Apex 763 Lite của Orient - thiết kế hiện đại.,5.0,step_counter;nfc;heart_rate;waterproof;sleep_tracking,none,,,
+465,Citizen Eco-Drive Elite 591 One,Citizen Eco-Drive,electronic,9923050,68,Mẫu Citizen Eco-Drive Elite 591 One của Citizen Eco-Drive - thiết kế hiện đại.,2.0,sleep_tracking;nfc;notifications,gps,,,
+466,Longines Sport 391 One,Longines,electronic,4654592,80,Mẫu Longines Sport 391 One của Longines - thiết kế hiện đại.,2.0,sleep_tracking;waterproof,gps,,,
+467,Citizen Sport 166 Lite,Citizen,electronic,3809160,40,Mẫu Citizen Sport 166 Lite của Citizen - thiết kế hiện đại.,7.0,step_counter;notifications;sleep_tracking,gps,,,
+468,Longines Urban 766 One,Longines,mechanical,8053568,57,Mẫu Longines Urban 766 One của Longines - thiết kế cổ điển.,,,,manual,40.0,1.0
+469,Tissot Elite 678 Pro,Tissot,electronic,14136341,89,Mẫu Tissot Elite 678 Pro của Tissot - thiết kế hiện đại.,7.0,waterproof,wifi,,,
+470,Orient Sport 960 S,Orient,mechanical,8452289,3,Mẫu Orient Sport 960 S của Orient - thiết kế cổ điển.,,,,manual,60.0,1.0
+471,Citizen Eco-Drive Master 87 X,Citizen Eco-Drive,mechanical,4985874,31,Mẫu Citizen Eco-Drive Master 87 X của Citizen Eco-Drive - thiết kế cổ điển.,,,,manual,48.0,0.0
+472,Invicta Master 30 Edition,Invicta,mechanical,10121462,41,Mẫu Invicta Master 30 Edition của Invicta - thiết kế cổ điển.,,,,manual,48.0,0.0
+473,Skagen Apex 139 Z,Skagen,electronic,3067031,76,Mẫu Skagen Apex 139 Z của Skagen - thiết kế hiện đại.,4.0,music_control;step_counter;sleep_tracking;notifications;nfc,none,,,
+474,Timex Sport 453 Pro,Timex,electronic,5803858,33,Mẫu Timex Sport 453 Pro của Timex - thiết kế hiện đại.,2.0,heart_rate;notifications;step_counter,wifi,,,
+475,Bulova Pilot 9 S,Bulova,mechanical,14230884,61,Mẫu Bulova Pilot 9 S của Bulova - thiết kế cổ điển.,,,,manual,36.0,0.0
+476,Citizen Eco-Drive Elite 816 Edition,Citizen Eco-Drive,electronic,8449077,24,Mẫu Citizen Eco-Drive Elite 816 Edition của Citizen Eco-Drive - thiết kế hiện đại.,4.0,music_control;waterproof;gps;sleep_tracking;notifications,gps,,,
+477,Citizen Heritage 641 Line,Citizen,mechanical,7990846,78,Mẫu Citizen Heritage 641 Line của Citizen - thiết kế cổ điển.,,,,manual,42.0,0.0
+478,Rolex Heritage 193 Series,Rolex,electronic,3144904,37,Mẫu Rolex Heritage 193 Series của Rolex - thiết kế hiện đại.,1.0,notifications;nfc;sleep_tracking;step_counter,gps,,,
+479,Seiko Master 51 Z,Seiko,mechanical,820898,13,Mẫu Seiko Master 51 Z của Seiko - thiết kế cổ điển.,,,,manual,42.0,1.0
+480,Seiko Elite 93 Model,Seiko,electronic,713510,27,Mẫu Seiko Elite 93 Model của Seiko - thiết kế hiện đại.,3.0,step_counter;music_control;waterproof;nfc,gps,,,
+481,Casio Urban 83 Model,Casio,electronic,1312556,99,Mẫu Casio Urban 83 Model của Casio - thiết kế hiện đại.,4.0,notifications,wifi,,,
+482,Rolex Heritage 849 Edition,Rolex,mechanical,2268443,98,Mẫu Rolex Heritage 849 Edition của Rolex - thiết kế cổ điển.,,,,automatic,48.0,0.0
+483,Casio Elite 472 Series,Casio,mechanical,8056517,26,Mẫu Casio Elite 472 Series của Casio - thiết kế cổ điển.,,,,manual,48.0,0.0
+484,Tag Heuer Master 645 Edition,Tag Heuer,electronic,11298506,70,Mẫu Tag Heuer Master 645 Edition của Tag Heuer - thiết kế hiện đại.,5.0,step_counter,gps,,,
+485,Fossil Urban 909 Edition,Fossil,electronic,13023036,27,Mẫu Fossil Urban 909 Edition của Fossil - thiết kế hiện đại.,1.0,music_control;nfc,bluetooth,,,
+486,Rolex Voyager 123 X,Rolex,mechanical,11942585,1,Mẫu Rolex Voyager 123 X của Rolex - thiết kế cổ điển.,,,,automatic,60.0,0.0
+487,Citizen Eco-Drive Master 381 Series,Citizen Eco-Drive,electronic,4106473,63,Mẫu Citizen Eco-Drive Master 381 Series của Citizen Eco-Drive - thiết kế hiện đại.,1.0,sleep_tracking;music_control;notifications;heart_rate;step_counter,none,,,
+488,Skagen Sport 129 S,Skagen,electronic,3873782,71,Mẫu Skagen Sport 129 S của Skagen - thiết kế hiện đại.,10.0,notifications;sleep_tracking;gps,bluetooth,,,
+489,Swatch Master 257 Edition,Swatch,electronic,7536881,56,Mẫu Swatch Master 257 Edition của Swatch - thiết kế hiện đại.,5.0,notifications;gps;step_counter,wifi,,,
+490,Tag Heuer Apex 282 One,Tag Heuer,electronic,13759873,70,Mẫu Tag Heuer Apex 282 One của Tag Heuer - thiết kế hiện đại.,2.0,nfc,gps,,,
+491,Rolex Pilot 376 S,Rolex,mechanical,510438,81,Mẫu Rolex Pilot 376 S của Rolex - thiết kế cổ điển.,,,,manual,72.0,1.0
+492,Citizen Eco-Drive Urban 795 One,Citizen Eco-Drive,electronic,3962405,92,Mẫu Citizen Eco-Drive Urban 795 One của Citizen Eco-Drive - thiết kế hiện đại.,1.0,music_control;gps;step_counter;waterproof;notifications,none,,,
+493,Tag Heuer Sport 99 Z,Tag Heuer,mechanical,10053920,5,Mẫu Tag Heuer Sport 99 Z của Tag Heuer - thiết kế cổ điển.,,,,automatic,40.0,1.0
+494,Bulova Elite 102 Edition,Bulova,mechanical,8779677,49,Mẫu Bulova Elite 102 Edition của Bulova - thiết kế cổ điển.,,,,manual,60.0,0.0
+495,Rolex Classic 376 Line,Rolex,electronic,9286328,9,Mẫu Rolex Classic 376 Line của Rolex - thiết kế hiện đại.,1.0,notifications;music_control,bluetooth,,,
+496,Casio Urban 572 X,Casio,electronic,12419384,90,Mẫu Casio Urban 572 X của Casio - thiết kế hiện đại.,1.0,step_counter;notifications;heart_rate;sleep_tracking;nfc,bluetooth,,,
+497,Invicta Sport 104 Line,Invicta,electronic,8209085,24,Mẫu Invicta Sport 104 Line của Invicta - thiết kế hiện đại.,2.0,waterproof;step_counter;sleep_tracking;gps;notifications,bluetooth,,,
+498,Movado Urban 691 S,Movado,electronic,10686981,54,Mẫu Movado Urban 691 S của Movado - thiết kế hiện đại.,1.0,nfc;step_counter,gps,,,
+499,Hamilton Pilot 615 S,Hamilton,electronic,14036040,40,Mẫu Hamilton Pilot 615 S của Hamilton - thiết kế hiện đại.,5.0,sleep_tracking;waterproof;notifications,gps,,,
+500,Tag Heuer Voyager 247 One,Tag Heuer,electronic,8411580,48,Mẫu Tag Heuer Voyager 247 One của Tag Heuer - thiết kế hiện đại.,10.0,step_counter;nfc;waterproof;sleep_tracking;notifications,bluetooth,,,
+501,Omega Voyager 17 Z,Omega,electronic,2458743,38,Mẫu Omega Voyager 17 Z của Omega - thiết kế hiện đại.,1.0,waterproof;gps;nfc,bluetooth,,,
+502,Rolex Pilot 524 Z,Rolex,electronic,8774689,73,Mẫu Rolex Pilot 524 Z của Rolex - thiết kế hiện đại.,2.0,heart_rate,gps,,,
+503,Tissot Prime 376 One,Tissot,mechanical,4122925,32,Mẫu Tissot Prime 376 One của Tissot - thiết kế cổ điển.,,,,manual,36.0,0.0
+504,Fossil Sport 741 Lite,Fossil,mechanical,11997111,22,Mẫu Fossil Sport 741 Lite của Fossil - thiết kế cổ điển.,,,,manual,80.0,0.0
+505,Orient Voyager 658 Pro,Orient,electronic,1041888,73,Mẫu Orient Voyager 658 Pro của Orient - thiết kế hiện đại.,4.0,heart_rate,none,,,
+506,Patek Philippe Heritage 953 Series,Patek Philippe,mechanical,13111904,29,Mẫu Patek Philippe Heritage 953 Series của Patek Philippe - thiết kế cổ điển.,,,,automatic,72.0,0.0
+507,Omega Pilot 43 Lite,Omega,mechanical,8328981,19,Mẫu Omega Pilot 43 Lite của Omega - thiết kế cổ điển.,,,,manual,60.0,0.0
+508,Casio Heritage 995 S,Casio,mechanical,11416183,73,Mẫu Casio Heritage 995 S của Casio - thiết kế cổ điển.,,,,automatic,40.0,0.0
+509,Hublot Master 136 Lite,Hublot,mechanical,1696904,73,Mẫu Hublot Master 136 Lite của Hublot - thiết kế cổ điển.,,,,automatic,60.0,0.0
+510,Hublot Pilot 445 Model,Hublot,mechanical,11549477,61,Mẫu Hublot Pilot 445 Model của Hublot - thiết kế cổ điển.,,,,automatic,48.0,0.0
+511,Fossil Pilot 631 Z,Fossil,electronic,4070565,9,Mẫu Fossil Pilot 631 Z của Fossil - thiết kế hiện đại.,3.0,sleep_tracking;notifications;step_counter;heart_rate,bluetooth,,,
+512,Patek Philippe Urban 357 Line,Patek Philippe,electronic,5150706,76,Mẫu Patek Philippe Urban 357 Line của Patek Philippe - thiết kế hiện đại.,7.0,step_counter,wifi,,,
+513,Citizen Eco-Drive Apex 639 Model,Citizen Eco-Drive,electronic,6886720,29,Mẫu Citizen Eco-Drive Apex 639 Model của Citizen Eco-Drive - thiết kế hiện đại.,2.0,nfc;music_control;sleep_tracking,bluetooth,,,
+514,Casio Elite 972 One,Casio,mechanical,13937581,36,Mẫu Casio Elite 972 One của Casio - thiết kế cổ điển.,,,,automatic,42.0,0.0
+515,Omega Apex 483 Edition,Omega,electronic,5312212,94,Mẫu Omega Apex 483 Edition của Omega - thiết kế hiện đại.,5.0,waterproof;step_counter,none,,,
+516,Citizen Eco-Drive Master 712 Edition,Citizen Eco-Drive,electronic,5960797,84,Mẫu Citizen Eco-Drive Master 712 Edition của Citizen Eco-Drive - thiết kế hiện đại.,5.0,step_counter,wifi,,,
+517,Fossil Voyager 278 Edition,Fossil,mechanical,7241932,1,Mẫu Fossil Voyager 278 Edition của Fossil - thiết kế cổ điển.,,,,automatic,48.0,0.0
+518,Swatch Sport 20 Pro,Swatch,mechanical,13077451,83,Mẫu Swatch Sport 20 Pro của Swatch - thiết kế cổ điển.,,,,manual,40.0,0.0
+519,Orient Urban 497 One,Orient,electronic,8207629,23,Mẫu Orient Urban 497 One của Orient - thiết kế hiện đại.,2.0,notifications;step_counter;sleep_tracking;heart_rate;music_control,wifi,,,
+520,Omega Urban 502 X,Omega,electronic,11293665,2,Mẫu Omega Urban 502 X của Omega - thiết kế hiện đại.,3.0,sleep_tracking;notifications;nfc,wifi,,,
+521,Invicta Prime 832 Edition,Invicta,electronic,9573989,49,Mẫu Invicta Prime 832 Edition của Invicta - thiết kế hiện đại.,10.0,step_counter,wifi,,,
+522,Hublot Master 90 X,Hublot,mechanical,8050409,86,Mẫu Hublot Master 90 X của Hublot - thiết kế cổ điển.,,,,automatic,48.0,1.0
+523,Patek Philippe Prime 932 One,Patek Philippe,electronic,5274629,69,Mẫu Patek Philippe Prime 932 One của Patek Philippe - thiết kế hiện đại.,2.0,nfc;step_counter,wifi,,,
+524,Omega Pilot 932 Model,Omega,electronic,6735932,98,Mẫu Omega Pilot 932 Model của Omega - thiết kế hiện đại.,2.0,nfc;notifications;heart_rate;step_counter;sleep_tracking,wifi,,,
+525,Tissot Classic 784 Lite,Tissot,mechanical,13261913,52,Mẫu Tissot Classic 784 Lite của Tissot - thiết kế cổ điển.,,,,manual,42.0,0.0
+526,Rolex Master 798 Line,Rolex,electronic,2048186,23,Mẫu Rolex Master 798 Line của Rolex - thiết kế hiện đại.,1.0,step_counter;notifications;music_control;sleep_tracking;gps,wifi,,,
+527,Seiko Urban 82 S,Seiko,mechanical,2444256,77,Mẫu Seiko Urban 82 S của Seiko - thiết kế cổ điển.,,,,manual,72.0,0.0
+528,Hublot Apex 486 Model,Hublot,mechanical,2874902,28,Mẫu Hublot Apex 486 Model của Hublot - thiết kế cổ điển.,,,,automatic,48.0,1.0
+529,Patek Philippe Elite 761 Line,Patek Philippe,electronic,11487761,8,Mẫu Patek Philippe Elite 761 Line của Patek Philippe - thiết kế hiện đại.,2.0,notifications;sleep_tracking;nfc;waterproof,wifi,,,
+530,Casio Voyager 753 X,Casio,mechanical,10942913,50,Mẫu Casio Voyager 753 X của Casio - thiết kế cổ điển.,,,,automatic,60.0,1.0
+531,Casio Elite 532 Z,Casio,electronic,6236362,94,Mẫu Casio Elite 532 Z của Casio - thiết kế hiện đại.,1.0,music_control;step_counter;sleep_tracking;heart_rate;gps,none,,,
+532,Omega Prime 473 Model,Omega,mechanical,6625702,78,Mẫu Omega Prime 473 Model của Omega - thiết kế cổ điển.,,,,automatic,72.0,0.0
+533,Longines Apex 93 Z,Longines,electronic,2140988,99,Mẫu Longines Apex 93 Z của Longines - thiết kế hiện đại.,5.0,nfc;waterproof;music_control;notifications;sleep_tracking,bluetooth,,,
+534,Movado Elite 904 S,Movado,mechanical,1807605,41,Mẫu Movado Elite 904 S của Movado - thiết kế cổ điển.,,,,automatic,72.0,0.0
+535,Orient Apex 650 Lite,Orient,mechanical,1736945,90,Mẫu Orient Apex 650 Lite của Orient - thiết kế cổ điển.,,,,manual,72.0,0.0
+536,Hamilton Heritage 564 X,Hamilton,electronic,1136638,21,Mẫu Hamilton Heritage 564 X của Hamilton - thiết kế hiện đại.,3.0,nfc;gps;music_control;sleep_tracking;heart_rate,gps,,,
+537,Longines Prime 642 Model,Longines,mechanical,2204533,16,Mẫu Longines Prime 642 Model của Longines - thiết kế cổ điển.,,,,automatic,36.0,0.0
+538,Seiko Apex 510 S,Seiko,electronic,8380767,0,Mẫu Seiko Apex 510 S của Seiko - thiết kế hiện đại.,5.0,waterproof;gps;step_counter;notifications,gps,,,
+539,Citizen Voyager 615 Edition,Citizen,mechanical,4048341,70,Mẫu Citizen Voyager 615 Edition của Citizen - thiết kế cổ điển.,,,,manual,60.0,0.0
+540,Fossil Classic 190 Model,Fossil,electronic,1298427,44,Mẫu Fossil Classic 190 Model của Fossil - thiết kế hiện đại.,1.0,heart_rate;sleep_tracking,none,,,
+541,Citizen Classic 112 X,Citizen,mechanical,14909160,20,Mẫu Citizen Classic 112 X của Citizen - thiết kế cổ điển.,,,,manual,60.0,0.0
+542,Citizen Eco-Drive Voyager 807 Z,Citizen Eco-Drive,electronic,3072579,58,Mẫu Citizen Eco-Drive Voyager 807 Z của Citizen Eco-Drive - thiết kế hiện đại.,7.0,sleep_tracking;heart_rate;music_control;nfc;step_counter,none,,,
+543,Citizen Heritage 864 Z,Citizen,electronic,1441425,60,Mẫu Citizen Heritage 864 Z của Citizen - thiết kế hiện đại.,2.0,step_counter,none,,,
+544,Invicta Elite 713 Line,Invicta,electronic,9374779,13,Mẫu Invicta Elite 713 Line của Invicta - thiết kế hiện đại.,5.0,gps;waterproof;sleep_tracking;step_counter;nfc,gps,,,
+545,Tag Heuer Prime 539 One,Tag Heuer,electronic,14927853,45,Mẫu Tag Heuer Prime 539 One của Tag Heuer - thiết kế hiện đại.,2.0,notifications;step_counter;sleep_tracking;waterproof;music_control,wifi,,,
+546,Timex Prime 199 Edition,Timex,electronic,2214003,59,Mẫu Timex Prime 199 Edition của Timex - thiết kế hiện đại.,7.0,waterproof,gps,,,
+547,Tag Heuer Urban 574 Line,Tag Heuer,mechanical,663810,25,Mẫu Tag Heuer Urban 574 Line của Tag Heuer - thiết kế cổ điển.,,,,manual,42.0,1.0
+548,Invicta Pilot 332 Edition,Invicta,mechanical,2150633,42,Mẫu Invicta Pilot 332 Edition của Invicta - thiết kế cổ điển.,,,,manual,48.0,0.0
+549,Seiko Master 199 Lite,Seiko,electronic,12590467,86,Mẫu Seiko Master 199 Lite của Seiko - thiết kế hiện đại.,4.0,heart_rate;sleep_tracking;gps;waterproof,wifi,,,
+550,Skagen Urban 474 X,Skagen,electronic,13952955,7,Mẫu Skagen Urban 474 X của Skagen - thiết kế hiện đại.,10.0,step_counter;notifications;sleep_tracking;nfc;heart_rate,wifi,,,
+551,Tag Heuer Urban 68 Model,Tag Heuer,electronic,4566670,3,Mẫu Tag Heuer Urban 68 Model của Tag Heuer - thiết kế hiện đại.,3.0,nfc;step_counter;music_control;waterproof,wifi,,,
+552,Omega Urban 727 Edition,Omega,electronic,4436713,11,Mẫu Omega Urban 727 Edition của Omega - thiết kế hiện đại.,4.0,sleep_tracking;waterproof,none,,,
+553,Omega Master 115 Lite,Omega,mechanical,11881688,99,Mẫu Omega Master 115 Lite của Omega - thiết kế cổ điển.,,,,automatic,36.0,0.0
+554,Bulova Pilot 158 Line,Bulova,electronic,5431681,61,Mẫu Bulova Pilot 158 Line của Bulova - thiết kế hiện đại.,7.0,step_counter;music_control;nfc;gps;heart_rate,wifi,,,
+555,Casio Apex 397 Z,Casio,mechanical,2179622,39,Mẫu Casio Apex 397 Z của Casio - thiết kế cổ điển.,,,,automatic,72.0,0.0
+556,Tag Heuer Apex 911 Edition,Tag Heuer,electronic,1994991,98,Mẫu Tag Heuer Apex 911 Edition của Tag Heuer - thiết kế hiện đại.,7.0,heart_rate;step_counter;nfc,wifi,,,
+557,Fossil Prime 284 Z,Fossil,mechanical,5127672,56,Mẫu Fossil Prime 284 Z của Fossil - thiết kế cổ điển.,,,,automatic,42.0,1.0
+558,Orient Classic 982 One,Orient,mechanical,8614574,13,Mẫu Orient Classic 982 One của Orient - thiết kế cổ điển.,,,,automatic,60.0,0.0
+559,Rolex Master 966 Pro,Rolex,electronic,8824203,21,Mẫu Rolex Master 966 Pro của Rolex - thiết kế hiện đại.,1.0,sleep_tracking;step_counter;waterproof,bluetooth,,,
+560,Bulova Classic 109 X,Bulova,mechanical,1280098,54,Mẫu Bulova Classic 109 X của Bulova - thiết kế cổ điển.,,,,manual,40.0,0.0
+561,Movado Apex 632 Lite,Movado,electronic,5030389,25,Mẫu Movado Apex 632 Lite của Movado - thiết kế hiện đại.,7.0,gps;music_control;waterproof;step_counter;notifications,bluetooth,,,
+562,Longines Sport 467 Pro,Longines,electronic,10424931,90,Mẫu Longines Sport 467 Pro của Longines - thiết kế hiện đại.,10.0,notifications;gps;music_control;sleep_tracking,none,,,
+563,Hublot Master 717 Lite,Hublot,electronic,11937291,41,Mẫu Hublot Master 717 Lite của Hublot - thiết kế hiện đại.,4.0,heart_rate;notifications;waterproof;music_control,none,,,
+564,Hamilton Prime 787 Lite,Hamilton,electronic,9264383,16,Mẫu Hamilton Prime 787 Lite của Hamilton - thiết kế hiện đại.,5.0,music_control,bluetooth,,,
+565,Citizen Prime 546 S,Citizen,mechanical,6311839,52,Mẫu Citizen Prime 546 S của Citizen - thiết kế cổ điển.,,,,automatic,60.0,1.0
+566,Bulova Heritage 68 Lite,Bulova,electronic,3519453,88,Mẫu Bulova Heritage 68 Lite của Bulova - thiết kế hiện đại.,5.0,music_control;step_counter;nfc;notifications,wifi,,,
+567,Citizen Voyager 857 S,Citizen,mechanical,2157681,76,Mẫu Citizen Voyager 857 S của Citizen - thiết kế cổ điển.,,,,manual,42.0,0.0
+568,Longines Master 316 X,Longines,mechanical,1509311,13,Mẫu Longines Master 316 X của Longines - thiết kế cổ điển.,,,,manual,42.0,0.0
+569,Casio Sport 223 Model,Casio,electronic,13365292,96,Mẫu Casio Sport 223 Model của Casio - thiết kế hiện đại.,7.0,nfc,wifi,,,
+570,Omega Heritage 631 One,Omega,electronic,6983817,26,Mẫu Omega Heritage 631 One của Omega - thiết kế hiện đại.,7.0,step_counter;notifications;sleep_tracking,none,,,
+571,Patek Philippe Urban 92 One,Patek Philippe,electronic,617729,65,Mẫu Patek Philippe Urban 92 One của Patek Philippe - thiết kế hiện đại.,4.0,step_counter;heart_rate,none,,,
+572,Casio Classic 721 Z,Casio,electronic,12400923,45,Mẫu Casio Classic 721 Z của Casio - thiết kế hiện đại.,1.0,heart_rate;gps;waterproof,gps,,,
+573,Hublot Heritage 391 X,Hublot,electronic,8404222,84,Mẫu Hublot Heritage 391 X của Hublot - thiết kế hiện đại.,2.0,nfc;gps;step_counter;waterproof,none,,,
+574,Tissot Prime 894 Model,Tissot,electronic,2447023,9,Mẫu Tissot Prime 894 Model của Tissot - thiết kế hiện đại.,7.0,nfc,gps,,,
+575,Tissot Sport 141 X,Tissot,electronic,12972215,100,Mẫu Tissot Sport 141 X của Tissot - thiết kế hiện đại.,7.0,music_control;step_counter;gps;waterproof;notifications,gps,,,
+576,Timex Master 435 One,Timex,mechanical,607735,63,Mẫu Timex Master 435 One của Timex - thiết kế cổ điển.,,,,automatic,72.0,0.0
+577,Skagen Voyager 376 Edition,Skagen,mechanical,14684385,72,Mẫu Skagen Voyager 376 Edition của Skagen - thiết kế cổ điển.,,,,manual,72.0,0.0
+578,Bulova Sport 146 Z,Bulova,mechanical,14761897,96,Mẫu Bulova Sport 146 Z của Bulova - thiết kế cổ điển.,,,,manual,48.0,0.0
+579,Citizen Eco-Drive Sport 252 S,Citizen Eco-Drive,mechanical,9644611,84,Mẫu Citizen Eco-Drive Sport 252 S của Citizen Eco-Drive - thiết kế cổ điển.,,,,automatic,72.0,0.0
+580,Movado Prime 628 Edition,Movado,electronic,13601986,68,Mẫu Movado Prime 628 Edition của Movado - thiết kế hiện đại.,10.0,notifications,gps,,,
+581,Bulova Voyager 752 Lite,Bulova,electronic,6604734,37,Mẫu Bulova Voyager 752 Lite của Bulova - thiết kế hiện đại.,3.0,heart_rate;sleep_tracking,none,,,
+582,Movado Prime 63 S,Movado,electronic,8883046,73,Mẫu Movado Prime 63 S của Movado - thiết kế hiện đại.,1.0,heart_rate;nfc;waterproof,bluetooth,,,
+583,Citizen Prime 259 Model,Citizen,mechanical,9429068,35,Mẫu Citizen Prime 259 Model của Citizen - thiết kế cổ điển.,,,,manual,36.0,0.0
+584,Hamilton Voyager 757 Model,Hamilton,mechanical,10057757,47,Mẫu Hamilton Voyager 757 Model của Hamilton - thiết kế cổ điển.,,,,automatic,42.0,0.0
+585,Hamilton Pilot 883 Edition,Hamilton,mechanical,5471296,10,Mẫu Hamilton Pilot 883 Edition của Hamilton - thiết kế cổ điển.,,,,automatic,60.0,1.0
+586,Patek Philippe Heritage 244 S,Patek Philippe,electronic,11026987,21,Mẫu Patek Philippe Heritage 244 S của Patek Philippe - thiết kế hiện đại.,2.0,sleep_tracking;heart_rate;notifications;nfc;music_control,bluetooth,,,
+587,Hublot Apex 309 S,Hublot,mechanical,11319183,96,Mẫu Hublot Apex 309 S của Hublot - thiết kế cổ điển.,,,,automatic,48.0,0.0
+588,Bulova Prime 149 Z,Bulova,electronic,13119027,1,Mẫu Bulova Prime 149 Z của Bulova - thiết kế hiện đại.,3.0,music_control;sleep_tracking;nfc;step_counter,bluetooth,,,
+589,Skagen Urban 980 X,Skagen,mechanical,9352041,83,Mẫu Skagen Urban 980 X của Skagen - thiết kế cổ điển.,,,,manual,42.0,0.0
+590,Orient Prime 671 One,Orient,mechanical,6171730,98,Mẫu Orient Prime 671 One của Orient - thiết kế cổ điển.,,,,automatic,72.0,0.0
+591,Fossil Pilot 346 Model,Fossil,electronic,5042412,1,Mẫu Fossil Pilot 346 Model của Fossil - thiết kế hiện đại.,7.0,gps,bluetooth,,,
+592,Invicta Sport 702 S,Invicta,mechanical,5596988,92,Mẫu Invicta Sport 702 S của Invicta - thiết kế cổ điển.,,,,manual,42.0,1.0
+593,Citizen Eco-Drive Sport 59 One,Citizen Eco-Drive,mechanical,10020780,27,Mẫu Citizen Eco-Drive Sport 59 One của Citizen Eco-Drive - thiết kế cổ điển.,,,,automatic,72.0,1.0
+594,Citizen Eco-Drive Master 385 One,Citizen Eco-Drive,mechanical,12146401,23,Mẫu Citizen Eco-Drive Master 385 One của Citizen Eco-Drive - thiết kế cổ điển.,,,,automatic,72.0,1.0
+595,Longines Sport 655 S,Longines,mechanical,13879083,35,Mẫu Longines Sport 655 S của Longines - thiết kế cổ điển.,,,,manual,72.0,0.0
+596,Tag Heuer Prime 166 Series,Tag Heuer,electronic,4520668,7,Mẫu Tag Heuer Prime 166 Series của Tag Heuer - thiết kế hiện đại.,4.0,sleep_tracking;heart_rate;nfc;notifications,wifi,,,
+597,Bulova Elite 625 X,Bulova,mechanical,3087411,62,Mẫu Bulova Elite 625 X của Bulova - thiết kế cổ điển.,,,,automatic,40.0,0.0
+598,Fossil Voyager 659 Series,Fossil,electronic,13732834,91,Mẫu Fossil Voyager 659 Series của Fossil - thiết kế hiện đại.,3.0,heart_rate,bluetooth,,,
+599,Rolex Apex 20 S,Rolex,mechanical,2658387,81,Mẫu Rolex Apex 20 S của Rolex - thiết kế cổ điển.,,,,automatic,36.0,0.0
+600,Tissot Urban 927 X,Tissot,mechanical,8832284,65,Mẫu Tissot Urban 927 X của Tissot - thiết kế cổ điển.,,,,manual,48.0,0.0
+601,Citizen Pilot 232 Edition,Citizen,mechanical,6074146,88,Mẫu Citizen Pilot 232 Edition của Citizen - thiết kế cổ điển.,,,,manual,36.0,0.0
+602,Swatch Urban 699 Pro,Swatch,electronic,6308915,80,Mẫu Swatch Urban 699 Pro của Swatch - thiết kế hiện đại.,7.0,sleep_tracking,none,,,
+603,Longines Prime 664 Line,Longines,mechanical,3060965,5,Mẫu Longines Prime 664 Line của Longines - thiết kế cổ điển.,,,,manual,72.0,1.0
+604,Hublot Sport 646 Lite,Hublot,mechanical,7554301,80,Mẫu Hublot Sport 646 Lite của Hublot - thiết kế cổ điển.,,,,manual,72.0,1.0
+605,Fossil Classic 738 One,Fossil,mechanical,3958034,49,Mẫu Fossil Classic 738 One của Fossil - thiết kế cổ điển.,,,,automatic,80.0,0.0
+606,Bulova Pilot 989 S,Bulova,electronic,14515325,2,Mẫu Bulova Pilot 989 S của Bulova - thiết kế hiện đại.,1.0,heart_rate;nfc;sleep_tracking,bluetooth,,,
+607,Fossil Pilot 470 Z,Fossil,mechanical,2659828,74,Mẫu Fossil Pilot 470 Z của Fossil - thiết kế cổ điển.,,,,automatic,36.0,1.0
+608,Bulova Classic 483 One,Bulova,electronic,1164125,89,Mẫu Bulova Classic 483 One của Bulova - thiết kế hiện đại.,7.0,heart_rate;gps,bluetooth,,,
+609,Orient Apex 626 Model,Orient,electronic,12612606,8,Mẫu Orient Apex 626 Model của Orient - thiết kế hiện đại.,10.0,gps,gps,,,
+610,Citizen Eco-Drive Elite 65 Line,Citizen Eco-Drive,electronic,6680066,94,Mẫu Citizen Eco-Drive Elite 65 Line của Citizen Eco-Drive - thiết kế hiện đại.,7.0,sleep_tracking;heart_rate;notifications;step_counter,wifi,,,
+611,Fossil Classic 608 Model,Fossil,mechanical,5364804,15,Mẫu Fossil Classic 608 Model của Fossil - thiết kế cổ điển.,,,,manual,40.0,0.0
+612,Swatch Pilot 169 S,Swatch,mechanical,4032847,74,Mẫu Swatch Pilot 169 S của Swatch - thiết kế cổ điển.,,,,automatic,40.0,1.0
+613,Citizen Eco-Drive Heritage 797 Model,Citizen Eco-Drive,electronic,726640,62,Mẫu Citizen Eco-Drive Heritage 797 Model của Citizen Eco-Drive - thiết kế hiện đại.,1.0,heart_rate,wifi,,,
+614,Movado Prime 427 S,Movado,electronic,10539196,26,Mẫu Movado Prime 427 S của Movado - thiết kế hiện đại.,2.0,notifications;waterproof;gps,wifi,,,
+615,Casio Voyager 185 S,Casio,electronic,9374722,11,Mẫu Casio Voyager 185 S của Casio - thiết kế hiện đại.,7.0,sleep_tracking;waterproof;heart_rate,wifi,,,
+616,Invicta Sport 634 Lite,Invicta,mechanical,13009600,69,Mẫu Invicta Sport 634 Lite của Invicta - thiết kế cổ điển.,,,,automatic,48.0,0.0
+617,Rolex Classic 199 Series,Rolex,electronic,12050888,87,Mẫu Rolex Classic 199 Series của Rolex - thiết kế hiện đại.,10.0,notifications;gps;music_control;heart_rate,bluetooth,,,
+618,Omega Elite 446 Pro,Omega,electronic,5347272,97,Mẫu Omega Elite 446 Pro của Omega - thiết kế hiện đại.,4.0,gps,bluetooth,,,
+619,Hamilton Master 805 Edition,Hamilton,electronic,7533390,14,Mẫu Hamilton Master 805 Edition của Hamilton - thiết kế hiện đại.,1.0,notifications;step_counter,none,,,
+620,Tag Heuer Elite 798 Series,Tag Heuer,mechanical,5228917,12,Mẫu Tag Heuer Elite 798 Series của Tag Heuer - thiết kế cổ điển.,,,,automatic,72.0,0.0
+621,Hublot Elite 76 S,Hublot,electronic,8983838,6,Mẫu Hublot Elite 76 S của Hublot - thiết kế hiện đại.,4.0,waterproof;step_counter,gps,,,
+622,Swatch Master 469 Line,Swatch,mechanical,9664306,34,Mẫu Swatch Master 469 Line của Swatch - thiết kế cổ điển.,,,,automatic,42.0,1.0
+623,Movado Classic 288 Model,Movado,mechanical,2111084,59,Mẫu Movado Classic 288 Model của Movado - thiết kế cổ điển.,,,,manual,48.0,1.0
+624,Timex Prime 619 Model,Timex,electronic,11948431,81,Mẫu Timex Prime 619 Model của Timex - thiết kế hiện đại.,5.0,waterproof;heart_rate,gps,,,
+625,Bulova Elite 606 S,Bulova,electronic,12636341,35,Mẫu Bulova Elite 606 S của Bulova - thiết kế hiện đại.,1.0,waterproof;gps;nfc;notifications,wifi,,,
+626,Movado Master 936 One,Movado,electronic,13524651,53,Mẫu Movado Master 936 One của Movado - thiết kế hiện đại.,1.0,notifications,bluetooth,,,
+627,Hublot Apex 830 Series,Hublot,mechanical,7060400,30,Mẫu Hublot Apex 830 Series của Hublot - thiết kế cổ điển.,,,,automatic,60.0,1.0
+628,Patek Philippe Elite 136 Lite,Patek Philippe,electronic,4788961,82,Mẫu Patek Philippe Elite 136 Lite của Patek Philippe - thiết kế hiện đại.,1.0,notifications,none,,,
+629,Longines Voyager 766 One,Longines,mechanical,853995,58,Mẫu Longines Voyager 766 One của Longines - thiết kế cổ điển.,,,,manual,80.0,1.0
+630,Hublot Master 809 Lite,Hublot,electronic,9588759,90,Mẫu Hublot Master 809 Lite của Hublot - thiết kế hiện đại.,7.0,gps,gps,,,
+631,Tag Heuer Pilot 34 Pro,Tag Heuer,electronic,6675583,34,Mẫu Tag Heuer Pilot 34 Pro của Tag Heuer - thiết kế hiện đại.,7.0,waterproof;music_control;sleep_tracking;heart_rate;nfc,bluetooth,,,
+632,Swatch Classic 114 X,Swatch,electronic,5801067,79,Mẫu Swatch Classic 114 X của Swatch - thiết kế hiện đại.,1.0,sleep_tracking;gps;notifications,bluetooth,,,
+633,Fossil Master 343 Line,Fossil,electronic,8324690,83,Mẫu Fossil Master 343 Line của Fossil - thiết kế hiện đại.,4.0,waterproof;music_control;sleep_tracking;gps;nfc,none,,,
+634,Invicta Heritage 284 Edition,Invicta,electronic,1418853,44,Mẫu Invicta Heritage 284 Edition của Invicta - thiết kế hiện đại.,4.0,gps;waterproof;sleep_tracking;step_counter,none,,,
+635,Swatch Sport 193 S,Swatch,electronic,1765977,50,Mẫu Swatch Sport 193 S của Swatch - thiết kế hiện đại.,2.0,gps;heart_rate;notifications,none,,,
+636,Tissot Apex 155 Line,Tissot,mechanical,8049971,80,Mẫu Tissot Apex 155 Line của Tissot - thiết kế cổ điển.,,,,automatic,42.0,0.0
+637,Skagen Master 486 Lite,Skagen,electronic,6591885,94,Mẫu Skagen Master 486 Lite của Skagen - thiết kế hiện đại.,7.0,step_counter,wifi,,,
+638,Timex Pilot 661 Lite,Timex,mechanical,6469530,43,Mẫu Timex Pilot 661 Lite của Timex - thiết kế cổ điển.,,,,manual,48.0,0.0
+639,Invicta Pilot 456 S,Invicta,electronic,4909194,16,Mẫu Invicta Pilot 456 S của Invicta - thiết kế hiện đại.,10.0,nfc;music_control;notifications,wifi,,,
+640,Omega Classic 152 Lite,Omega,electronic,4623539,21,Mẫu Omega Classic 152 Lite của Omega - thiết kế hiện đại.,5.0,step_counter;gps,wifi,,,
+641,Tissot Master 244 Series,Tissot,electronic,1096696,40,Mẫu Tissot Master 244 Series của Tissot - thiết kế hiện đại.,5.0,notifications;nfc,none,,,
+642,Skagen Classic 682 Lite,Skagen,mechanical,14681327,18,Mẫu Skagen Classic 682 Lite của Skagen - thiết kế cổ điển.,,,,manual,48.0,0.0
+643,Skagen Prime 125 Edition,Skagen,electronic,6366154,63,Mẫu Skagen Prime 125 Edition của Skagen - thiết kế hiện đại.,10.0,notifications;nfc,wifi,,,
+644,Skagen Pilot 340 Pro,Skagen,mechanical,7371705,37,Mẫu Skagen Pilot 340 Pro của Skagen - thiết kế cổ điển.,,,,automatic,80.0,0.0
+645,Longines Urban 706 Series,Longines,electronic,11108788,5,Mẫu Longines Urban 706 Series của Longines - thiết kế hiện đại.,2.0,gps;nfc;heart_rate;waterproof;notifications,gps,,,
+646,Tag Heuer Classic 623 Line,Tag Heuer,mechanical,8959756,28,Mẫu Tag Heuer Classic 623 Line của Tag Heuer - thiết kế cổ điển.,,,,manual,40.0,1.0
+647,Longines Sport 525 X,Longines,mechanical,3319526,40,Mẫu Longines Sport 525 X của Longines - thiết kế cổ điển.,,,,automatic,72.0,0.0
+648,Patek Philippe Urban 396 Lite,Patek Philippe,mechanical,676766,44,Mẫu Patek Philippe Urban 396 Lite của Patek Philippe - thiết kế cổ điển.,,,,manual,42.0,0.0
+649,Citizen Elite 746 S,Citizen,electronic,11252151,53,Mẫu Citizen Elite 746 S của Citizen - thiết kế hiện đại.,10.0,step_counter;gps;sleep_tracking;waterproof,gps,,,
+650,Movado Voyager 89 Model,Movado,mechanical,3512865,60,Mẫu Movado Voyager 89 Model của Movado - thiết kế cổ điển.,,,,manual,36.0,0.0
+651,Citizen Classic 420 Pro,Citizen,electronic,6510453,71,Mẫu Citizen Classic 420 Pro của Citizen - thiết kế hiện đại.,4.0,nfc;gps;music_control;waterproof;notifications,gps,,,
+652,Omega Voyager 312 S,Omega,mechanical,8609575,59,Mẫu Omega Voyager 312 S của Omega - thiết kế cổ điển.,,,,automatic,36.0,1.0
+653,Omega Apex 128 Pro,Omega,mechanical,6548773,62,Mẫu Omega Apex 128 Pro của Omega - thiết kế cổ điển.,,,,automatic,36.0,1.0
+654,Bulova Sport 614 Lite,Bulova,electronic,8925454,72,Mẫu Bulova Sport 614 Lite của Bulova - thiết kế hiện đại.,4.0,notifications;sleep_tracking;heart_rate,none,,,
+655,Movado Classic 866 Pro,Movado,electronic,2861285,7,Mẫu Movado Classic 866 Pro của Movado - thiết kế hiện đại.,2.0,notifications;sleep_tracking;gps,none,,,
+656,Rolex Urban 430 Lite,Rolex,mechanical,1206366,37,Mẫu Rolex Urban 430 Lite của Rolex - thiết kế cổ điển.,,,,automatic,60.0,1.0
+657,Hamilton Sport 614 Model,Hamilton,electronic,8383829,40,Mẫu Hamilton Sport 614 Model của Hamilton - thiết kế hiện đại.,10.0,step_counter;sleep_tracking;music_control,none,,,
+658,Movado Urban 844 Model,Movado,mechanical,687016,66,Mẫu Movado Urban 844 Model của Movado - thiết kế cổ điển.,,,,manual,42.0,0.0
+659,Hamilton Sport 224 Model,Hamilton,mechanical,7799052,24,Mẫu Hamilton Sport 224 Model của Hamilton - thiết kế cổ điển.,,,,automatic,48.0,0.0
+660,Orient Master 946 Edition,Orient,electronic,7453014,39,Mẫu Orient Master 946 Edition của Orient - thiết kế hiện đại.,7.0,nfc;music_control;waterproof,none,,,
+661,Omega Classic 763 Series,Omega,mechanical,3724189,88,Mẫu Omega Classic 763 Series của Omega - thiết kế cổ điển.,,,,automatic,72.0,1.0
+662,Fossil Master 81 X,Fossil,mechanical,10516863,100,Mẫu Fossil Master 81 X của Fossil - thiết kế cổ điển.,,,,automatic,36.0,1.0
+663,Patek Philippe Classic 202 Series,Patek Philippe,electronic,975494,84,Mẫu Patek Philippe Classic 202 Series của Patek Philippe - thiết kế hiện đại.,5.0,heart_rate;waterproof;notifications;nfc;sleep_tracking,bluetooth,,,
+664,Seiko Sport 802 Series,Seiko,mechanical,13841422,26,Mẫu Seiko Sport 802 Series của Seiko - thiết kế cổ điển.,,,,automatic,40.0,0.0
+665,Citizen Master 867 Pro,Citizen,mechanical,14257478,44,Mẫu Citizen Master 867 Pro của Citizen - thiết kế cổ điển.,,,,manual,40.0,0.0
+666,Citizen Eco-Drive Elite 518 One,Citizen Eco-Drive,electronic,1490887,74,Mẫu Citizen Eco-Drive Elite 518 One của Citizen Eco-Drive - thiết kế hiện đại.,10.0,waterproof,wifi,,,
+667,Hamilton Pilot 5 Series,Hamilton,electronic,13901365,64,Mẫu Hamilton Pilot 5 Series của Hamilton - thiết kế hiện đại.,10.0,sleep_tracking;notifications;step_counter;gps,gps,,,
+668,Orient Master 855 Lite,Orient,electronic,14728866,54,Mẫu Orient Master 855 Lite của Orient - thiết kế hiện đại.,2.0,waterproof;notifications;heart_rate;nfc;sleep_tracking,gps,,,
+669,Tissot Apex 781 Lite,Tissot,mechanical,10718598,71,Mẫu Tissot Apex 781 Lite của Tissot - thiết kế cổ điển.,,,,automatic,36.0,0.0
+670,Hublot Prime 468 One,Hublot,electronic,11174529,87,Mẫu Hublot Prime 468 One của Hublot - thiết kế hiện đại.,10.0,waterproof;step_counter;notifications;nfc,gps,,,
+671,Citizen Apex 962 Lite,Citizen,mechanical,3099811,86,Mẫu Citizen Apex 962 Lite của Citizen - thiết kế cổ điển.,,,,manual,72.0,1.0
+672,Invicta Sport 123 Model,Invicta,mechanical,6224766,88,Mẫu Invicta Sport 123 Model của Invicta - thiết kế cổ điển.,,,,automatic,72.0,1.0
+673,Fossil Urban 206 One,Fossil,mechanical,12738428,51,Mẫu Fossil Urban 206 One của Fossil - thiết kế cổ điển.,,,,automatic,40.0,0.0
+674,Rolex Voyager 608 Pro,Rolex,electronic,11466393,82,Mẫu Rolex Voyager 608 Pro của Rolex - thiết kế hiện đại.,4.0,notifications;sleep_tracking;step_counter,gps,,,
+675,Invicta Prime 151 S,Invicta,electronic,2066532,32,Mẫu Invicta Prime 151 S của Invicta - thiết kế hiện đại.,4.0,waterproof;sleep_tracking;gps;heart_rate,bluetooth,,,
+676,Citizen Apex 695 Edition,Citizen,electronic,14595052,48,Mẫu Citizen Apex 695 Edition của Citizen - thiết kế hiện đại.,5.0,nfc;notifications;step_counter,bluetooth,,,
+677,Invicta Apex 812 S,Invicta,electronic,3428010,84,Mẫu Invicta Apex 812 S của Invicta - thiết kế hiện đại.,4.0,step_counter;notifications;nfc;music_control,bluetooth,,,
+678,Casio Heritage 902 Series,Casio,electronic,6062633,40,Mẫu Casio Heritage 902 Series của Casio - thiết kế hiện đại.,10.0,notifications;waterproof;heart_rate;sleep_tracking,wifi,,,
+679,Omega Master 504 X,Omega,electronic,2450080,91,Mẫu Omega Master 504 X của Omega - thiết kế hiện đại.,4.0,gps;step_counter;sleep_tracking;waterproof,gps,,,
+680,Hamilton Pilot 58 X,Hamilton,electronic,4319169,75,Mẫu Hamilton Pilot 58 X của Hamilton - thiết kế hiện đại.,4.0,sleep_tracking;music_control;nfc;notifications;heart_rate,bluetooth,,,
+681,Tissot Urban 358 One,Tissot,electronic,890048,80,Mẫu Tissot Urban 358 One của Tissot - thiết kế hiện đại.,3.0,gps;waterproof;nfc;sleep_tracking,gps,,,
+682,Timex Elite 241 Pro,Timex,mechanical,9091709,88,Mẫu Timex Elite 241 Pro của Timex - thiết kế cổ điển.,,,,automatic,80.0,0.0
+683,Hamilton Classic 552 Lite,Hamilton,mechanical,1041976,84,Mẫu Hamilton Classic 552 Lite của Hamilton - thiết kế cổ điển.,,,,manual,60.0,0.0
+684,Rolex Classic 713 S,Rolex,electronic,9025844,40,Mẫu Rolex Classic 713 S của Rolex - thiết kế hiện đại.,4.0,music_control;nfc;step_counter;heart_rate;waterproof,bluetooth,,,
+685,Fossil Urban 509 Z,Fossil,electronic,12266129,85,Mẫu Fossil Urban 509 Z của Fossil - thiết kế hiện đại.,3.0,step_counter;nfc,gps,,,
+686,Citizen Pilot 220 Pro,Citizen,mechanical,4344749,38,Mẫu Citizen Pilot 220 Pro của Citizen - thiết kế cổ điển.,,,,manual,80.0,1.0
+687,Citizen Voyager 98 One,Citizen,electronic,5384152,8,Mẫu Citizen Voyager 98 One của Citizen - thiết kế hiện đại.,5.0,notifications;waterproof;gps;nfc;heart_rate,none,,,
+688,Omega Heritage 680 Z,Omega,electronic,5043618,53,Mẫu Omega Heritage 680 Z của Omega - thiết kế hiện đại.,4.0,notifications;sleep_tracking;step_counter,wifi,,,
+689,Invicta Master 591 S,Invicta,electronic,3587816,95,Mẫu Invicta Master 591 S của Invicta - thiết kế hiện đại.,4.0,music_control;step_counter;sleep_tracking,bluetooth,,,
+690,Swatch Apex 152 Line,Swatch,electronic,2681853,87,Mẫu Swatch Apex 152 Line của Swatch - thiết kế hiện đại.,10.0,music_control;waterproof;nfc,bluetooth,,,
+691,Patek Philippe Prime 844 Pro,Patek Philippe,electronic,9867618,32,Mẫu Patek Philippe Prime 844 Pro của Patek Philippe - thiết kế hiện đại.,7.0,waterproof;notifications;gps;heart_rate;sleep_tracking,wifi,,,
+692,Omega Apex 498 Z,Omega,mechanical,14873750,54,Mẫu Omega Apex 498 Z của Omega - thiết kế cổ điển.,,,,automatic,40.0,1.0
+693,Seiko Prime 809 Pro,Seiko,mechanical,10050725,22,Mẫu Seiko Prime 809 Pro của Seiko - thiết kế cổ điển.,,,,automatic,72.0,0.0
+694,Casio Sport 322 One,Casio,electronic,4820698,8,Mẫu Casio Sport 322 One của Casio - thiết kế hiện đại.,4.0,gps;waterproof;sleep_tracking,wifi,,,
+695,Movado Pilot 956 Series,Movado,mechanical,8068385,74,Mẫu Movado Pilot 956 Series của Movado - thiết kế cổ điển.,,,,manual,48.0,1.0
+696,Orient Urban 338 One,Orient,mechanical,11189927,95,Mẫu Orient Urban 338 One của Orient - thiết kế cổ điển.,,,,automatic,48.0,1.0
+697,Hamilton Elite 994 Pro,Hamilton,mechanical,6872393,32,Mẫu Hamilton Elite 994 Pro của Hamilton - thiết kế cổ điển.,,,,automatic,48.0,0.0
+698,Orient Urban 559 X,Orient,mechanical,7385385,31,Mẫu Orient Urban 559 X của Orient - thiết kế cổ điển.,,,,manual,80.0,1.0
+699,Swatch Prime 22 One,Swatch,mechanical,1004737,94,Mẫu Swatch Prime 22 One của Swatch - thiết kế cổ điển.,,,,automatic,72.0,0.0
+700,Skagen Heritage 317 Lite,Skagen,mechanical,13595778,87,Mẫu Skagen Heritage 317 Lite của Skagen - thiết kế cổ điển.,,,,automatic,60.0,1.0
+701,Hublot Classic 932 X,Hublot,electronic,13948857,32,Mẫu Hublot Classic 932 X của Hublot - thiết kế hiện đại.,3.0,waterproof,none,,,
+702,Hamilton Apex 647 Lite,Hamilton,mechanical,13252275,98,Mẫu Hamilton Apex 647 Lite của Hamilton - thiết kế cổ điển.,,,,manual,80.0,1.0
+703,Citizen Apex 483 X,Citizen,mechanical,13934210,42,Mẫu Citizen Apex 483 X của Citizen - thiết kế cổ điển.,,,,manual,80.0,1.0
+704,Rolex Pilot 68 Lite,Rolex,electronic,6602623,93,Mẫu Rolex Pilot 68 Lite của Rolex - thiết kế hiện đại.,10.0,sleep_tracking;waterproof;notifications;heart_rate;step_counter,wifi,,,
+705,Tissot Classic 411 Line,Tissot,electronic,9610296,40,Mẫu Tissot Classic 411 Line của Tissot - thiết kế hiện đại.,5.0,gps,wifi,,,
+706,Tissot Voyager 703 X,Tissot,mechanical,11993313,40,Mẫu Tissot Voyager 703 X của Tissot - thiết kế cổ điển.,,,,manual,48.0,0.0
+707,Hamilton Voyager 847 Lite,Hamilton,mechanical,12093166,25,Mẫu Hamilton Voyager 847 Lite của Hamilton - thiết kế cổ điển.,,,,automatic,48.0,0.0
+708,Hublot Voyager 230 Edition,Hublot,mechanical,14247584,71,Mẫu Hublot Voyager 230 Edition của Hublot - thiết kế cổ điển.,,,,automatic,36.0,0.0
+709,Hamilton Classic 411 One,Hamilton,mechanical,6719099,33,Mẫu Hamilton Classic 411 One của Hamilton - thiết kế cổ điển.,,,,automatic,36.0,0.0
+710,Movado Sport 15 Z,Movado,mechanical,6809802,58,Mẫu Movado Sport 15 Z của Movado - thiết kế cổ điển.,,,,manual,36.0,1.0
+711,Fossil Prime 295 S,Fossil,electronic,6040066,55,Mẫu Fossil Prime 295 S của Fossil - thiết kế hiện đại.,10.0,waterproof;music_control,none,,,
+712,Fossil Heritage 185 X,Fossil,electronic,11990721,3,Mẫu Fossil Heritage 185 X của Fossil - thiết kế hiện đại.,3.0,waterproof;step_counter;notifications,wifi,,,
+713,Longines Sport 11 S,Longines,mechanical,2431472,41,Mẫu Longines Sport 11 S của Longines - thiết kế cổ điển.,,,,manual,72.0,1.0
+714,Patek Philippe Voyager 263 Series,Patek Philippe,electronic,1881552,7,Mẫu Patek Philippe Voyager 263 Series của Patek Philippe - thiết kế hiện đại.,1.0,waterproof;notifications;nfc,bluetooth,,,
+715,Invicta Voyager 391 Pro,Invicta,mechanical,14674096,85,Mẫu Invicta Voyager 391 Pro của Invicta - thiết kế cổ điển.,,,,manual,40.0,0.0
+716,Hamilton Prime 174 Z,Hamilton,mechanical,7646178,43,Mẫu Hamilton Prime 174 Z của Hamilton - thiết kế cổ điển.,,,,manual,40.0,1.0
+717,Invicta Heritage 146 Pro,Invicta,mechanical,2194210,5,Mẫu Invicta Heritage 146 Pro của Invicta - thiết kế cổ điển.,,,,automatic,48.0,0.0
+718,Patek Philippe Prime 925 Pro,Patek Philippe,electronic,9387508,97,Mẫu Patek Philippe Prime 925 Pro của Patek Philippe - thiết kế hiện đại.,3.0,sleep_tracking;waterproof;gps;nfc;music_control,wifi,,,
+719,Longines Classic 194 Model,Longines,electronic,1291224,23,Mẫu Longines Classic 194 Model của Longines - thiết kế hiện đại.,1.0,step_counter;gps;sleep_tracking;waterproof,gps,,,
+720,Bulova Classic 453 Lite,Bulova,mechanical,14837869,71,Mẫu Bulova Classic 453 Lite của Bulova - thiết kế cổ điển.,,,,manual,48.0,0.0
+721,Tissot Sport 358 Series,Tissot,mechanical,3454139,36,Mẫu Tissot Sport 358 Series của Tissot - thiết kế cổ điển.,,,,automatic,80.0,1.0
+722,Rolex Voyager 913 One,Rolex,electronic,3579744,0,Mẫu Rolex Voyager 913 One của Rolex - thiết kế hiện đại.,5.0,nfc;waterproof;heart_rate;gps;music_control,bluetooth,,,
+723,Seiko Prime 698 Series,Seiko,electronic,6215462,75,Mẫu Seiko Prime 698 Series của Seiko - thiết kế hiện đại.,1.0,nfc;heart_rate;music_control,gps,,,
+724,Bulova Apex 644 Pro,Bulova,electronic,9115962,0,Mẫu Bulova Apex 644 Pro của Bulova - thiết kế hiện đại.,3.0,notifications,none,,,
+725,Movado Master 217 Edition,Movado,electronic,12122590,36,Mẫu Movado Master 217 Edition của Movado - thiết kế hiện đại.,3.0,gps,gps,,,
+726,Rolex Master 246 X,Rolex,mechanical,1793230,26,Mẫu Rolex Master 246 X của Rolex - thiết kế cổ điển.,,,,automatic,48.0,0.0
+727,Tissot Sport 306 S,Tissot,mechanical,12115956,94,Mẫu Tissot Sport 306 S của Tissot - thiết kế cổ điển.,,,,manual,72.0,0.0
+728,Orient Urban 525 Line,Orient,mechanical,7599534,49,Mẫu Orient Urban 525 Line của Orient - thiết kế cổ điển.,,,,manual,42.0,0.0
+729,Citizen Heritage 831 Lite,Citizen,electronic,9401083,55,Mẫu Citizen Heritage 831 Lite của Citizen - thiết kế hiện đại.,7.0,gps;heart_rate;step_counter;nfc,gps,,,
+730,Tissot Apex 540 Z,Tissot,electronic,1717566,59,Mẫu Tissot Apex 540 Z của Tissot - thiết kế hiện đại.,4.0,notifications,none,,,
+731,Tissot Prime 862 Line,Tissot,mechanical,8084835,37,Mẫu Tissot Prime 862 Line của Tissot - thiết kế cổ điển.,,,,automatic,60.0,1.0
+732,Invicta Sport 523 X,Invicta,electronic,6488781,59,Mẫu Invicta Sport 523 X của Invicta - thiết kế hiện đại.,7.0,step_counter;nfc;music_control;notifications;heart_rate,bluetooth,,,
+733,Longines Master 806 Model,Longines,mechanical,12722192,5,Mẫu Longines Master 806 Model của Longines - thiết kế cổ điển.,,,,automatic,48.0,0.0
+734,Movado Apex 776 S,Movado,mechanical,9545251,33,Mẫu Movado Apex 776 S của Movado - thiết kế cổ điển.,,,,manual,80.0,1.0
+735,Citizen Voyager 266 Series,Citizen,mechanical,6790084,2,Mẫu Citizen Voyager 266 Series của Citizen - thiết kế cổ điển.,,,,automatic,48.0,1.0
+736,Bulova Apex 709 X,Bulova,mechanical,13097318,95,Mẫu Bulova Apex 709 X của Bulova - thiết kế cổ điển.,,,,manual,42.0,0.0
+737,Citizen Eco-Drive Urban 708 X,Citizen Eco-Drive,electronic,12167291,11,Mẫu Citizen Eco-Drive Urban 708 X của Citizen Eco-Drive - thiết kế hiện đại.,2.0,heart_rate;gps,bluetooth,,,
+738,Fossil Classic 215 S,Fossil,electronic,9905037,83,Mẫu Fossil Classic 215 S của Fossil - thiết kế hiện đại.,2.0,waterproof;heart_rate;nfc;notifications,wifi,,,
+739,Seiko Sport 171 Model,Seiko,electronic,11212327,56,Mẫu Seiko Sport 171 Model của Seiko - thiết kế hiện đại.,4.0,heart_rate;music_control;waterproof;step_counter,wifi,,,
+740,Movado Heritage 53 Lite,Movado,mechanical,614177,80,Mẫu Movado Heritage 53 Lite của Movado - thiết kế cổ điển.,,,,manual,48.0,0.0
+741,Citizen Eco-Drive Pilot 298 Edition,Citizen Eco-Drive,electronic,7568699,62,Mẫu Citizen Eco-Drive Pilot 298 Edition của Citizen Eco-Drive - thiết kế hiện đại.,5.0,notifications;gps;sleep_tracking;heart_rate;step_counter,gps,,,
+742,Skagen Sport 275 X,Skagen,electronic,13392539,14,Mẫu Skagen Sport 275 X của Skagen - thiết kế hiện đại.,4.0,sleep_tracking;waterproof;notifications;music_control;heart_rate,wifi,,,
+743,Fossil Apex 353 S,Fossil,mechanical,3865495,28,Mẫu Fossil Apex 353 S của Fossil - thiết kế cổ điển.,,,,manual,60.0,0.0
+744,Tissot Prime 741 X,Tissot,electronic,14417149,86,Mẫu Tissot Prime 741 X của Tissot - thiết kế hiện đại.,7.0,notifications;music_control;gps,wifi,,,
+745,Citizen Apex 133 Model,Citizen,mechanical,3392521,77,Mẫu Citizen Apex 133 Model của Citizen - thiết kế cổ điển.,,,,manual,36.0,0.0
+746,Bulova Prime 241 Line,Bulova,electronic,8574042,2,Mẫu Bulova Prime 241 Line của Bulova - thiết kế hiện đại.,3.0,sleep_tracking;notifications;gps,wifi,,,
+747,Invicta Classic 827 Series,Invicta,electronic,5397154,14,Mẫu Invicta Classic 827 Series của Invicta - thiết kế hiện đại.,5.0,gps;step_counter,wifi,,,
+748,Tag Heuer Urban 788 Edition,Tag Heuer,electronic,11666376,71,Mẫu Tag Heuer Urban 788 Edition của Tag Heuer - thiết kế hiện đại.,3.0,gps;sleep_tracking,bluetooth,,,
+749,Longines Apex 986 Series,Longines,electronic,14632566,100,Mẫu Longines Apex 986 Series của Longines - thiết kế hiện đại.,5.0,gps;music_control;step_counter;heart_rate;sleep_tracking,wifi,,,
+750,Fossil Urban 161 Pro,Fossil,electronic,10768369,97,Mẫu Fossil Urban 161 Pro của Fossil - thiết kế hiện đại.,5.0,gps;notifications;sleep_tracking;nfc,none,,,
+751,Orient Elite 450 X,Orient,electronic,11653680,0,Mẫu Orient Elite 450 X của Orient - thiết kế hiện đại.,2.0,sleep_tracking;nfc;step_counter;gps,bluetooth,,,
+752,Patek Philippe Urban 645 Line,Patek Philippe,mechanical,2698363,96,Mẫu Patek Philippe Urban 645 Line của Patek Philippe - thiết kế cổ điển.,,,,manual,80.0,1.0
+753,Patek Philippe Heritage 941 X,Patek Philippe,mechanical,13521946,66,Mẫu Patek Philippe Heritage 941 X của Patek Philippe - thiết kế cổ điển.,,,,manual,36.0,0.0
+754,Seiko Pilot 967 Series,Seiko,mechanical,1729284,40,Mẫu Seiko Pilot 967 Series của Seiko - thiết kế cổ điển.,,,,manual,80.0,1.0
+755,Hublot Classic 677 Model,Hublot,mechanical,13586411,7,Mẫu Hublot Classic 677 Model của Hublot - thiết kế cổ điển.,,,,manual,48.0,0.0
+756,Skagen Prime 739 Lite,Skagen,electronic,13683847,1,Mẫu Skagen Prime 739 Lite của Skagen - thiết kế hiện đại.,10.0,nfc;sleep_tracking;waterproof,gps,,,
+757,Skagen Voyager 808 One,Skagen,electronic,9954538,89,Mẫu Skagen Voyager 808 One của Skagen - thiết kế hiện đại.,3.0,waterproof;nfc;heart_rate;sleep_tracking,none,,,
+758,Tissot Pilot 554 Pro,Tissot,mechanical,3599150,65,Mẫu Tissot Pilot 554 Pro của Tissot - thiết kế cổ điển.,,,,manual,60.0,0.0
+759,Hamilton Classic 29 Z,Hamilton,electronic,9091302,30,Mẫu Hamilton Classic 29 Z của Hamilton - thiết kế hiện đại.,10.0,music_control;step_counter;heart_rate,bluetooth,,,
+760,Rolex Pilot 363 Series,Rolex,electronic,1192127,83,Mẫu Rolex Pilot 363 Series của Rolex - thiết kế hiện đại.,1.0,step_counter;notifications;sleep_tracking;heart_rate,gps,,,
+761,Timex Voyager 580 Z,Timex,mechanical,12745189,29,Mẫu Timex Voyager 580 Z của Timex - thiết kế cổ điển.,,,,manual,42.0,0.0
+762,Movado Master 732 X,Movado,electronic,8035166,31,Mẫu Movado Master 732 X của Movado - thiết kế hiện đại.,1.0,waterproof;music_control;nfc,gps,,,
+763,Patek Philippe Heritage 84 Series,Patek Philippe,mechanical,1401808,16,Mẫu Patek Philippe Heritage 84 Series của Patek Philippe - thiết kế cổ điển.,,,,manual,40.0,0.0
+764,Invicta Heritage 603 Z,Invicta,mechanical,8024702,50,Mẫu Invicta Heritage 603 Z của Invicta - thiết kế cổ điển.,,,,manual,60.0,0.0
+765,Longines Apex 750 X,Longines,electronic,12445272,18,Mẫu Longines Apex 750 X của Longines - thiết kế hiện đại.,5.0,notifications;sleep_tracking,gps,,,
+766,Invicta Pilot 121 Line,Invicta,mechanical,7103769,4,Mẫu Invicta Pilot 121 Line của Invicta - thiết kế cổ điển.,,,,automatic,60.0,0.0
+767,Orient Voyager 873 X,Orient,electronic,2099874,47,Mẫu Orient Voyager 873 X của Orient - thiết kế hiện đại.,5.0,heart_rate;step_counter;gps,bluetooth,,,
+768,Swatch Prime 302 S,Swatch,mechanical,905678,18,Mẫu Swatch Prime 302 S của Swatch - thiết kế cổ điển.,,,,automatic,80.0,0.0
+769,Omega Prime 221 Model,Omega,mechanical,12377314,62,Mẫu Omega Prime 221 Model của Omega - thiết kế cổ điển.,,,,automatic,36.0,0.0
+770,Casio Heritage 493 One,Casio,mechanical,4990677,57,Mẫu Casio Heritage 493 One của Casio - thiết kế cổ điển.,,,,manual,80.0,0.0
+771,Citizen Eco-Drive Master 781 Model,Citizen Eco-Drive,electronic,7819076,58,Mẫu Citizen Eco-Drive Master 781 Model của Citizen Eco-Drive - thiết kế hiện đại.,10.0,notifications;gps;sleep_tracking;nfc,bluetooth,,,
+772,Citizen Eco-Drive Heritage 397 Line,Citizen Eco-Drive,electronic,13553544,43,Mẫu Citizen Eco-Drive Heritage 397 Line của Citizen Eco-Drive - thiết kế hiện đại.,5.0,notifications,none,,,
+773,Hamilton Classic 586 Pro,Hamilton,electronic,8635143,15,Mẫu Hamilton Classic 586 Pro của Hamilton - thiết kế hiện đại.,7.0,gps;notifications;step_counter;sleep_tracking;heart_rate,wifi,,,
+774,Invicta Classic 124 Z,Invicta,electronic,3106279,2,Mẫu Invicta Classic 124 Z của Invicta - thiết kế hiện đại.,3.0,waterproof;music_control,gps,,,
+775,Skagen Voyager 329 X,Skagen,mechanical,9038949,62,Mẫu Skagen Voyager 329 X của Skagen - thiết kế cổ điển.,,,,automatic,42.0,0.0
+776,Seiko Pilot 325 X,Seiko,mechanical,4229078,14,Mẫu Seiko Pilot 325 X của Seiko - thiết kế cổ điển.,,,,automatic,60.0,1.0
+777,Hamilton Prime 787 Series,Hamilton,mechanical,2736297,52,Mẫu Hamilton Prime 787 Series của Hamilton - thiết kế cổ điển.,,,,automatic,36.0,0.0
+778,Hamilton Classic 731 Edition,Hamilton,electronic,4821353,12,Mẫu Hamilton Classic 731 Edition của Hamilton - thiết kế hiện đại.,3.0,music_control;nfc,none,,,
+779,Orient Classic 208 Line,Orient,mechanical,11405939,75,Mẫu Orient Classic 208 Line của Orient - thiết kế cổ điển.,,,,automatic,48.0,0.0
+780,Hublot Sport 276 Edition,Hublot,electronic,5115878,70,Mẫu Hublot Sport 276 Edition của Hublot - thiết kế hiện đại.,4.0,notifications,bluetooth,,,
+781,Timex Classic 276 Z,Timex,mechanical,14470383,86,Mẫu Timex Classic 276 Z của Timex - thiết kế cổ điển.,,,,automatic,40.0,0.0
+782,Tissot Prime 582 X,Tissot,electronic,6966743,81,Mẫu Tissot Prime 582 X của Tissot - thiết kế hiện đại.,5.0,nfc;notifications,wifi,,,
+783,Skagen Heritage 985 Z,Skagen,electronic,7050259,0,Mẫu Skagen Heritage 985 Z của Skagen - thiết kế hiện đại.,10.0,step_counter;sleep_tracking;gps;heart_rate,bluetooth,,,
+784,Bulova Prime 613 Pro,Bulova,electronic,12672572,48,Mẫu Bulova Prime 613 Pro của Bulova - thiết kế hiện đại.,3.0,step_counter;heart_rate,wifi,,,
+785,Movado Sport 308 Series,Movado,electronic,6231921,15,Mẫu Movado Sport 308 Series của Movado - thiết kế hiện đại.,10.0,step_counter;waterproof,wifi,,,
+786,Tag Heuer Urban 651 Pro,Tag Heuer,electronic,14704785,90,Mẫu Tag Heuer Urban 651 Pro của Tag Heuer - thiết kế hiện đại.,4.0,waterproof;sleep_tracking;nfc,none,,,
+787,Citizen Eco-Drive Urban 17 Model,Citizen Eco-Drive,mechanical,9873428,0,Mẫu Citizen Eco-Drive Urban 17 Model của Citizen Eco-Drive - thiết kế cổ điển.,,,,manual,36.0,1.0
+788,Patek Philippe Pilot 917 S,Patek Philippe,electronic,11555746,68,Mẫu Patek Philippe Pilot 917 S của Patek Philippe - thiết kế hiện đại.,1.0,heart_rate,gps,,,
+789,Swatch Heritage 848 One,Swatch,electronic,5690503,22,Mẫu Swatch Heritage 848 One của Swatch - thiết kế hiện đại.,10.0,gps,gps,,,
+790,Fossil Apex 10 Line,Fossil,mechanical,11275594,97,Mẫu Fossil Apex 10 Line của Fossil - thiết kế cổ điển.,,,,manual,72.0,0.0
+791,Citizen Voyager 641 Pro,Citizen,mechanical,12222010,28,Mẫu Citizen Voyager 641 Pro của Citizen - thiết kế cổ điển.,,,,automatic,48.0,0.0
+792,Bulova Voyager 215 Edition,Bulova,mechanical,3343259,81,Mẫu Bulova Voyager 215 Edition của Bulova - thiết kế cổ điển.,,,,manual,36.0,0.0
+793,Bulova Master 566 Line,Bulova,electronic,10067657,72,Mẫu Bulova Master 566 Line của Bulova - thiết kế hiện đại.,7.0,nfc;heart_rate;step_counter;gps;music_control,wifi,,,
+794,Movado Elite 903 Z,Movado,mechanical,11069034,35,Mẫu Movado Elite 903 Z của Movado - thiết kế cổ điển.,,,,automatic,80.0,0.0
+795,Skagen Voyager 259 Z,Skagen,mechanical,13304978,0,Mẫu Skagen Voyager 259 Z của Skagen - thiết kế cổ điển.,,,,manual,72.0,0.0
+796,Casio Urban 443 X,Casio,electronic,4473516,87,Mẫu Casio Urban 443 X của Casio - thiết kế hiện đại.,5.0,notifications;nfc;step_counter;heart_rate,wifi,,,
+797,Patek Philippe Pilot 460 Lite,Patek Philippe,mechanical,574810,24,Mẫu Patek Philippe Pilot 460 Lite của Patek Philippe - thiết kế cổ điển.,,,,manual,36.0,0.0
+798,Timex Heritage 981 Series,Timex,electronic,13796431,25,Mẫu Timex Heritage 981 Series của Timex - thiết kế hiện đại.,2.0,step_counter;heart_rate;sleep_tracking,bluetooth,,,
+799,Patek Philippe Classic 607 Lite,Patek Philippe,mechanical,12687360,31,Mẫu Patek Philippe Classic 607 Lite của Patek Philippe - thiết kế cổ điển.,,,,automatic,48.0,1.0
+800,Casio Urban 533 Line,Casio,electronic,14181440,99,Mẫu Casio Urban 533 Line của Casio - thiết kế hiện đại.,5.0,notifications;music_control;heart_rate;waterproof;sleep_tracking,bluetooth,,,
+801,Casio Heritage 321 Series,Casio,electronic,11848370,7,Mẫu Casio Heritage 321 Series của Casio - thiết kế hiện đại.,10.0,heart_rate;nfc;step_counter;waterproof,bluetooth,,,
+802,Casio Pilot 54 Pro,Casio,mechanical,12823975,51,Mẫu Casio Pilot 54 Pro của Casio - thiết kế cổ điển.,,,,automatic,60.0,0.0
+803,Citizen Eco-Drive Voyager 11 S,Citizen Eco-Drive,mechanical,6066840,54,Mẫu Citizen Eco-Drive Voyager 11 S của Citizen Eco-Drive - thiết kế cổ điển.,,,,automatic,42.0,0.0
+804,Seiko Apex 530 Lite,Seiko,electronic,9023294,13,Mẫu Seiko Apex 530 Lite của Seiko - thiết kế hiện đại.,1.0,gps,wifi,,,
+805,Tissot Pilot 263 Lite,Tissot,electronic,6604602,92,Mẫu Tissot Pilot 263 Lite của Tissot - thiết kế hiện đại.,5.0,nfc;gps;music_control;heart_rate,bluetooth,,,
+806,Movado Heritage 526 Lite,Movado,mechanical,5012229,69,Mẫu Movado Heritage 526 Lite của Movado - thiết kế cổ điển.,,,,automatic,40.0,0.0
+807,Tag Heuer Prime 378 Edition,Tag Heuer,mechanical,8006369,84,Mẫu Tag Heuer Prime 378 Edition của Tag Heuer - thiết kế cổ điển.,,,,automatic,36.0,1.0
+808,Skagen Classic 433 Lite,Skagen,electronic,3333403,25,Mẫu Skagen Classic 433 Lite của Skagen - thiết kế hiện đại.,7.0,gps;nfc,wifi,,,
+809,Longines Voyager 710 Lite,Longines,electronic,12854126,72,Mẫu Longines Voyager 710 Lite của Longines - thiết kế hiện đại.,3.0,step_counter;waterproof;nfc;gps;heart_rate,gps,,,
+810,Casio Apex 225 Edition,Casio,electronic,9762122,88,Mẫu Casio Apex 225 Edition của Casio - thiết kế hiện đại.,2.0,waterproof;gps;notifications;nfc,gps,,,
+811,Hamilton Classic 372 Edition,Hamilton,mechanical,1569102,3,Mẫu Hamilton Classic 372 Edition của Hamilton - thiết kế cổ điển.,,,,automatic,40.0,0.0
+812,Movado Urban 45 Edition,Movado,mechanical,3387282,36,Mẫu Movado Urban 45 Edition của Movado - thiết kế cổ điển.,,,,automatic,40.0,0.0
+813,Tag Heuer Pilot 252 Model,Tag Heuer,electronic,3341820,22,Mẫu Tag Heuer Pilot 252 Model của Tag Heuer - thiết kế hiện đại.,10.0,gps;heart_rate;sleep_tracking,wifi,,,
+814,Orient Urban 959 Line,Orient,mechanical,4923549,30,Mẫu Orient Urban 959 Line của Orient - thiết kế cổ điển.,,,,manual,80.0,0.0
+815,Invicta Voyager 903 X,Invicta,electronic,13236624,8,Mẫu Invicta Voyager 903 X của Invicta - thiết kế hiện đại.,1.0,nfc;music_control,wifi,,,
+816,Hublot Urban 326 One,Hublot,mechanical,6728332,81,Mẫu Hublot Urban 326 One của Hublot - thiết kế cổ điển.,,,,automatic,36.0,0.0
+817,Skagen Prime 809 Model,Skagen,electronic,5251369,6,Mẫu Skagen Prime 809 Model của Skagen - thiết kế hiện đại.,7.0,nfc;music_control;step_counter,gps,,,
+818,Citizen Apex 810 One,Citizen,mechanical,1440659,65,Mẫu Citizen Apex 810 One của Citizen - thiết kế cổ điển.,,,,manual,80.0,0.0
+819,Swatch Apex 532 S,Swatch,electronic,3095478,91,Mẫu Swatch Apex 532 S của Swatch - thiết kế hiện đại.,3.0,notifications;sleep_tracking;waterproof;music_control;nfc,gps,,,
+820,Movado Classic 213 Line,Movado,electronic,13475827,57,Mẫu Movado Classic 213 Line của Movado - thiết kế hiện đại.,10.0,music_control;gps,none,,,
+821,Hublot Voyager 161 Lite,Hublot,mechanical,4190674,10,Mẫu Hublot Voyager 161 Lite của Hublot - thiết kế cổ điển.,,,,automatic,80.0,1.0
+822,Invicta Urban 236 One,Invicta,mechanical,1096572,65,Mẫu Invicta Urban 236 One của Invicta - thiết kế cổ điển.,,,,manual,48.0,0.0
+823,Patek Philippe Urban 824 S,Patek Philippe,electronic,5096796,48,Mẫu Patek Philippe Urban 824 S của Patek Philippe - thiết kế hiện đại.,1.0,notifications;gps,none,,,
+824,Swatch Sport 302 Z,Swatch,electronic,7935469,82,Mẫu Swatch Sport 302 Z của Swatch - thiết kế hiện đại.,1.0,waterproof;heart_rate;music_control,bluetooth,,,
+825,Skagen Elite 342 Line,Skagen,mechanical,10289056,32,Mẫu Skagen Elite 342 Line của Skagen - thiết kế cổ điển.,,,,manual,72.0,0.0
+826,Fossil Voyager 142 Z,Fossil,electronic,13729547,1,Mẫu Fossil Voyager 142 Z của Fossil - thiết kế hiện đại.,10.0,step_counter;music_control;nfc,gps,,,
+827,Movado Classic 484 Z,Movado,electronic,14844482,19,Mẫu Movado Classic 484 Z của Movado - thiết kế hiện đại.,10.0,waterproof;gps;sleep_tracking;music_control,gps,,,
+828,Movado Pilot 776 S,Movado,mechanical,10976400,59,Mẫu Movado Pilot 776 S của Movado - thiết kế cổ điển.,,,,manual,80.0,1.0
+829,Fossil Heritage 789 X,Fossil,mechanical,3538979,57,Mẫu Fossil Heritage 789 X của Fossil - thiết kế cổ điển.,,,,automatic,42.0,1.0
+830,Tissot Prime 966 Edition,Tissot,electronic,7747103,84,Mẫu Tissot Prime 966 Edition của Tissot - thiết kế hiện đại.,10.0,sleep_tracking;gps;waterproof,gps,,,
+831,Hublot Pilot 307 Lite,Hublot,electronic,9010849,72,Mẫu Hublot Pilot 307 Lite của Hublot - thiết kế hiện đại.,10.0,nfc,wifi,,,
+832,Tag Heuer Voyager 645 One,Tag Heuer,electronic,13749407,73,Mẫu Tag Heuer Voyager 645 One của Tag Heuer - thiết kế hiện đại.,10.0,music_control;gps;waterproof;heart_rate,gps,,,
+833,Orient Urban 584 S,Orient,mechanical,9765548,38,Mẫu Orient Urban 584 S của Orient - thiết kế cổ điển.,,,,automatic,40.0,1.0
+834,Hamilton Classic 847 One,Hamilton,electronic,7584893,23,Mẫu Hamilton Classic 847 One của Hamilton - thiết kế hiện đại.,2.0,music_control,none,,,
+835,Omega Pilot 72 S,Omega,mechanical,1333071,66,Mẫu Omega Pilot 72 S của Omega - thiết kế cổ điển.,,,,automatic,40.0,0.0
+836,Patek Philippe Heritage 161 Series,Patek Philippe,electronic,2372496,53,Mẫu Patek Philippe Heritage 161 Series của Patek Philippe - thiết kế hiện đại.,4.0,music_control,wifi,,,
+837,Fossil Prime 443 S,Fossil,mechanical,2802328,73,Mẫu Fossil Prime 443 S của Fossil - thiết kế cổ điển.,,,,manual,60.0,1.0
+838,Longines Prime 207 Edition,Longines,electronic,14870734,57,Mẫu Longines Prime 207 Edition của Longines - thiết kế hiện đại.,1.0,waterproof;step_counter;nfc;music_control,gps,,,
+839,Movado Classic 755 Series,Movado,electronic,4674721,58,Mẫu Movado Classic 755 Series của Movado - thiết kế hiện đại.,3.0,music_control;step_counter;gps,gps,,,
+840,Citizen Eco-Drive Heritage 469 X,Citizen Eco-Drive,mechanical,13707080,23,Mẫu Citizen Eco-Drive Heritage 469 X của Citizen Eco-Drive - thiết kế cổ điển.,,,,automatic,48.0,0.0
+841,Timex Master 281 Z,Timex,electronic,4732399,8,Mẫu Timex Master 281 Z của Timex - thiết kế hiện đại.,7.0,notifications;waterproof,bluetooth,,,
+842,Citizen Sport 517 Lite,Citizen,electronic,6446393,21,Mẫu Citizen Sport 517 Lite của Citizen - thiết kế hiện đại.,3.0,heart_rate;waterproof,bluetooth,,,
+843,Longines Heritage 352 X,Longines,mechanical,12908711,50,Mẫu Longines Heritage 352 X của Longines - thiết kế cổ điển.,,,,automatic,36.0,0.0
+844,Tissot Urban 687 S,Tissot,mechanical,7529009,8,Mẫu Tissot Urban 687 S của Tissot - thiết kế cổ điển.,,,,automatic,60.0,0.0
+845,Longines Master 483 Pro,Longines,mechanical,12702657,21,Mẫu Longines Master 483 Pro của Longines - thiết kế cổ điển.,,,,automatic,60.0,1.0
+846,Orient Pilot 760 X,Orient,mechanical,2942574,85,Mẫu Orient Pilot 760 X của Orient - thiết kế cổ điển.,,,,automatic,72.0,0.0
+847,Swatch Master 222 Edition,Swatch,mechanical,13443972,68,Mẫu Swatch Master 222 Edition của Swatch - thiết kế cổ điển.,,,,automatic,48.0,0.0
+848,Invicta Sport 400 Pro,Invicta,mechanical,6937807,76,Mẫu Invicta Sport 400 Pro của Invicta - thiết kế cổ điển.,,,,automatic,36.0,0.0
+849,Timex Urban 931 Line,Timex,electronic,3399793,2,Mẫu Timex Urban 931 Line của Timex - thiết kế hiện đại.,4.0,heart_rate,none,,,
+850,Citizen Elite 982 Series,Citizen,electronic,12055400,85,Mẫu Citizen Elite 982 Series của Citizen - thiết kế hiện đại.,2.0,heart_rate;waterproof,bluetooth,,,
+851,Tag Heuer Pilot 642 Line,Tag Heuer,electronic,9557764,69,Mẫu Tag Heuer Pilot 642 Line của Tag Heuer - thiết kế hiện đại.,4.0,gps;notifications;music_control;heart_rate,none,,,
+852,Seiko Heritage 670 Lite,Seiko,mechanical,673730,27,Mẫu Seiko Heritage 670 Lite của Seiko - thiết kế cổ điển.,,,,manual,40.0,1.0
+853,Rolex Voyager 378 Edition,Rolex,electronic,1476303,27,Mẫu Rolex Voyager 378 Edition của Rolex - thiết kế hiện đại.,4.0,notifications;heart_rate;sleep_tracking,wifi,,,
+854,Orient Voyager 333 X,Orient,mechanical,10329558,98,Mẫu Orient Voyager 333 X của Orient - thiết kế cổ điển.,,,,automatic,42.0,1.0
+855,Tag Heuer Apex 70 Lite,Tag Heuer,electronic,755908,74,Mẫu Tag Heuer Apex 70 Lite của Tag Heuer - thiết kế hiện đại.,4.0,waterproof;step_counter;music_control;heart_rate,wifi,,,
+856,Orient Prime 243 X,Orient,mechanical,11480063,79,Mẫu Orient Prime 243 X của Orient - thiết kế cổ điển.,,,,automatic,36.0,1.0
+857,Omega Elite 156 X,Omega,mechanical,3463587,4,Mẫu Omega Elite 156 X của Omega - thiết kế cổ điển.,,,,automatic,72.0,0.0
+858,Longines Urban 138 Pro,Longines,electronic,5104311,100,Mẫu Longines Urban 138 Pro của Longines - thiết kế hiện đại.,10.0,music_control,none,,,
+859,Timex Urban 351 Line,Timex,electronic,3484353,6,Mẫu Timex Urban 351 Line của Timex - thiết kế hiện đại.,7.0,waterproof;step_counter,gps,,,
+860,Hamilton Apex 645 Edition,Hamilton,electronic,1436945,62,Mẫu Hamilton Apex 645 Edition của Hamilton - thiết kế hiện đại.,1.0,heart_rate;sleep_tracking,wifi,,,
+861,Tissot Sport 178 One,Tissot,electronic,8458283,26,Mẫu Tissot Sport 178 One của Tissot - thiết kế hiện đại.,2.0,gps;waterproof;sleep_tracking;music_control;nfc,wifi,,,
+862,Timex Heritage 181 One,Timex,electronic,4110057,36,Mẫu Timex Heritage 181 One của Timex - thiết kế hiện đại.,5.0,waterproof;nfc;notifications;heart_rate,none,,,
+863,Hamilton Apex 452 X,Hamilton,mechanical,7826742,94,Mẫu Hamilton Apex 452 X của Hamilton - thiết kế cổ điển.,,,,manual,80.0,1.0
+864,Bulova Classic 781 X,Bulova,electronic,6697261,10,Mẫu Bulova Classic 781 X của Bulova - thiết kế hiện đại.,10.0,nfc;step_counter;sleep_tracking,wifi,,,
+865,Longines Prime 465 Pro,Longines,mechanical,5939630,77,Mẫu Longines Prime 465 Pro của Longines - thiết kế cổ điển.,,,,manual,36.0,0.0
+866,Bulova Elite 159 Line,Bulova,mechanical,560618,64,Mẫu Bulova Elite 159 Line của Bulova - thiết kế cổ điển.,,,,manual,48.0,0.0
+867,Hublot Urban 394 S,Hublot,electronic,4963257,75,Mẫu Hublot Urban 394 S của Hublot - thiết kế hiện đại.,1.0,heart_rate;notifications;waterproof;step_counter,wifi,,,
+868,Patek Philippe Prime 790 Lite,Patek Philippe,mechanical,7889321,62,Mẫu Patek Philippe Prime 790 Lite của Patek Philippe - thiết kế cổ điển.,,,,manual,72.0,1.0
+869,Patek Philippe Elite 249 S,Patek Philippe,electronic,1000360,46,Mẫu Patek Philippe Elite 249 S của Patek Philippe - thiết kế hiện đại.,7.0,nfc,none,,,
+870,Tissot Prime 254 One,Tissot,electronic,8885956,84,Mẫu Tissot Prime 254 One của Tissot - thiết kế hiện đại.,10.0,heart_rate;notifications,bluetooth,,,
+871,Hublot Heritage 724 One,Hublot,electronic,14625111,10,Mẫu Hublot Heritage 724 One của Hublot - thiết kế hiện đại.,5.0,music_control;gps,gps,,,
+872,Omega Pilot 991 Z,Omega,mechanical,10048048,48,Mẫu Omega Pilot 991 Z của Omega - thiết kế cổ điển.,,,,manual,72.0,0.0
+873,Citizen Sport 652 One,Citizen,electronic,11762021,44,Mẫu Citizen Sport 652 One của Citizen - thiết kế hiện đại.,10.0,step_counter;sleep_tracking,wifi,,,
+874,Hublot Prime 7 Model,Hublot,electronic,12337646,0,Mẫu Hublot Prime 7 Model của Hublot - thiết kế hiện đại.,1.0,music_control,gps,,,
+875,Patek Philippe Master 181 Lite,Patek Philippe,electronic,3202801,17,Mẫu Patek Philippe Master 181 Lite của Patek Philippe - thiết kế hiện đại.,2.0,nfc;step_counter;heart_rate;waterproof,wifi,,,
+876,Casio Master 829 Line,Casio,mechanical,4260603,52,Mẫu Casio Master 829 Line của Casio - thiết kế cổ điển.,,,,manual,72.0,0.0
+877,Hamilton Sport 301 Series,Hamilton,mechanical,5977064,35,Mẫu Hamilton Sport 301 Series của Hamilton - thiết kế cổ điển.,,,,automatic,42.0,1.0
+878,Bulova Apex 689 Series,Bulova,electronic,637845,34,Mẫu Bulova Apex 689 Series của Bulova - thiết kế hiện đại.,10.0,heart_rate,bluetooth,,,
+879,Seiko Heritage 618 Z,Seiko,mechanical,14810004,97,Mẫu Seiko Heritage 618 Z của Seiko - thiết kế cổ điển.,,,,manual,48.0,0.0
+880,Citizen Eco-Drive Heritage 345 Lite,Citizen Eco-Drive,electronic,10386970,43,Mẫu Citizen Eco-Drive Heritage 345 Lite của Citizen Eco-Drive - thiết kế hiện đại.,3.0,sleep_tracking;notifications,gps,,,
+881,Casio Urban 895 Lite,Casio,mechanical,12190918,0,Mẫu Casio Urban 895 Lite của Casio - thiết kế cổ điển.,,,,manual,80.0,0.0
+882,Tissot Classic 617 Series,Tissot,mechanical,13100577,35,Mẫu Tissot Classic 617 Series của Tissot - thiết kế cổ điển.,,,,automatic,42.0,0.0
+883,Bulova Pilot 424 Line,Bulova,electronic,545372,81,Mẫu Bulova Pilot 424 Line của Bulova - thiết kế hiện đại.,10.0,heart_rate;sleep_tracking;nfc,bluetooth,,,
+884,Tag Heuer Apex 240 One,Tag Heuer,electronic,7525774,94,Mẫu Tag Heuer Apex 240 One của Tag Heuer - thiết kế hiện đại.,5.0,sleep_tracking,gps,,,
+885,Bulova Sport 752 X,Bulova,electronic,4761013,24,Mẫu Bulova Sport 752 X của Bulova - thiết kế hiện đại.,7.0,heart_rate;gps,gps,,,
+886,Omega Pilot 896 S,Omega,electronic,2936766,57,Mẫu Omega Pilot 896 S của Omega - thiết kế hiện đại.,1.0,waterproof;gps;music_control;sleep_tracking,bluetooth,,,
+887,Seiko Master 952 Lite,Seiko,mechanical,13588404,98,Mẫu Seiko Master 952 Lite của Seiko - thiết kế cổ điển.,,,,manual,40.0,0.0
+888,Bulova Sport 682 Model,Bulova,mechanical,13879675,81,Mẫu Bulova Sport 682 Model của Bulova - thiết kế cổ điển.,,,,manual,36.0,0.0
+889,Timex Voyager 785 One,Timex,mechanical,1437672,43,Mẫu Timex Voyager 785 One của Timex - thiết kế cổ điển.,,,,manual,72.0,0.0
+890,Hublot Pilot 990 X,Hublot,electronic,12222488,28,Mẫu Hublot Pilot 990 X của Hublot - thiết kế hiện đại.,3.0,step_counter,bluetooth,,,
+891,Tag Heuer Voyager 960 Line,Tag Heuer,mechanical,11296957,14,Mẫu Tag Heuer Voyager 960 Line của Tag Heuer - thiết kế cổ điển.,,,,manual,40.0,0.0
+892,Movado Classic 319 Edition,Movado,electronic,9055867,24,Mẫu Movado Classic 319 Edition của Movado - thiết kế hiện đại.,10.0,music_control;nfc;notifications;gps,wifi,,,
+893,Seiko Pilot 873 S,Seiko,mechanical,5080930,37,Mẫu Seiko Pilot 873 S của Seiko - thiết kế cổ điển.,,,,automatic,48.0,0.0
+894,Citizen Eco-Drive Prime 150 Edition,Citizen Eco-Drive,electronic,9183764,39,Mẫu Citizen Eco-Drive Prime 150 Edition của Citizen Eco-Drive - thiết kế hiện đại.,5.0,step_counter,gps,,,
+895,Fossil Apex 299 X,Fossil,electronic,1352783,42,Mẫu Fossil Apex 299 X của Fossil - thiết kế hiện đại.,2.0,waterproof;sleep_tracking,bluetooth,,,
+896,Hamilton Apex 745 X,Hamilton,electronic,4836976,84,Mẫu Hamilton Apex 745 X của Hamilton - thiết kế hiện đại.,10.0,heart_rate;step_counter,gps,,,
+897,Bulova Urban 776 X,Bulova,mechanical,6170415,67,Mẫu Bulova Urban 776 X của Bulova - thiết kế cổ điển.,,,,manual,42.0,0.0
+898,Skagen Heritage 100 Model,Skagen,electronic,5189569,74,Mẫu Skagen Heritage 100 Model của Skagen - thiết kế hiện đại.,10.0,step_counter,gps,,,
+899,Movado Master 453 S,Movado,electronic,4720683,18,Mẫu Movado Master 453 S của Movado - thiết kế hiện đại.,2.0,waterproof;sleep_tracking,bluetooth,,,
+900,Movado Sport 695 Model,Movado,mechanical,5960059,54,Mẫu Movado Sport 695 Model của Movado - thiết kế cổ điển.,,,,automatic,36.0,1.0
+901,Bulova Master 968 Edition,Bulova,mechanical,2201529,65,Mẫu Bulova Master 968 Edition của Bulova - thiết kế cổ điển.,,,,manual,60.0,0.0
+902,Hublot Elite 35 Series,Hublot,electronic,3992404,62,Mẫu Hublot Elite 35 Series của Hublot - thiết kế hiện đại.,3.0,nfc;sleep_tracking;music_control;waterproof;heart_rate,gps,,,
+903,Hublot Prime 648 S,Hublot,electronic,5826184,15,Mẫu Hublot Prime 648 S của Hublot - thiết kế hiện đại.,1.0,gps,gps,,,
+904,Invicta Elite 24 One,Invicta,electronic,8808238,73,Mẫu Invicta Elite 24 One của Invicta - thiết kế hiện đại.,4.0,gps;music_control;step_counter,wifi,,,
+905,Patek Philippe Prime 586 Model,Patek Philippe,mechanical,1941898,8,Mẫu Patek Philippe Prime 586 Model của Patek Philippe - thiết kế cổ điển.,,,,automatic,48.0,0.0
+906,Skagen Pilot 803 Z,Skagen,mechanical,7584167,66,Mẫu Skagen Pilot 803 Z của Skagen - thiết kế cổ điển.,,,,automatic,80.0,1.0
+907,Orient Master 883 One,Orient,electronic,10580630,0,Mẫu Orient Master 883 One của Orient - thiết kế hiện đại.,5.0,sleep_tracking;heart_rate;music_control;gps,wifi,,,
+908,Citizen Pilot 263 Edition,Citizen,electronic,1726850,15,Mẫu Citizen Pilot 263 Edition của Citizen - thiết kế hiện đại.,5.0,sleep_tracking;step_counter;gps,gps,,,
+909,Seiko Elite 308 Edition,Seiko,electronic,14220112,66,Mẫu Seiko Elite 308 Edition của Seiko - thiết kế hiện đại.,10.0,notifications;gps;step_counter,gps,,,
+910,Invicta Urban 621 Z,Invicta,electronic,7903560,88,Mẫu Invicta Urban 621 Z của Invicta - thiết kế hiện đại.,1.0,waterproof,bluetooth,,,
+911,Omega Elite 981 Model,Omega,mechanical,9231094,27,Mẫu Omega Elite 981 Model của Omega - thiết kế cổ điển.,,,,manual,42.0,1.0
+912,Patek Philippe Sport 564 Pro,Patek Philippe,electronic,4279779,83,Mẫu Patek Philippe Sport 564 Pro của Patek Philippe - thiết kế hiện đại.,2.0,notifications;heart_rate;nfc;waterproof,wifi,,,
+913,Citizen Prime 649 Line,Citizen,electronic,10859452,72,Mẫu Citizen Prime 649 Line của Citizen - thiết kế hiện đại.,7.0,nfc;waterproof;gps;notifications;music_control,gps,,,
+914,Citizen Eco-Drive Elite 80 Pro,Citizen Eco-Drive,mechanical,2307008,14,Mẫu Citizen Eco-Drive Elite 80 Pro của Citizen Eco-Drive - thiết kế cổ điển.,,,,manual,36.0,0.0
+915,Swatch Urban 797 Pro,Swatch,electronic,2621780,28,Mẫu Swatch Urban 797 Pro của Swatch - thiết kế hiện đại.,3.0,gps,gps,,,
+916,Timex Heritage 975 Series,Timex,electronic,11849637,15,Mẫu Timex Heritage 975 Series của Timex - thiết kế hiện đại.,2.0,step_counter;notifications;waterproof;heart_rate;nfc,none,,,
+917,Citizen Eco-Drive Sport 919 Edition,Citizen Eco-Drive,electronic,2975838,96,Mẫu Citizen Eco-Drive Sport 919 Edition của Citizen Eco-Drive - thiết kế hiện đại.,4.0,sleep_tracking;music_control,gps,,,
+918,Tissot Prime 10 Z,Tissot,electronic,10841729,84,Mẫu Tissot Prime 10 Z của Tissot - thiết kế hiện đại.,2.0,music_control;step_counter,none,,,
+919,Swatch Elite 695 One,Swatch,mechanical,6564534,58,Mẫu Swatch Elite 695 One của Swatch - thiết kế cổ điển.,,,,automatic,48.0,0.0
+920,Invicta Prime 283 X,Invicta,electronic,8048623,91,Mẫu Invicta Prime 283 X của Invicta - thiết kế hiện đại.,10.0,step_counter;sleep_tracking,bluetooth,,,
+921,Patek Philippe Urban 866 Series,Patek Philippe,electronic,9702812,9,Mẫu Patek Philippe Urban 866 Series của Patek Philippe - thiết kế hiện đại.,7.0,gps;notifications,bluetooth,,,
+922,Omega Pilot 952 S,Omega,mechanical,12221030,1,Mẫu Omega Pilot 952 S của Omega - thiết kế cổ điển.,,,,manual,72.0,0.0
+923,Tissot Apex 510 Z,Tissot,electronic,10434267,86,Mẫu Tissot Apex 510 Z của Tissot - thiết kế hiện đại.,5.0,music_control,bluetooth,,,
+924,Seiko Heritage 720 Z,Seiko,electronic,11370185,31,Mẫu Seiko Heritage 720 Z của Seiko - thiết kế hiện đại.,7.0,heart_rate;step_counter;waterproof;gps;music_control,wifi,,,
+925,Tissot Pilot 362 Edition,Tissot,mechanical,6629473,48,Mẫu Tissot Pilot 362 Edition của Tissot - thiết kế cổ điển.,,,,automatic,42.0,1.0
+926,Timex Pilot 872 Series,Timex,mechanical,4705939,61,Mẫu Timex Pilot 872 Series của Timex - thiết kế cổ điển.,,,,manual,42.0,1.0
+927,Movado Heritage 223 Pro,Movado,mechanical,13972081,82,Mẫu Movado Heritage 223 Pro của Movado - thiết kế cổ điển.,,,,automatic,48.0,0.0
+928,Casio Urban 7 One,Casio,electronic,7175131,38,Mẫu Casio Urban 7 One của Casio - thiết kế hiện đại.,3.0,heart_rate,none,,,
+929,Hamilton Heritage 364 Edition,Hamilton,electronic,1969398,62,Mẫu Hamilton Heritage 364 Edition của Hamilton - thiết kế hiện đại.,2.0,nfc,gps,,,
+930,Bulova Classic 160 Pro,Bulova,mechanical,3778381,50,Mẫu Bulova Classic 160 Pro của Bulova - thiết kế cổ điển.,,,,manual,42.0,0.0
+931,Hamilton Pilot 832 Pro,Hamilton,mechanical,2076077,56,Mẫu Hamilton Pilot 832 Pro của Hamilton - thiết kế cổ điển.,,,,manual,40.0,1.0
+932,Patek Philippe Classic 368 Line,Patek Philippe,mechanical,2104652,36,Mẫu Patek Philippe Classic 368 Line của Patek Philippe - thiết kế cổ điển.,,,,automatic,40.0,0.0
+933,Tag Heuer Classic 165 Line,Tag Heuer,mechanical,14251450,85,Mẫu Tag Heuer Classic 165 Line của Tag Heuer - thiết kế cổ điển.,,,,manual,36.0,0.0
+934,Bulova Master 333 X,Bulova,electronic,7776949,94,Mẫu Bulova Master 333 X của Bulova - thiết kế hiện đại.,10.0,nfc;heart_rate;music_control;sleep_tracking,wifi,,,
+935,Invicta Classic 786 Line,Invicta,mechanical,1254578,43,Mẫu Invicta Classic 786 Line của Invicta - thiết kế cổ điển.,,,,manual,60.0,0.0
+936,Bulova Prime 289 S,Bulova,mechanical,1697916,54,Mẫu Bulova Prime 289 S của Bulova - thiết kế cổ điển.,,,,automatic,60.0,1.0
+937,Hamilton Elite 288 Series,Hamilton,electronic,13030419,89,Mẫu Hamilton Elite 288 Series của Hamilton - thiết kế hiện đại.,2.0,waterproof;notifications;sleep_tracking;heart_rate,wifi,,,
+938,Movado Master 235 Series,Movado,mechanical,2418289,4,Mẫu Movado Master 235 Series của Movado - thiết kế cổ điển.,,,,manual,40.0,1.0
+939,Citizen Eco-Drive Elite 94 Edition,Citizen Eco-Drive,mechanical,6015113,67,Mẫu Citizen Eco-Drive Elite 94 Edition của Citizen Eco-Drive - thiết kế cổ điển.,,,,manual,72.0,0.0
+940,Timex Urban 437 S,Timex,electronic,1389571,54,Mẫu Timex Urban 437 S của Timex - thiết kế hiện đại.,7.0,step_counter,bluetooth,,,
+941,Rolex Urban 729 X,Rolex,mechanical,4081045,6,Mẫu Rolex Urban 729 X của Rolex - thiết kế cổ điển.,,,,automatic,36.0,1.0
+942,Tag Heuer Elite 293 S,Tag Heuer,mechanical,4562311,77,Mẫu Tag Heuer Elite 293 S của Tag Heuer - thiết kế cổ điển.,,,,automatic,48.0,1.0
+943,Bulova Urban 343 Pro,Bulova,mechanical,2117165,85,Mẫu Bulova Urban 343 Pro của Bulova - thiết kế cổ điển.,,,,automatic,72.0,0.0
+944,Tissot Urban 370 Lite,Tissot,electronic,11272514,75,Mẫu Tissot Urban 370 Lite của Tissot - thiết kế hiện đại.,5.0,sleep_tracking;gps;notifications;nfc;music_control,gps,,,
+945,Orient Master 645 One,Orient,mechanical,2245138,75,Mẫu Orient Master 645 One của Orient - thiết kế cổ điển.,,,,automatic,40.0,0.0
+946,Orient Sport 965 Z,Orient,mechanical,9475650,38,Mẫu Orient Sport 965 Z của Orient - thiết kế cổ điển.,,,,manual,80.0,1.0
+947,Tissot Classic 131 Line,Tissot,electronic,6564082,91,Mẫu Tissot Classic 131 Line của Tissot - thiết kế hiện đại.,3.0,sleep_tracking;nfc;waterproof;heart_rate;notifications,bluetooth,,,
+948,Invicta Pilot 810 Edition,Invicta,electronic,2920559,35,Mẫu Invicta Pilot 810 Edition của Invicta - thiết kế hiện đại.,7.0,step_counter;heart_rate,bluetooth,,,
+949,Fossil Heritage 507 Z,Fossil,electronic,13118708,9,Mẫu Fossil Heritage 507 Z của Fossil - thiết kế hiện đại.,2.0,music_control;step_counter;waterproof;sleep_tracking,none,,,
+950,Seiko Master 586 Line,Seiko,mechanical,9085635,1,Mẫu Seiko Master 586 Line của Seiko - thiết kế cổ điển.,,,,manual,60.0,0.0
+951,Rolex Prime 873 Line,Rolex,electronic,4797273,34,Mẫu Rolex Prime 873 Line của Rolex - thiết kế hiện đại.,5.0,nfc,wifi,,,
+952,Timex Prime 41 Model,Timex,mechanical,14159667,35,Mẫu Timex Prime 41 Model của Timex - thiết kế cổ điển.,,,,automatic,42.0,1.0
+953,Timex Elite 548 Series,Timex,electronic,520299,44,Mẫu Timex Elite 548 Series của Timex - thiết kế hiện đại.,7.0,sleep_tracking;nfc;heart_rate;step_counter;music_control,wifi,,,
+954,Citizen Eco-Drive Prime 333 Edition,Citizen Eco-Drive,mechanical,9576352,1,Mẫu Citizen Eco-Drive Prime 333 Edition của Citizen Eco-Drive - thiết kế cổ điển.,,,,manual,40.0,0.0
+955,Hamilton Prime 995 Edition,Hamilton,electronic,8292136,99,Mẫu Hamilton Prime 995 Edition của Hamilton - thiết kế hiện đại.,10.0,gps;sleep_tracking;music_control;waterproof;nfc,wifi,,,
+956,Timex Urban 276 Line,Timex,electronic,8934125,96,Mẫu Timex Urban 276 Line của Timex - thiết kế hiện đại.,4.0,notifications;gps,gps,,,
+957,Bulova Sport 508 Model,Bulova,mechanical,7161157,22,Mẫu Bulova Sport 508 Model của Bulova - thiết kế cổ điển.,,,,automatic,60.0,0.0
+958,Hamilton Prime 22 Pro,Hamilton,electronic,2862320,22,Mẫu Hamilton Prime 22 Pro của Hamilton - thiết kế hiện đại.,10.0,waterproof;heart_rate;gps;music_control,gps,,,
+959,Hublot Sport 742 Z,Hublot,mechanical,2490724,96,Mẫu Hublot Sport 742 Z của Hublot - thiết kế cổ điển.,,,,automatic,60.0,1.0
+960,Seiko Sport 847 Edition,Seiko,mechanical,11569963,82,Mẫu Seiko Sport 847 Edition của Seiko - thiết kế cổ điển.,,,,automatic,40.0,1.0
+961,Rolex Master 962 One,Rolex,electronic,695705,1,Mẫu Rolex Master 962 One của Rolex - thiết kế hiện đại.,10.0,sleep_tracking,bluetooth,,,
+962,Bulova Voyager 914 S,Bulova,mechanical,12324241,39,Mẫu Bulova Voyager 914 S của Bulova - thiết kế cổ điển.,,,,manual,48.0,1.0
+963,Skagen Prime 643 Z,Skagen,mechanical,2284595,5,Mẫu Skagen Prime 643 Z của Skagen - thiết kế cổ điển.,,,,automatic,60.0,0.0
+964,Patek Philippe Master 2 Line,Patek Philippe,mechanical,848013,54,Mẫu Patek Philippe Master 2 Line của Patek Philippe - thiết kế cổ điển.,,,,manual,40.0,0.0
+965,Timex Heritage 704 Series,Timex,electronic,7631398,14,Mẫu Timex Heritage 704 Series của Timex - thiết kế hiện đại.,2.0,step_counter,none,,,
+966,Tag Heuer Sport 370 Series,Tag Heuer,mechanical,13486004,77,Mẫu Tag Heuer Sport 370 Series của Tag Heuer - thiết kế cổ điển.,,,,automatic,40.0,0.0
+967,Citizen Eco-Drive Master 696 X,Citizen Eco-Drive,electronic,2678191,85,Mẫu Citizen Eco-Drive Master 696 X của Citizen Eco-Drive - thiết kế hiện đại.,7.0,step_counter;nfc;heart_rate,none,,,
+968,Swatch Prime 831 Series,Swatch,electronic,11938414,19,Mẫu Swatch Prime 831 Series của Swatch - thiết kế hiện đại.,10.0,sleep_tracking;gps,gps,,,
+969,Bulova Sport 116 One,Bulova,mechanical,6698071,93,Mẫu Bulova Sport 116 One của Bulova - thiết kế cổ điển.,,,,manual,40.0,1.0
+970,Tissot Master 786 X,Tissot,mechanical,5612827,63,Mẫu Tissot Master 786 X của Tissot - thiết kế cổ điển.,,,,manual,48.0,0.0
+971,Citizen Eco-Drive Urban 142 Line,Citizen Eco-Drive,electronic,6056186,70,Mẫu Citizen Eco-Drive Urban 142 Line của Citizen Eco-Drive - thiết kế hiện đại.,4.0,notifications;step_counter;music_control;gps;waterproof,bluetooth,,,
+972,Patek Philippe Pilot 592 Line,Patek Philippe,electronic,10694853,30,Mẫu Patek Philippe Pilot 592 Line của Patek Philippe - thiết kế hiện đại.,3.0,waterproof,bluetooth,,,
+973,Bulova Master 944 Series,Bulova,mechanical,1363872,44,Mẫu Bulova Master 944 Series của Bulova - thiết kế cổ điển.,,,,manual,80.0,1.0
+974,Tissot Pilot 996 X,Tissot,mechanical,4016212,28,Mẫu Tissot Pilot 996 X của Tissot - thiết kế cổ điển.,,,,automatic,72.0,1.0
+975,Tissot Heritage 751 Edition,Tissot,mechanical,10593777,54,Mẫu Tissot Heritage 751 Edition của Tissot - thiết kế cổ điển.,,,,manual,36.0,0.0
+976,Movado Sport 489 One,Movado,mechanical,13121916,3,Mẫu Movado Sport 489 One của Movado - thiết kế cổ điển.,,,,automatic,42.0,1.0
+977,Citizen Classic 583 X,Citizen,mechanical,2670900,23,Mẫu Citizen Classic 583 X của Citizen - thiết kế cổ điển.,,,,manual,72.0,1.0
+978,Omega Apex 422 Lite,Omega,electronic,6937618,82,Mẫu Omega Apex 422 Lite của Omega - thiết kế hiện đại.,7.0,step_counter,bluetooth,,,
+979,Casio Voyager 770 Model,Casio,mechanical,7797784,1,Mẫu Casio Voyager 770 Model của Casio - thiết kế cổ điển.,,,,manual,80.0,0.0
+980,Longines Pilot 729 Pro,Longines,electronic,13827678,64,Mẫu Longines Pilot 729 Pro của Longines - thiết kế hiện đại.,3.0,music_control;gps,none,,,
+981,Invicta Heritage 974 Model,Invicta,electronic,11275454,51,Mẫu Invicta Heritage 974 Model của Invicta - thiết kế hiện đại.,5.0,waterproof,gps,,,
+982,Skagen Voyager 862 Series,Skagen,mechanical,12340103,59,Mẫu Skagen Voyager 862 Series của Skagen - thiết kế cổ điển.,,,,manual,42.0,0.0
+983,Hublot Master 56 Lite,Hublot,electronic,9876384,24,Mẫu Hublot Master 56 Lite của Hublot - thiết kế hiện đại.,3.0,gps,bluetooth,,,
+984,Tag Heuer Classic 246 Pro,Tag Heuer,mechanical,2860026,13,Mẫu Tag Heuer Classic 246 Pro của Tag Heuer - thiết kế cổ điển.,,,,automatic,40.0,0.0
+985,Omega Elite 565 Line,Omega,mechanical,9756640,4,Mẫu Omega Elite 565 Line của Omega - thiết kế cổ điển.,,,,automatic,42.0,1.0
+986,Movado Classic 578 S,Movado,electronic,1162369,40,Mẫu Movado Classic 578 S của Movado - thiết kế hiện đại.,1.0,heart_rate;nfc;music_control,gps,,,
+987,Tag Heuer Heritage 744 Lite,Tag Heuer,electronic,14620836,89,Mẫu Tag Heuer Heritage 744 Lite của Tag Heuer - thiết kế hiện đại.,7.0,sleep_tracking,gps,,,
+988,Invicta Sport 515 Model,Invicta,electronic,843437,48,Mẫu Invicta Sport 515 Model của Invicta - thiết kế hiện đại.,4.0,heart_rate;nfc;gps;sleep_tracking;waterproof,bluetooth,,,
+989,Citizen Elite 906 Line,Citizen,electronic,12208402,83,Mẫu Citizen Elite 906 Line của Citizen - thiết kế hiện đại.,2.0,sleep_tracking;waterproof,wifi,,,
+990,Swatch Voyager 877 X,Swatch,mechanical,1080187,91,Mẫu Swatch Voyager 877 X của Swatch - thiết kế cổ điển.,,,,manual,40.0,1.0
+991,Citizen Eco-Drive Sport 982 Model,Citizen Eco-Drive,electronic,8720062,63,Mẫu Citizen Eco-Drive Sport 982 Model của Citizen Eco-Drive - thiết kế hiện đại.,1.0,nfc,none,,,
+992,Citizen Apex 97 S,Citizen,electronic,5048921,37,Mẫu Citizen Apex 97 S của Citizen - thiết kế hiện đại.,2.0,step_counter,none,,,
+993,Citizen Master 728 S,Citizen,mechanical,4240189,60,Mẫu Citizen Master 728 S của Citizen - thiết kế cổ điển.,,,,manual,80.0,0.0
+994,Tissot Sport 996 One,Tissot,electronic,7579755,46,Mẫu Tissot Sport 996 One của Tissot - thiết kế hiện đại.,10.0,music_control;waterproof;step_counter,wifi,,,
+995,Invicta Voyager 975 Lite,Invicta,mechanical,5918405,87,Mẫu Invicta Voyager 975 Lite của Invicta - thiết kế cổ điển.,,,,manual,60.0,0.0
+996,Casio Voyager 660 Edition,Casio,mechanical,11245117,31,Mẫu Casio Voyager 660 Edition của Casio - thiết kế cổ điển.,,,,automatic,40.0,1.0
+997,Hamilton Voyager 409 Series,Hamilton,mechanical,3734244,59,Mẫu Hamilton Voyager 409 Series của Hamilton - thiết kế cổ điển.,,,,automatic,42.0,0.0
+998,Skagen Apex 112 Series,Skagen,electronic,3113964,13,Mẫu Skagen Apex 112 Series của Skagen - thiết kế hiện đại.,4.0,waterproof;notifications;nfc;heart_rate,none,,,
+999,Citizen Eco-Drive Apex 218 S,Citizen Eco-Drive,mechanical,2157733,58,Mẫu Citizen Eco-Drive Apex 218 S của Citizen Eco-Drive - thiết kế cổ điển.,,,,automatic,60.0,1.0
+1000,Tissot Elite 328 One,Tissot,electronic,954187,76,Mẫu Tissot Elite 328 One của Tissot - thiết kế hiện đại.,10.0,heart_rate;music_control;nfc;waterproof,gps,,,
