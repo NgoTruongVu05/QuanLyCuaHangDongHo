@@ -36,22 +36,6 @@ class SalaryManagementTab(QWidget):
         
         filter_layout.addStretch()
         
-        # Nút tính lương
-        calculate_btn = QPushButton('Tính lương tháng này')
-        calculate_btn.clicked.connect(self.calculate_all_salaries)
-        calculate_btn.setStyleSheet('''
-            QPushButton {
-                background-color: #27AE60;
-                color: white;
-                border: none;
-                border-radius: 3px;
-                padding: 5px 10px;
-            }
-            QPushButton:hover {
-                background-color: #229954;
-            }
-        ''')
-        filter_layout.addWidget(calculate_btn)
         
         filter_group.setLayout(filter_layout)
         layout.addWidget(filter_group)
