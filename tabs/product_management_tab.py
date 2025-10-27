@@ -332,14 +332,15 @@ class ProductManagementTab(QWidget):
             # Lưu lại danh sách products cho trang hiện tại để dùng khi hiển thị dialog
             self.products = products
 
-            # Populate brand filter with all brands from database (only if not already done)
-            if self.brand_filter.count() == 1:  # Only 'Tất cả' means not populated yet
-                cursor.execute('SELECT name FROM brands ORDER BY name')
-                all_brands = cursor.fetchall()
-                for brand_row in all_brands:
-                    brand_name = brand_row[0]
-                    if brand_name:
-                        self.brand_filter.addItem(brand_name)
+            # Populate brand filter with all brands from database (always refresh)
+            self.brand_filter.clear()
+            self.brand_filter.addItem('Tất cả')
+            cursor.execute('SELECT name FROM brands ORDER BY name')
+            all_brands = cursor.fetchall()
+            for brand_row in all_brands:
+                brand_name = brand_row[0]
+                if brand_name:
+                    self.brand_filter.addItem(brand_name)
         except Exception as e:
             QMessageBox.critical(self, 'Lỗi tải dữ liệu', f'Không thể tải dữ liệu sản phẩm từ cơ sở dữ liệu.\nChi tiết lỗi: {str(e)}')
             self.products = []

@@ -234,7 +234,7 @@ class StatisticsTab(QWidget):
 
         try:
             if self.current_mode == "revenue":
-                # Vẽ doanh thu bán hàng và doanh thu sửa chữa (song song)
+                # Vẽ doanh thu bán hàng và doanh thu sửa chữa (biểu đồ đường)
                 if month == 'Tất cả':
                     months = [f'{i:02d}' for i in range(1,13)]
                     xlbl = [f'T{i}' for i in range(1,13)]
@@ -248,12 +248,12 @@ class StatisticsTab(QWidget):
                         sales_data.append(s_sum); repair_data.append(r_sum)
                     ax = self.figure.add_subplot(111); ax.set_facecolor('#353535')
                     x = np.arange(len(xlbl))
-                    width = 0.35
-                    ax.bar(x - width/2, sales_data, width, label='Doanh thu bán hàng', edgecolor='white', linewidth=0.3)
-                    ax.bar(x + width/2, repair_data, width, label='Doanh thu sửa chữa', edgecolor='white', linewidth=0.3)
+                    ax.plot(x, sales_data, marker='o', label='Doanh thu bán hàng', color='#3498DB', linewidth=2)
+                    ax.plot(x, repair_data, marker='s', label='Doanh thu sửa chữa', color='#E74C3C', linewidth=2)
                     ax.set_xticks(x); ax.set_xticklabels(xlbl, color='white')
                     ax.set_ylabel('Doanh thu (VND)', color='white'); ax.yaxis.set_major_formatter(mtick.StrMethodFormatter("{x:,.0f}"))
                     ax.tick_params(axis='y', colors='white', labelcolor='white')
+                    ax.grid(True, alpha=0.3, color='white')
                     ax.set_title(f'Doanh thu năm {year}', color='white', fontsize=12, fontweight='bold')
                     legend = ax.legend(frameon=True); legend.get_frame().set_facecolor('#2C3E50'); legend.get_frame().set_edgecolor('white')
                     for t in legend.get_texts(): t.set_color('white')
@@ -274,12 +274,12 @@ class StatisticsTab(QWidget):
                     for d,v in zip(days_r, sums_r): r_map[d]=v
                     ax = self.figure.add_subplot(111); ax.set_facecolor('#353535')
                     x = np.arange(len(all_days))
-                    width = 0.35
-                    ax.bar(x - width/2, [s_map[d] for d in all_days], width, label='Doanh thu bán hàng', edgecolor='white', linewidth=0.3)
-                    ax.bar(x + width/2, [r_map[d] for d in all_days], width, label='Doanh thu sửa chữa', edgecolor='white', linewidth=0.3)
+                    ax.plot(x, [s_map[d] for d in all_days], marker='o', label='Doanh thu bán hàng', color='#3498DB', linewidth=2)
+                    ax.plot(x, [r_map[d] for d in all_days], marker='s', label='Doanh thu sửa chữa', color='#E74C3C', linewidth=2)
                     ax.set_xticks(x); ax.set_xticklabels(all_days, rotation=45, color='white')
                     ax.set_ylabel('Doanh thu (VND)', color='white'); ax.yaxis.set_major_formatter(mtick.StrMethodFormatter("{x:,.0f}"))
                     ax.tick_params(axis='y', colors='white', labelcolor='white')
+                    ax.grid(True, alpha=0.3, color='white')
                     ax.set_title(f'Doanh thu tháng {int(month)}/{year}', color='white', fontsize=12, fontweight='bold')
                     legend = ax.legend(frameon=True); legend.get_frame().set_facecolor('#2C3E50'); legend.get_frame().set_edgecolor('white')
                     for t in legend.get_texts(): t.set_color('white')
@@ -304,33 +304,61 @@ class StatisticsTab(QWidget):
                         repeat_counts.append(len(rows))
                     ax = self.figure.add_subplot(111); ax.set_facecolor('#353535')
                     x = np.arange(len(months))
-                    ax.bar(x, new_counts, label='Khách mới')
-                    ax.bar(x, repeat_counts, bottom=new_counts, label='Khách thân thiết')
+                    ax.plot(x, new_counts, marker='o', label='Khách mới', color='#3498DB', linewidth=2)
+                    ax.plot(x, repeat_counts, marker='s', label='Khách thân thiết', color='#E74C3C', linewidth=2)
                     ax.set_xticks(x); ax.set_xticklabels([f'T{i}' for i in range(1,13)], color='white')
+                    ax.set_ylabel('Số lượng khách hàng', color='white')
                     ax.set_title(f'Khách hàng năm {year}', color='white', fontsize=12)
-                    ax.legend(frameon=True); ax.grid(True, alpha=0.12)
+                    ax.legend(frameon=True); ax.grid(True, alpha=0.3, color='white')
                     for text in ax.get_legend().get_texts(): text.set_color('white')
                     ax.tick_params(axis='y', colors='white', labelcolor='white')
+                    legend = ax.legend(frameon=True); legend.get_frame().set_facecolor('#2C3E50'); legend.get_frame().set_edgecolor('white')
+                    for t in legend.get_texts(): t.set_color('white')
                 else:
                     m = month.zfill(2)
+                    # Query daily new customers
                     cursor.execute('''
-                        SELECT COUNT(*) FROM (
+                        SELECT strftime('%d', first_date) as d, COUNT(*) FROM (
                             SELECT customer_id, MIN(created_date) as first_date FROM invoices
                             WHERE customer_id IS NOT NULL
                             GROUP BY customer_id
                             HAVING strftime('%Y', first_date)=? AND strftime('%m', first_date)=?
-                        )
+                        ) GROUP BY d ORDER BY d
                     ''', (str(year), m))
-                    new_c = cursor.fetchone()[0] or 0
+                    new_rows = cursor.fetchall()
+                    new_days = [r[0] for r in new_rows] if new_rows else []
+                    new_counts = [r[1] for r in new_rows] if new_rows else []
+
+                    # Query daily repeat customers
                     cursor.execute('''
-                        SELECT COUNT(DISTINCT customer_id) FROM invoices
+                        SELECT strftime('%d', created_date) as d, COUNT(DISTINCT customer_id) FROM invoices
                         WHERE strftime('%Y', created_date)=? AND strftime('%m', created_date)=?
-                        GROUP BY customer_id HAVING COUNT(*)>1
+                        AND customer_id IN (
+                            SELECT customer_id FROM invoices GROUP BY customer_id HAVING COUNT(*)>1
+                        )
+                        GROUP BY d ORDER BY d
                     ''', (str(year), m))
-                    rep_rows = cursor.fetchall(); rep_c = len(rep_rows)
+                    rep_rows = cursor.fetchall()
+                    rep_days = [r[0] for r in rep_rows] if rep_rows else []
+                    rep_counts = [r[1] for r in rep_rows] if rep_rows else []
+
+                    # Align by day
+                    all_days = sorted(list(set(new_days + rep_days)), key=lambda x: int(x))
+                    new_map = {d: 0 for d in all_days}
+                    rep_map = {d: 0 for d in all_days}
+                    for d, v in zip(new_days, new_counts): new_map[d] = v
+                    for d, v in zip(rep_days, rep_counts): rep_map[d] = v
+
                     ax = self.figure.add_subplot(111); ax.set_facecolor('#353535')
-                    ax.bar(['Khách mới', 'Khách thân thiết'], [new_c, rep_c])
+                    x = np.arange(len(all_days))
+                    ax.plot(x, [new_map[d] for d in all_days], marker='o', label='Khách mới', color='#3498DB', linewidth=2)
+                    ax.plot(x, [rep_map[d] for d in all_days], marker='s', label='Khách thân thiết', color='#E74C3C', linewidth=2)
+                    ax.set_xticks(x); ax.set_xticklabels(all_days, rotation=45, color='white')
+                    ax.set_ylabel('Số lượng khách hàng', color='white')
                     ax.set_title(f'Khách hàng tháng {int(month)}/{year}', color='white'); ax.tick_params(axis='y', colors='white', labelcolor='white')
+                    ax.grid(True, alpha=0.3, color='white')
+                    legend = ax.legend(frameon=True); legend.get_frame().set_facecolor('#2C3E50'); legend.get_frame().set_edgecolor('white')
+                    for t in legend.get_texts(): t.set_color('white')
 
             elif self.current_mode == "top_types":
                 # Thống kê sản phẩm bán chạy nhất
@@ -360,7 +388,10 @@ class StatisticsTab(QWidget):
                         qtys = [r[1] for r in rows]
                         ax = self.figure.add_subplot(111); ax.set_facecolor('#353535')
                         y_pos = np.arange(len(products))
-                        ax.barh(y_pos, qtys)
+                        # Sử dụng màu sắc khác nhau cho từng cột để dễ nhận diện
+                        colors = ['#3498DB', '#E74C3C', '#2ECC71', '#F39C12', '#9B59B6', '#1ABC9C', '#E67E22', '#34495E', '#16A085', '#27AE60', '#2980B9', '#8E44AD', '#D35400', '#C0392B', '#7D3C98']
+                        bar_colors = [colors[i % len(colors)] for i in range(len(products))]
+                        ax.barh(y_pos, qtys, color=bar_colors)
                         ax.set_yticks(y_pos); ax.set_yticklabels(products, color='white')
                         ax.invert_yaxis()
                         ax.set_xlabel('Số lượng bán', color='white')
