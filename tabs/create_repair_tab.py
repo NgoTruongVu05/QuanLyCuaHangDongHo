@@ -32,9 +32,17 @@ class CreateRepairTab(QWidget):
         
         self.watch_desc_input = QTextEdit()
         self.watch_desc_input.setMaximumHeight(80)
+        
+        # Thêm ô tìm kiếm đồng hồ
+        self.product_search = QLineEdit()
+        self.product_search.setPlaceholderText('Tìm kiếm đồng hồ...')
+        self.product_search.textChanged.connect(self.filter_products)
+        repair_layout.addRow('Tìm kiếm:', self.product_search)
+        
         # Cho phép chọn một đồng hồ có sẵn từ database (nếu muốn)
         self.product_combo = QComboBox()
         self.product_combo.addItem('--- Chọn đồng hồ ---', -1)
+        self.all_products = []  
         self.load_products()
         self.product_combo.currentIndexChanged.connect(self.on_product_selected)
         repair_layout.addRow('Chọn đồng hồ:', self.product_combo)
@@ -92,34 +100,53 @@ class CreateRepairTab(QWidget):
             cursor = self.db.conn.cursor()
             # Sắp xếp theo tên để sản phẩm mới dễ tìm
             cursor.execute('SELECT id, name FROM products ORDER BY name')
-            products = cursor.fetchall()
+            self.all_products = cursor.fetchall()
 
             # Giữ item mặc định ở vị trí 0
             self.product_combo.clear()
             self.product_combo.addItem('--- Chọn đồng hồ ---', -1)
-            for p in products:
+            for p in self.all_products:
                 self.product_combo.addItem(p[1], p[0])
         except Exception:
             # Nếu lỗi DB, giữ combobox rỗng (ngoại trừ placeholder)
             self.product_combo.clear()
             self.product_combo.addItem('--- Chọn đồng hồ ---', -1)
+            self.all_products = []
+            
+    def filter_products(self, search_text):
+        """Lọc danh sách đồng hồ theo từ khóa tìm kiếm."""
+        self.product_combo.clear()
+        self.product_combo.addItem('--- Chọn đồng hồ ---', -1)
+        
+        # Nếu không có từ khóa tìm kiếm, hiển thị tất cả
+        if not search_text.strip():
+            for p in self.all_products:
+                self.product_combo.addItem(p[1], p[0])
+            return
+            
+        # Lọc sản phẩm theo từ khóa (không phân biệt hoa thường)
+        search_text = search_text.lower()
+        for p in self.all_products:
+            if search_text in p[1].lower():
+                self.product_combo.addItem(p[1], p[0])
 
     def showEvent(self, event):
-        """Khi tab/Widget hiện lên, reload products để cập nhật các thay đổi gần đây."""
+        """Khi tab/Widget hiện lên, reload products và áp dụng lại bộ lọc tìm kiếm."""
         try:
             self.load_products()
+            # Áp dụng lại bộ lọc tìm kiếm hiện tại
+            self.filter_products(self.product_search.text())
         except Exception:
             pass
         return super().showEvent(event)
 
     def on_product_selected(self, index):
-        """Khi chọn sản phẩm: tự động điền mô tả đồng hồ (không ép buộc)."""
+        """Khi chọn sản phẩm: tự động cập nhật mô tả đồng hồ."""
         pid = self.product_combo.currentData()
         if pid and pid != -1:
             name = self.product_combo.currentText()
-            # Nếu người dùng chưa nhập mô tả, tự động điền
-            if not self.watch_desc_input.toPlainText().strip():
-                self.watch_desc_input.setPlainText(name)
+            #cập nhật mô tả khi chọn đồng hồ mới
+            self.watch_desc_input.setPlainText(name)
     
     def create_repair_order(self):
         customer_id = self.customer_combo.currentData()
@@ -168,11 +195,19 @@ class CreateRepairTab(QWidget):
         self.watch_desc_input.clear()
         self.issue_desc_input.clear()
         self.estimated_completion_input.setDate(QDate.currentDate().addDays(7))
+        # Reset product combo về mặc định nhưng không xóa kết quả tìm kiếm
+        current_search = self.product_search.text()
+        if current_search:
+            self.filter_products(current_search)
+        else:
+            self.product_combo.setCurrentIndex(0)
 
     def refresh_form(self):
         """Làm mới form và reload dữ liệu tham chiếu (sản phẩm, khách hàng)."""
         # Giữ hành vi clear hiện tại
         self.clear_form()
+        # Clear ô tìm kiếm
+        self.product_search.clear()
         # Reload danh sách sản phẩm và khách hàng trong combobox
         try:
             self.load_products()
