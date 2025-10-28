@@ -1,8 +1,8 @@
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QTableWidget, 
                              QTableWidgetItem, QPushButton, QMessageBox,
                              QHeaderView, QHBoxLayout, QLabel, QDialog, QWidget as _QWidget,
-                             QLineEdit)
-from PyQt6.QtCore import Qt
+                             QLineEdit, QDateEdit, QComboBox, QSizePolicy)
+from PyQt6.QtCore import Qt, QDate
 from dialogs.edit_repair_dialog import EditRepairDialog
 from datetime import datetime
 
@@ -24,7 +24,7 @@ class InvoiceManagementTab(QWidget):
         self.current_mode = "invoices"  # "invoices" hoặc "repairs"
         self.init_ui()
         self.load_data()
-    
+
     def init_ui(self):
         layout = QVBoxLayout()
         
@@ -63,13 +63,87 @@ class InvoiceManagementTab(QWidget):
         ''')
         refresh_btn.clicked.connect(self.load_data)
         controls_layout.addWidget(refresh_btn)
-        # Ô tìm kiếm dùng chung cho cả hai chế độ (lọc client-side)
-        self.search_input = QLineEdit()
-        self.search_input.setPlaceholderText('Tìm kiếm (ID, khách, nhân viên, đồng hồ, lỗi, trạng thái)...')
-        self.search_input.textChanged.connect(self.on_search_text_changed)
-        controls_layout.addWidget(self.search_input)
         
         layout.addLayout(controls_layout)
+        
+        # Layout tìm kiếm cho hóa đơn bán hàng
+        self.invoice_search_layout = QHBoxLayout()
+        self.invoice_search_layout.addWidget(QLabel('Từ ngày:'))
+        self.invoice_from_date = QDateEdit()
+        self.invoice_from_date.setDate(QDate.currentDate().addMonths(-1))
+        self.invoice_from_date.setCalendarPopup(True)
+        self.invoice_from_date.dateChanged.connect(self.load_data)
+        self.invoice_search_layout.addWidget(self.invoice_from_date)
+        
+        self.invoice_search_layout.addWidget(QLabel('Đến ngày:'))
+        self.invoice_to_date = QDateEdit()
+        self.invoice_to_date.setDate(QDate.currentDate())
+        self.invoice_to_date.setCalendarPopup(True)
+        self.invoice_to_date.dateChanged.connect(self.load_data)
+        self.invoice_search_layout.addWidget(self.invoice_to_date)
+        
+        # Clear button for invoices
+        clear_invoice_btn = QPushButton('Xóa tìm kiếm')
+        clear_invoice_btn.clicked.connect(self.clear_search)
+        clear_invoice_btn.setStyleSheet('''
+            QPushButton {
+                background-color: #95A5A6;
+                color: white;
+                border: none;
+                border-radius: 3px;
+                padding: 5px 10px;
+            }
+            QPushButton:hover {
+                background-color: #7F8C8D;
+            }
+        ''')
+        self.invoice_search_layout.addWidget(clear_invoice_btn)
+        
+        # Layout tìm kiếm cho hóa đơn sửa chữa
+        self.repair_search_layout = QHBoxLayout()
+        
+        # Tìm kiếm theo tên đồng hồ
+        self.repair_search_layout.addWidget(QLabel('Tìm theo tên đồng hồ:'))
+        self.repair_search_input = QLineEdit()
+        self.repair_search_input.setPlaceholderText('Nhập tên đồng hồ cần tìm...')
+        self.repair_search_input.textChanged.connect(self.load_data)
+        self.repair_search_layout.addWidget(self.repair_search_input)
+        
+        # Thêm lọc theo ngày cho sửa chữa
+        self.repair_search_layout.addWidget(QLabel('Từ ngày:'))
+        self.repair_date_from = QDateEdit()
+        self.repair_date_from.setDate(QDate.currentDate().addMonths(-1))
+        self.repair_date_from.setCalendarPopup(True)
+        self.repair_date_from.dateChanged.connect(self.load_data)
+        self.repair_search_layout.addWidget(self.repair_date_from)
+        
+        self.repair_search_layout.addWidget(QLabel('Đến ngày:'))
+        self.repair_date_to = QDateEdit()
+        self.repair_date_to.setDate(QDate.currentDate())
+        self.repair_date_to.setCalendarPopup(True)
+        self.repair_date_to.dateChanged.connect(self.load_data)
+        self.repair_search_layout.addWidget(self.repair_date_to)
+        
+        # Clear button for repairs
+        clear_repair_btn = QPushButton('Xóa tìm kiếm')
+        clear_repair_btn.clicked.connect(self.clear_search)
+        clear_repair_btn.setStyleSheet('''
+            QPushButton {
+                background-color: #95A5A6;
+                color: white;
+                border: none;
+                border-radius: 3px;
+                padding: 5px 10px;
+            }
+            QPushButton:hover {
+                background-color: #7F8C8D;
+            }
+        ''')
+        self.repair_search_layout.addWidget(clear_repair_btn)
+        
+        # Thêm các layout tìm kiếm vào layout chính
+        layout.addLayout(self.invoice_search_layout)
+        layout.addLayout(self.repair_search_layout)
         
         # Bảng chính
         self.table = QTableWidget()
@@ -77,14 +151,54 @@ class InvoiceManagementTab(QWidget):
         
         self.setLayout(layout)
         
+        # Ẩn/hiện các controls tìm kiếm theo mode
+        self.update_search_controls()
         # Cập nhật trạng thái button ban đầu
         self.update_button_styles()
+
+    def clear_search(self):
+        """Xóa tất cả các điều kiện tìm kiếm"""
+        if self.current_mode == "invoices":
+            self.invoice_from_date.setDate(QDate.currentDate().addMonths(-1))
+            self.invoice_to_date.setDate(QDate.currentDate())
+        else:
+            # Xóa cả tìm kiếm tên đồng hồ và reset ngày
+            self.repair_search_input.clear()
+            self.repair_date_from.setDate(QDate.currentDate().addMonths(-1))
+            self.repair_date_to.setDate(QDate.currentDate())
+        self.load_data()
     
     def switch_mode(self, mode):
         """Chuyển đổi giữa chế độ xem hóa đơn và sửa chữa"""
         self.current_mode = mode
+        self.update_search_controls()
         self.load_data()
         self.update_button_styles()
+        
+    def update_search_controls(self):
+        """Ẩn/hiện các controls tìm kiếm tương ứng với mode hiện tại"""
+        if self.current_mode == "invoices":
+            # Hiện tìm kiếm theo ngày cho hóa đơn
+            for i in range(self.invoice_search_layout.count()):
+                widget = self.invoice_search_layout.itemAt(i).widget()
+                if widget:
+                    widget.show()
+            # Ẩn tìm kiếm theo tên đồng hồ
+            for i in range(self.repair_search_layout.count()):
+                widget = self.repair_search_layout.itemAt(i).widget()
+                if widget:
+                    widget.hide()
+        else:
+            # Ẩn tìm kiếm theo ngày
+            for i in range(self.invoice_search_layout.count()):
+                widget = self.invoice_search_layout.itemAt(i).widget()
+                if widget:
+                    widget.hide()
+            # Hiện tìm kiếm theo tên đồng hồ
+            for i in range(self.repair_search_layout.count()):
+                widget = self.repair_search_layout.itemAt(i).widget()
+                if widget:
+                    widget.show()
 
     def edit_repair_row(self, row):
         """Mở dialog sửa đơn sửa chữa; reload khi dialog trả về Accepted"""
@@ -149,27 +263,26 @@ class InvoiceManagementTab(QWidget):
             self.repair_btn.setStyleSheet(active_style)
     
     def load_data(self):
+        """Tải dữ liệu theo chế độ hiện tại"""
         if self.current_mode == "invoices":
             self.load_invoices_data()
         else:
-            # pass current search text to repair loader via instance attribute
             self.load_repairs_data()
-
-    def on_search_text_changed(self, text: str):
-        """Handler gọi khi thay đổi text tìm kiếm: reload dữ liệu theo chế độ hiện tại."""
-        # đơn giản: reload hiện tại (functions will read self.search_input)
-        self.load_data()
     
     def load_invoices_data(self):
-        """Tải dữ liệu hóa đơn - ĐÃ BỎ BỘ LỌC"""
+        """Tải dữ liệu hóa đơn theo khoảng thời gian"""
+        from_date = self.invoice_from_date.date().toString('yyyy-MM-dd')
+        to_date = self.invoice_to_date.date().toString('yyyy-MM-dd')
+        
         cursor = self.db.conn.cursor()
         cursor.execute('''
             SELECT i.id, c.name, e.full_name, i.total_amount, i.created_date
             FROM invoices i
             LEFT JOIN customers c ON i.customer_id = c.id
             LEFT JOIN employees e ON i.employee_id = e.id
+            WHERE DATE(i.created_date) BETWEEN ? AND ?
             ORDER BY i.id DESC
-        ''')
+        ''', (from_date, to_date))
         
         invoices = cursor.fetchall()
         
@@ -227,41 +340,36 @@ class InvoiceManagementTab(QWidget):
             self.table.setCellWidget(row, 6, action_widget)
     
     def load_repairs_data(self):
-        """Tải dữ liệu sửa chữa (bao gồm chi phí mặc định 0 nếu NULL)"""
+        """Tải dữ liệu sửa chữa và lọc theo tên đồng hồ và khoảng thời gian"""
         cursor = self.db.conn.cursor()
-        cursor.execute('''
+        
+        # Lấy các điều kiện lọc
+        watch_search = self.repair_search_input.text().strip().lower()
+        from_date = self.repair_date_from.date().toString('yyyy-MM-dd')
+        to_date = self.repair_date_to.date().toString('yyyy-MM-dd')
+        
+        # Xây dựng query với điều kiện lọc ngày
+        query = '''
             SELECT r.id, c.name, e.full_name, r.watch_description, r.issue_description,
-                   COALESCE(r.actual_cost, 0.0) as actual_cost, r.created_date, r.estimated_completion, r.status
+                   COALESCE(r.actual_cost, 0.0) as actual_cost, r.created_date, 
+                   r.estimated_completion, r.status
             FROM repair_orders r
             LEFT JOIN customers c ON r.customer_id = c.id
             LEFT JOIN employees e ON r.employee_id = e.id
-            ORDER BY r.id DESC
-        ''')
+            WHERE DATE(r.created_date) BETWEEN ? AND ?
+        '''
+        params = [from_date, to_date]
+        
+        # Thêm điều kiện tìm kiếm theo tên đồng hồ nếu có
+        if watch_search:
+            query += ' AND LOWER(r.watch_description) LIKE ?'
+            params.append(f'%{watch_search}%')
+        
+        query += ' ORDER BY r.id DESC'
+        
+        cursor.execute(query, params)
+        
         repairs = cursor.fetchall()
-
-        # Lọc client-side theo ô tìm kiếm nếu có
-        search = ''
-        if hasattr(self, 'search_input'):
-            search = self.search_input.text().strip().lower()
-
-        if search:
-            filtered = []
-            for rep in repairs:
-                (rid, cust_name, emp_name, watch_desc, issue_desc,
-                 actual_cost, created_date, est_completion, status) = rep
-                haystack = ' '.join([
-                    str(rid),
-                    str(cust_name or '').lower(),
-                    str(emp_name or '').lower(),
-                    str(watch_desc or '').lower(),
-                    str(issue_desc or '').lower(),
-                    str(status or '').lower(),
-                    str(created_date or '').lower(),
-                    f"{actual_cost}".lower()
-                ])
-                if search in haystack:
-                    filtered.append(rep)
-            repairs = filtered
         
         self.setup_repairs_table()
         self.table.setRowCount(len(repairs))
