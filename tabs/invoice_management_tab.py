@@ -68,6 +68,18 @@ class InvoiceManagementTab(QWidget):
         
         # Layout tìm kiếm cho hóa đơn bán hàng
         self.invoice_search_layout = QHBoxLayout()
+        self.invoice_search_layout.addWidget(QLabel('Loại tìm kiếm:'))
+        
+        self.search_type = QComboBox()
+        self.search_type.addItems(['Tất cả', 'ID hóa đơn', 'Tên khách hàng', 'Tên nhân viên'])
+        self.search_type.currentTextChanged.connect(self.on_search_type_changed)
+        self.invoice_search_layout.addWidget(self.search_type)
+        
+        self.invoice_search_layout.addWidget(QLabel('Từ khóa:'))
+        self.search_input = QLineEdit()
+        self.search_input.setPlaceholderText('Nhập từ khóa tìm kiếm...')
+        self.search_input.textChanged.connect(self.search_data)
+        self.invoice_search_layout.addWidget(self.search_input)
         self.invoice_search_layout.addWidget(QLabel('Từ ngày:'))
         self.invoice_from_date = QDateEdit()
         self.invoice_from_date.setDate(QDate.currentDate().addMonths(-1))
@@ -81,6 +93,8 @@ class InvoiceManagementTab(QWidget):
         self.invoice_to_date.setCalendarPopup(True)
         self.invoice_to_date.dateChanged.connect(self.load_data)
         self.invoice_search_layout.addWidget(self.invoice_to_date)
+
+        self.invoice_search_layout.addStretch()
         
         # Clear button for invoices
         clear_invoice_btn = QPushButton('Xóa tìm kiếm')
@@ -156,9 +170,111 @@ class InvoiceManagementTab(QWidget):
         # Cập nhật trạng thái button ban đầu
         self.update_button_styles()
 
+    def on_search_type_changed(self, search_type):
+        """Cập nhật placeholder khi loại tìm kiếm thay đổi"""
+        if search_type == 'ID hóa đơn':
+            self.search_input.setPlaceholderText('Nhập ID hóa đơn...')
+        elif search_type == 'Tên khách hàng':
+            self.search_input.setPlaceholderText('Nhập tên khách hàng...')
+        elif search_type == 'Tên nhân viên':
+            self.search_input.setPlaceholderText('Nhập tên nhân viên...')
+        else:
+            self.search_input.setPlaceholderText('Nhập từ khóa tìm kiếm...')
+
+    def search_data(self):
+        """Tìm kiếm dữ liệu dựa trên loại tìm kiếm và từ khóa"""
+        if self.current_mode == "invoices":
+            self.search_invoices()
+        else:
+            self.load_repairs_data()
+
+    def search_invoices(self):
+        """Tìm kiếm hóa đơn dựa trên loại và từ khóa"""
+        search_type = self.search_type.currentText()
+        search_text = self.search_input.text().strip()
+        from_date = self.invoice_from_date.date().toString('yyyy-MM-dd')
+        to_date = self.invoice_to_date.date().toString('yyyy-MM-dd')
+        
+        cursor = self.db.conn.cursor()
+        
+        base_query = '''
+            SELECT i.id, c.name, e.full_name, i.total_amount, i.created_date
+            FROM invoices i
+            LEFT JOIN customers c ON i.customer_id = c.id
+            LEFT JOIN employees e ON i.employee_id = e.id
+            WHERE i.created_date BETWEEN ? AND ?
+        '''
+        params = [from_date, to_date]
+        
+        if search_text:
+            if search_type == 'Tất cả':
+                base_query += ' AND (LOWER(i.id) LIKE ? OR LOWER(c.name) LIKE ? OR LOWER(e.full_name) LIKE ?)'
+                search_term = f'%{search_text.lower()}%'
+                params.extend([search_term, search_term, search_term])
+            elif search_type == 'ID hóa đơn':
+                base_query += ' AND LOWER(i.id) LIKE ?'
+                params.append(f'%{search_text.lower()}%')
+            elif search_type == 'Tên khách hàng':
+                base_query += ' AND LOWER(c.name) LIKE ?'
+                params.append(f'%{search_text.lower()}%')
+            elif search_type == 'Tên nhân viên':
+                base_query += ' AND LOWER(e.full_name) LIKE ?'
+                params.append(f'%{search_text.lower()}%')
+        
+        base_query += ' ORDER BY i.id DESC'
+        
+        cursor.execute(base_query, params)
+        invoices = cursor.fetchall()
+        
+        self.setup_invoices_table()
+        self.table.setRowCount(len(invoices))
+        
+        for row, invoice in enumerate(invoices):
+            for col, value in enumerate(invoice):
+                if col == 3:  # Total amount
+                    item = QTableWidgetItem(f"{value:,.0f} VND" if value else "0 VND")
+                elif col == 4:
+                    item = QTableWidgetItem(_format_date(value))
+                else:
+                    item = QTableWidgetItem(str(value) if value else 'Khách lẻ')
+                item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+                self.table.setItem(row, col, item)
+
+            detail_widget = QWidget()
+            detail_layout = QHBoxLayout(detail_widget)
+            detail_layout.setContentsMargins(4, 0, 4, 0)
+            detail_layout.setSpacing(0)
+            
+            # Nút chi tiết
+            detail_btn = QPushButton('Xem chi tiết')
+            detail_btn.setFixedSize(72, 26)
+            detail_btn.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+            detail_btn.setStyleSheet('''
+                QPushButton {
+                    background-color: #1E88E5;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    padding: 3px 6px;
+                    font-size: 11px;
+                }
+                QPushButton:hover {
+                    background-color: #1565C0;
+                }
+            ''')
+            detail_btn.clicked.connect(lambda checked, inv_id=invoice[0]: 
+                                    self.show_invoice_details(inv_id))
+            detail_layout.addStretch()
+            detail_layout.addWidget(detail_btn, alignment=Qt.AlignmentFlag.AlignCenter)
+            detail_layout.addStretch()
+            self.table.setCellWidget(row, 5, detail_widget)
+            self.table.setRowHeight(row, max(self.table.rowHeight(row), 36))
+
     def clear_search(self):
         """Xóa tất cả các điều kiện tìm kiếm"""
         if self.current_mode == "invoices":
+            self.search_type.setCurrentText('Tất cả')
+            self.search_input.clear()
             self.invoice_from_date.setDate(QDate.currentDate().addMonths(-1))
             self.invoice_to_date.setDate(QDate.currentDate())
         else:
@@ -270,19 +386,15 @@ class InvoiceManagementTab(QWidget):
             self.load_repairs_data()
     
     def load_invoices_data(self):
-        """Tải dữ liệu hóa đơn theo khoảng thời gian"""
-        from_date = self.invoice_from_date.date().toString('yyyy-MM-dd')
-        to_date = self.invoice_to_date.date().toString('yyyy-MM-dd')
-        
+        """Tải dữ liệu hóa đơn - không lọc"""
         cursor = self.db.conn.cursor()
         cursor.execute('''
             SELECT i.id, c.name, e.full_name, i.total_amount, i.created_date
             FROM invoices i
             LEFT JOIN customers c ON i.customer_id = c.id
             LEFT JOIN employees e ON i.employee_id = e.id
-            WHERE DATE(i.created_date) BETWEEN ? AND ?
             ORDER BY i.id DESC
-        ''', (from_date, to_date))
+        ''')
         
         invoices = cursor.fetchall()
         
@@ -290,54 +402,45 @@ class InvoiceManagementTab(QWidget):
         self.table.setRowCount(len(invoices))
         
         for row, invoice in enumerate(invoices):
-            inv_id, cust_name, emp_name, total_amount, created_date = invoice
-            # ID
-            item = QTableWidgetItem(str(inv_id))
-            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
-            self.table.setItem(row, 0, item)
-            # Khách hàng
-            item = QTableWidgetItem(str(cust_name) if cust_name else 'Khách lẻ')
-            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
-            self.table.setItem(row, 1, item)
-            # Nhân viên
-            item = QTableWidgetItem(str(emp_name) if emp_name else '')
-            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
-            self.table.setItem(row, 2, item)
-            # Tổng tiền
-            item = QTableWidgetItem(f"{total_amount:,.0f} VND" if total_amount else "0 VND")
-            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
-            self.table.setItem(row, 3, item)
-            # Ngày tạo
-            item = QTableWidgetItem(str(created_date) if created_date else '')
-            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
-            self.table.setItem(row, 4, item)
+            for col, value in enumerate(invoice):
+                if col == 3:  # Total amount
+                    item = QTableWidgetItem(f"{value:,.0f} VND" if value else "0 VND")
+                elif col == 4:
+                    item = QTableWidgetItem(_format_date(value))
+                else:
+                    item = QTableWidgetItem(str(value) if value else 'Khách lẻ')
+                item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+                self.table.setItem(row, col, item)
+
+            detail_widget = QWidget()
+            detail_layout = QHBoxLayout(detail_widget)
+            detail_layout.setContentsMargins(4, 0, 4, 0)
+            detail_layout.setSpacing(0)
             
             # Nút chi tiết
             detail_btn = QPushButton('Xem chi tiết')
+            detail_btn.setFixedSize(72, 26)
+            detail_btn.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
             detail_btn.setStyleSheet('''
                 QPushButton {
-                    background-color: #3498DB;
+                    background-color: #1E88E5;
                     color: white;
                     border: none;
-                    border-radius: 3px;
-                    padding: 3px 8px;
+                    border-radius: 5px;
+                    padding: 3px 6px;
                     font-size: 11px;
                 }
                 QPushButton:hover {
-                    background-color: #2980B9;
+                    background-color: #1565C0;
                 }
             ''')
-            detail_btn.clicked.connect(lambda checked, inv_id=inv_id: self.show_invoice_details(inv_id))
-            self.table.setCellWidget(row, 5, detail_btn)
-
-            
-            # Nút xóa (chỉ cho admin)
-            action_widget = _QWidget()
-            action_layout = QHBoxLayout(action_widget)
-            action_layout.setContentsMargins(5, 2, 5, 2)
-            
-            action_layout.addStretch()
-            self.table.setCellWidget(row, 6, action_widget)
+            detail_btn.clicked.connect(lambda checked, inv_id=invoice[0]:
+                                    self.show_invoice_details(inv_id))
+            detail_layout.addStretch()
+            detail_layout.addWidget(detail_btn, alignment=Qt.AlignmentFlag.AlignCenter)
+            detail_layout.addStretch()
+            self.table.setCellWidget(row, 5, detail_widget)
+            self.table.setRowHeight(row, max(self.table.rowHeight(row), 36))
     
     def load_repairs_data(self):
         """Tải dữ liệu sửa chữa và lọc theo tên đồng hồ và khoảng thời gian"""
@@ -522,23 +625,61 @@ class InvoiceManagementTab(QWidget):
     
     def show_invoice_details(self, invoice_id):
         cursor = self.db.conn.cursor()
-        
+        # Lấy header hóa đơn
         cursor.execute('''
-            SELECT p.name, id.quantity, id.price, (id.quantity * id.price) as total
+            SELECT i.id, i.created_date, i.total_amount,
+                   c.name, c.phone, c.address, e.full_name
+            FROM invoices i
+            LEFT JOIN customers c ON i.customer_id = c.id
+            LEFT JOIN employees e ON i.employee_id = e.id
+            WHERE i.id = ?
+        ''', (invoice_id,))
+        header = cursor.fetchone()
+
+        if not header:
+            QMessageBox.warning(self, 'Lỗi', f'Không tìm thấy hóa đơn #{invoice_id}')
+            return
+
+        inv_id, created_date, total_amount, cust_name, cust_phone, cust_addr, emp_name = header
+        cust_name = cust_name
+        created_date_fmt = _format_date(created_date)
+        emp_name = emp_name or ''
+
+        # Lấy chi tiết sản phẩm
+        cursor.execute('''
+            SELECT p.name, id.quantity, id.price, (id.quantity * id.price) as line_total
             FROM invoice_details id
             JOIN products p ON id.product_id = p.id
             WHERE id.invoice_id = ?
         ''', (invoice_id,))
         details = cursor.fetchall()
-        
-        detail_text = f"Chi tiết hóa đơn #{invoice_id}:\n\n"
-        total_amount = 0
-        for detail in details:
-            detail_text += f"{detail[0]} - {detail[1]} x {detail[2]:,} = {detail[3]:,} VND\n"
-            total_amount += detail[3]
-        detail_text += f"\nTổng cộng: {total_amount:,} VND"
-        
-        QMessageBox.information(self, 'Chi tiết', detail_text)
+
+        lines = [
+            f"HÓA ĐƠN #{inv_id}",
+            f"Ngày tạo: {created_date_fmt}",
+            f"Khách hàng: {cust_name}",
+        ]
+        if cust_phone:
+            lines.append(f"SĐT: {cust_phone}")
+        if cust_addr:
+            lines.append(f"Địa chỉ: {cust_addr}")
+        lines.append(f"Nhân viên: {emp_name}")
+        lines.append("\n--- Chi tiết sản phẩm ---")
+
+        for i, (name, qty, price, line_total) in enumerate(details, 1):
+            lines.append(
+                f"\n{i}. {name}\n"
+                f"   Số lượng : {qty}\n"
+                f"   Đơn giá  : {price:,.0f} VND\n"
+                f"   Thành tiền: {line_total:,.0f} VND"
+            )
+
+        lines.append("\n-------------------------")
+        total_display = total_amount or sum(d[3] for d in details)
+        lines.append(f"TỔNG CỘNG: {total_display:,.0f} VND")
+
+        detail_text = "\n".join(lines)
+        QMessageBox.information(self, f'Hóa đơn #{inv_id}', detail_text)
     
     def view_repair_details(self, row):
         repair_id = int(self.table.item(row, 0).text())
@@ -573,15 +714,6 @@ class InvoiceManagementTab(QWidget):
             'Đã hủy': 'Đã hủy'
         }
         return status_map.get(status, status)
-    
-    def delete_invoice_row(self, row, invoice_id):        
-        reply = QMessageBox.question(self, 'Xác nhận', 
-                                f'Bạn có chắc muốn xóa hóa đơn #{invoice_id}?')
-        if reply == QMessageBox.StandardButton.Yes:
-            cursor = self.db.conn.cursor()  
-            cursor.execute('DELETE FROM invoices WHERE id = ?', (invoice_id,))
-            self.db.conn.commit()
-            self.load_data()
     
     def delete_repair_row(self, row):
         repair_id = int(self.table.item(row, 0).text())
