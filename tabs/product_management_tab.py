@@ -211,8 +211,8 @@ class ProductManagementTab(QWidget):
         header.setSectionResizeMode(6, QHeaderView.ResizeMode.Stretch)  # Chi tiết sản phẩm
         header.setSectionResizeMode(7, QHeaderView.ResizeMode.ResizeToContents)  # Hành động
 
-        # Bật sorting (nhưng lưu ý sorting client-side chỉ trên trang hiện tại)
-        self.table.setSortingEnabled(True)
+        # Tắt sorting (vì dữ liệu được phân trang và sorting server-side)
+        self.table.setSortingEnabled(False)
 
         # Allow deselection by clicking empty area
         self.table.clicked.connect(self.handle_click)

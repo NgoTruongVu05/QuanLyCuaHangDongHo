@@ -188,7 +188,6 @@ class BrandManagementTab(QWidget):
             
             action_layout.addStretch()
             self.table.setCellWidget(row, 3, action_widget)
-            self.table.resizeRowsToContents()
         for row in range(self.table.rowCount()):
             self.table.setRowHeight(row, 40)
     

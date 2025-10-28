@@ -111,17 +111,6 @@ class Database:
         # Bảng lương - BỎ vì tính tự động
         cursor.execute('DROP TABLE IF EXISTS salaries')
         
-        # Thêm dữ liệu mẫu cho brands
-        cursor.executemany('''
-            INSERT OR IGNORE INTO brands (name, country) VALUES (?, ?)
-        ''', [
-            ('Seiko', 'Nhật Bản'),
-            ('Casio', 'Nhật Bản'),
-            ('Rolex', 'Thụy Sĩ'),
-            ('Citizen', 'Nhật Bản'),
-            ('Omega', 'Thụy Sĩ')
-        ])
-        
         # Thêm admin mặc định - QL + 6 SỐ CUỐI
         cursor.execute('''
             INSERT OR IGNORE INTO employees 
