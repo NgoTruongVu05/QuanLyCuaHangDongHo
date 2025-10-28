@@ -32,26 +32,21 @@ class CreateRepairTab(QWidget):
         
         self.watch_desc_input = QTextEdit()
         self.watch_desc_input.setMaximumHeight(80)
+        # Cho phép chọn một đồng hồ có sẵn từ database (nếu muốn)
+        self.product_combo = QComboBox()
+        self.product_combo.addItem('--- Chọn đồng hồ ---', -1)
+        self.load_products()
+        self.product_combo.currentIndexChanged.connect(self.on_product_selected)
+        repair_layout.addRow('Chọn đồng hồ:', self.product_combo)
+
         repair_layout.addRow('Mô tả đồng hồ:', self.watch_desc_input)
         
         self.issue_desc_input = QTextEdit()
         self.issue_desc_input.setMaximumHeight(80)
         repair_layout.addRow('Mô tả lỗi:', self.issue_desc_input)
         
-        cost_layout = QHBoxLayout()
-        self.estimated_cost_input = QDoubleSpinBox()
-        self.estimated_cost_input.setMaximum(999999999)
-        self.estimated_cost_input.setPrefix('VND ')
-        cost_layout.addWidget(QLabel('Chi phí dự kiến:'))
-        cost_layout.addWidget(self.estimated_cost_input)
         
-        self.actual_cost_input = QDoubleSpinBox()
-        self.actual_cost_input.setMaximum(999999999)
-        self.actual_cost_input.setPrefix('VND ')
-        cost_layout.addWidget(QLabel('Chi phí thực tế:'))
-        cost_layout.addWidget(self.actual_cost_input)
-        
-        repair_layout.addRow(cost_layout)
+        # Không hiển thị input chi phí khi tạo đơn
         
         date_layout = QHBoxLayout()
         self.estimated_completion_input = QDateEdit()
@@ -61,10 +56,6 @@ class CreateRepairTab(QWidget):
         date_layout.addWidget(self.estimated_completion_input)
         
         repair_layout.addRow(date_layout)
-        
-        self.status_combo = QComboBox()
-        self.status_combo.addItems(['Chờ xử lý', 'Đang sửa', 'Hoàn thành', 'Đã hủy'])
-        repair_layout.addRow('Trạng thái:', self.status_combo)
         
         repair_group.setLayout(repair_layout)
         layout.addWidget(repair_group)
@@ -76,7 +67,8 @@ class CreateRepairTab(QWidget):
         button_layout.addWidget(create_btn)
         
         clear_btn = QPushButton('Làm mới')
-        clear_btn.clicked.connect(self.clear_form)
+        # Làm mới form và tải lại danh sách sản phẩm/khách hàng mới (nếu có)
+        clear_btn.clicked.connect(self.refresh_form)
         button_layout.addWidget(clear_btn)
         
         layout.addLayout(button_layout)
@@ -93,15 +85,49 @@ class CreateRepairTab(QWidget):
         self.customer_combo.addItem('Khách lẻ', -1)
         for customer in customers:
             self.customer_combo.addItem(customer[1], customer[0])
+
+    def load_products(self):
+        """Tải danh sách sản phẩm (đồng hồ) từ database vào combobox."""
+        try:
+            cursor = self.db.conn.cursor()
+            # Sắp xếp theo tên để sản phẩm mới dễ tìm
+            cursor.execute('SELECT id, name FROM products ORDER BY name')
+            products = cursor.fetchall()
+
+            # Giữ item mặc định ở vị trí 0
+            self.product_combo.clear()
+            self.product_combo.addItem('--- Chọn đồng hồ ---', -1)
+            for p in products:
+                self.product_combo.addItem(p[1], p[0])
+        except Exception:
+            # Nếu lỗi DB, giữ combobox rỗng (ngoại trừ placeholder)
+            self.product_combo.clear()
+            self.product_combo.addItem('--- Chọn đồng hồ ---', -1)
+
+    def showEvent(self, event):
+        """Khi tab/Widget hiện lên, reload products để cập nhật các thay đổi gần đây."""
+        try:
+            self.load_products()
+        except Exception:
+            pass
+        return super().showEvent(event)
+
+    def on_product_selected(self, index):
+        """Khi chọn sản phẩm: tự động điền mô tả đồng hồ (không ép buộc)."""
+        pid = self.product_combo.currentData()
+        if pid and pid != -1:
+            name = self.product_combo.currentText()
+            # Nếu người dùng chưa nhập mô tả, tự động điền
+            if not self.watch_desc_input.toPlainText().strip():
+                self.watch_desc_input.setPlainText(name)
     
     def create_repair_order(self):
         customer_id = self.customer_combo.currentData()
         watch_desc = self.watch_desc_input.toPlainText()
         issue_desc = self.issue_desc_input.toPlainText()
-        estimated_cost = self.estimated_cost_input.value()
-        actual_cost = self.actual_cost_input.value()
         estimated_completion = self.estimated_completion_input.date().toString('yyyy-MM-dd')
-        status = self.get_status_value(self.status_combo.currentText())
+        # Mặc định trạng thái là "Chờ xử lý"
+        status = 'Chờ xử lý'
         
         if not watch_desc or not issue_desc:
             QMessageBox.warning(self, 'Lỗi', 'Vui lòng nhập đầy đủ thông tin!')
@@ -117,11 +143,11 @@ class CreateRepairTab(QWidget):
         
         cursor.execute('''
             INSERT INTO repair_orders 
-            (customer_id, employee_id, watch_description, issue_description, estimated_cost, 
+            (customer_id, employee_id, watch_description, issue_description, 
              actual_cost, created_date, estimated_completion, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (customer_id, employee_id, watch_desc, issue_desc, estimated_cost,
-             actual_cost, QDate.currentDate().toString('yyyy-MM-dd'), estimated_completion, status))
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (customer_id, employee_id, watch_desc, issue_desc, 
+             0, QDate.currentDate().toString('yyyy-MM-dd'), estimated_completion, status))
         
         repair_id = cursor.lastrowid
         self.db.conn.commit()
@@ -141,7 +167,18 @@ class CreateRepairTab(QWidget):
     def clear_form(self):
         self.watch_desc_input.clear()
         self.issue_desc_input.clear()
-        self.estimated_cost_input.setValue(0)
-        self.actual_cost_input.setValue(0)
         self.estimated_completion_input.setDate(QDate.currentDate().addDays(7))
-        self.status_combo.setCurrentIndex(0)
+
+    def refresh_form(self):
+        """Làm mới form và reload dữ liệu tham chiếu (sản phẩm, khách hàng)."""
+        # Giữ hành vi clear hiện tại
+        self.clear_form()
+        # Reload danh sách sản phẩm và khách hàng trong combobox
+        try:
+            self.load_products()
+        except Exception:
+            pass
+        try:
+            self.load_customers()
+        except Exception:
+            pass

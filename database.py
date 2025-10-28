@@ -99,7 +99,6 @@ class Database:
                 employee_id TEXT,
                 watch_description TEXT NOT NULL,
                 issue_description TEXT NOT NULL,
-                estimated_cost REAL DEFAULT 0,
                 actual_cost REAL DEFAULT 0,
                 created_date TEXT NOT NULL,
                 estimated_completion TEXT,

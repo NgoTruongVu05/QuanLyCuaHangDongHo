@@ -1,18 +1,9 @@
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QTableWidget, 
                              QTableWidgetItem, QPushButton, QMessageBox,
-                             QHeaderView, QHBoxLayout, QLabel, QSizePolicy)
+                             QHeaderView, QHBoxLayout, QLabel, QDialog, QWidget as _QWidget,
+                             QLineEdit)
 from PyQt6.QtCore import Qt
-from datetime import datetime
-
-def _format_date(val: str) -> str:
-    if not val:
-        return ''
-    for fmt in ('%Y-%m-%d', '%Y-%m-%d %H:%M:%S', '%Y/%m/%d'):
-        try:
-            return datetime.strptime(val, fmt).strftime('%d/%m/%Y')
-        except Exception:
-            continue
-    return val
+from dialogs.edit_repair_dialog import EditRepairDialog
 
 class InvoiceManagementTab(QWidget):
     def __init__(self, db, user_role):
@@ -61,6 +52,11 @@ class InvoiceManagementTab(QWidget):
         ''')
         refresh_btn.clicked.connect(self.load_data)
         controls_layout.addWidget(refresh_btn)
+        # Ô tìm kiếm dùng chung cho cả hai chế độ (lọc client-side)
+        self.search_input = QLineEdit()
+        self.search_input.setPlaceholderText('Tìm kiếm (ID, khách, nhân viên, đồng hồ, lỗi, trạng thái)...')
+        self.search_input.textChanged.connect(self.on_search_text_changed)
+        controls_layout.addWidget(self.search_input)
         
         layout.addLayout(controls_layout)
         
@@ -78,6 +74,13 @@ class InvoiceManagementTab(QWidget):
         self.current_mode = mode
         self.load_data()
         self.update_button_styles()
+
+    def edit_repair_row(self, row):
+        """Mở dialog sửa đơn sửa chữa; reload khi dialog trả về Accepted"""
+        repair_id = int(self.table.item(row, 0).text())
+        dialog = EditRepairDialog(self.db, repair_id, parent=self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            self.load_data()
     
     def update_button_styles(self):
         """Cập nhật style cho button để thể hiện trạng thái active"""
@@ -138,7 +141,13 @@ class InvoiceManagementTab(QWidget):
         if self.current_mode == "invoices":
             self.load_invoices_data()
         else:
+            # pass current search text to repair loader via instance attribute
             self.load_repairs_data()
+
+    def on_search_text_changed(self, text: str):
+        """Handler gọi khi thay đổi text tìm kiếm: reload dữ liệu theo chế độ hiện tại."""
+        # đơn giản: reload hiện tại (functions will read self.search_input)
+        self.load_data()
     
     def load_invoices_data(self):
         """Tải dữ liệu hóa đơn - ĐÃ BỎ BỘ LỌC"""
@@ -157,48 +166,49 @@ class InvoiceManagementTab(QWidget):
         self.table.setRowCount(len(invoices))
         
         for row, invoice in enumerate(invoices):
-            for col, value in enumerate(invoice):
-                if col == 3:  # Total amount
-                    item = QTableWidgetItem(f"{value:,.0f} VND" if value else "0 VND")
-                elif col == 4:
-                    item = QTableWidgetItem(_format_date(value))
-                else:
-                    item = QTableWidgetItem(str(value) if value else 'Khách lẻ')
-                item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
-                self.table.setItem(row, col, item)
-
-            detail_widget = QWidget()
-            detail_layout = QHBoxLayout(detail_widget)
-            detail_layout.setContentsMargins(4, 0, 4, 0)
-            detail_layout.setSpacing(0)
+            inv_id, cust_name, emp_name, total_amount, created_date = invoice
+            # ID
+            item = QTableWidgetItem(str(inv_id))
+            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 0, item)
+            # Khách hàng
+            item = QTableWidgetItem(str(cust_name) if cust_name else 'Khách lẻ')
+            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 1, item)
+            # Nhân viên
+            item = QTableWidgetItem(str(emp_name) if emp_name else '')
+            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 2, item)
+            # Tổng tiền
+            item = QTableWidgetItem(f"{total_amount:,.0f} VND" if total_amount else "0 VND")
+            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 3, item)
+            # Ngày tạo
+            item = QTableWidgetItem(str(created_date) if created_date else '')
+            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 4, item)
             
             # Nút chi tiết
             detail_btn = QPushButton('Xem chi tiết')
-            detail_btn.setFixedSize(72, 26)
-            detail_btn.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
             detail_btn.setStyleSheet('''
                 QPushButton {
-                    background-color: #1E88E5;
+                    background-color: #3498DB;
                     color: white;
                     border: none;
-                    border-radius: 5px;
-                    padding: 3px 6px;
+                    border-radius: 3px;
+                    padding: 3px 8px;
                     font-size: 11px;
                 }
                 QPushButton:hover {
-                    background-color: #1565C0;
+                    background-color: #2980B9;
                 }
             ''')
-            detail_btn.clicked.connect(lambda checked, inv_id=invoice[0]:
-                                    self.show_invoice_details(inv_id))
-            detail_layout.addStretch()
-            detail_layout.addWidget(detail_btn, alignment=Qt.AlignmentFlag.AlignCenter)
-            detail_layout.addStretch()
-            self.table.setCellWidget(row, 5, detail_widget)
-            self.table.setRowHeight(row, max(self.table.rowHeight(row), 36))
+            detail_btn.clicked.connect(lambda checked, inv_id=inv_id: self.show_invoice_details(inv_id))
+            self.table.setCellWidget(row, 5, detail_btn)
+
             
             # Nút xóa (chỉ cho admin)
-            action_widget = QWidget()
+            action_widget = _QWidget()
             action_layout = QHBoxLayout(action_widget)
             action_layout.setContentsMargins(5, 2, 5, 2)
             
@@ -206,35 +216,97 @@ class InvoiceManagementTab(QWidget):
             self.table.setCellWidget(row, 6, action_widget)
     
     def load_repairs_data(self):
-        """Tải dữ liệu sửa chữa"""
+        """Tải dữ liệu sửa chữa (bao gồm chi phí mặc định 0 nếu NULL)"""
         cursor = self.db.conn.cursor()
         cursor.execute('''
             SELECT r.id, c.name, e.full_name, r.watch_description, r.issue_description,
-                   r.estimated_cost, r.actual_cost, r.created_date, r.estimated_completion, r.status
+                   COALESCE(r.actual_cost, 0.0) as actual_cost, r.created_date, r.estimated_completion, r.status
             FROM repair_orders r
             LEFT JOIN customers c ON r.customer_id = c.id
             LEFT JOIN employees e ON r.employee_id = e.id
             ORDER BY r.id DESC
         ''')
         repairs = cursor.fetchall()
+
+        # Lọc client-side theo ô tìm kiếm nếu có
+        search = ''
+        if hasattr(self, 'search_input'):
+            search = self.search_input.text().strip().lower()
+
+        if search:
+            filtered = []
+            for rep in repairs:
+                (rid, cust_name, emp_name, watch_desc, issue_desc,
+                 actual_cost, created_date, est_completion, status) = rep
+                haystack = ' '.join([
+                    str(rid),
+                    str(cust_name or '').lower(),
+                    str(emp_name or '').lower(),
+                    str(watch_desc or '').lower(),
+                    str(issue_desc or '').lower(),
+                    str(status or '').lower(),
+                    str(created_date or '').lower(),
+                    f"{actual_cost}".lower()
+                ])
+                if search in haystack:
+                    filtered.append(rep)
+            repairs = filtered
         
         self.setup_repairs_table()
         self.table.setRowCount(len(repairs))
         
-        for row, repair in enumerate(repairs):
-            for col, value in enumerate(repair):
-                if col in [5, 6]:  # Cost columns
-                    item = QTableWidgetItem(f"{value:,.0f} VND" if value else "0 VND")
-                elif col == 9:  # Status column
-                    status_text = self.get_repair_status_text(value)
-                    item = QTableWidgetItem(status_text)
-                else:
-                    item = QTableWidgetItem(str(value) if value else 'Khách lẻ')
-                item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
-                self.table.setItem(row, col, item)
-            
+        for row, rep in enumerate(repairs):
+            (rid, cust_name, emp_name, watch_desc, issue_desc,
+             actual_cost, created_date, est_completion, status) = rep
+
+            # ID
+            item = QTableWidgetItem(str(rid))
+            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 0, item)
+
+            # Khách hàng
+            item = QTableWidgetItem(str(cust_name) if cust_name else 'Khách lẻ')
+            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 1, item)
+            # Nhân viên
+            item = QTableWidgetItem(str(emp_name) if emp_name else '')
+            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 2, item)
+
+            # Đồng hồ
+            item = QTableWidgetItem(str(watch_desc) if watch_desc else '')
+            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 3, item)
+
+            # Lỗi
+            item = QTableWidgetItem(str(issue_desc) if issue_desc else '')
+            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 4, item)
+
+            # Chi phí
+            try:
+                item = QTableWidgetItem(f"{float(actual_cost):,.0f} VND")
+            except Exception:
+                item = QTableWidgetItem("0 VND")
+            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 5, item)
+
+            # Ngày tạo
+            item = QTableWidgetItem(str(created_date) if created_date else '')
+            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 6, item)
+
+            # Dự kiến hoàn thành
+            item = QTableWidgetItem(str(est_completion) if est_completion else '')
+            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 7, item)
+
+            # Trạng thái 
+            item = QTableWidgetItem(self.get_repair_status_text(status))
+            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            self.table.setItem(row, 8, item)
             # Nút hành động cho từng dòng
-            action_widget = QWidget()
+            action_widget = _QWidget()
             action_layout = QHBoxLayout(action_widget)
             action_layout.setContentsMargins(5, 2, 5, 2)
             
@@ -292,7 +364,7 @@ class InvoiceManagementTab(QWidget):
                 action_layout.addWidget(delete_btn)
             
             action_layout.addStretch()
-            self.table.setCellWidget(row, 10, action_widget)
+            self.table.setCellWidget(row, 9, action_widget)
     
     def setup_invoices_table(self):
         """Thiết lập bảng cho chế độ hóa đơn"""
@@ -308,14 +380,13 @@ class InvoiceManagementTab(QWidget):
         header.setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)  # Tổng tiền
         header.setSectionResizeMode(4, QHeaderView.ResizeMode.ResizeToContents)  # Ngày tạo
         header.setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)  # Chi tiết
-        self.table.verticalHeader().setDefaultSectionSize(40)
     
     def setup_repairs_table(self):
         """Thiết lập bảng cho chế độ sửa chữa"""
-        self.table.setColumnCount(11)
+        self.table.setColumnCount(10)
         self.table.setHorizontalHeaderLabels([
-            'ID', 'Khách hàng', 'Nhân viên', 'Đồng hồ', 'Lỗi', 
-            'Chi phí dự kiến', 'Chi phí thực', 'Ngày tạo', 'Dự kiến hoàn thành', 'Trạng thái', 'Hành động'
+            'ID', 'Khách hàng', 'Nhân viên', 'Đồng hồ', 'Lỗi'
+            , 'Chi phí', 'Ngày tạo', 'Dự kiến hoàn thành', 'Trạng thái', 'Hành động'
         ])
         
         header = self.table.horizontalHeader()
@@ -324,70 +395,31 @@ class InvoiceManagementTab(QWidget):
         header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)  # Nhân viên
         header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)  # Đồng hồ
         header.setSectionResizeMode(4, QHeaderView.ResizeMode.Stretch)  # Lỗi
-        header.setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)  # Chi phí dự kiến
-        header.setSectionResizeMode(6, QHeaderView.ResizeMode.ResizeToContents)  # Chi phí thực
-        header.setSectionResizeMode(7, QHeaderView.ResizeMode.ResizeToContents)  # Ngày tạo
-        header.setSectionResizeMode(8, QHeaderView.ResizeMode.ResizeToContents)  # Dự kiến hoàn thành
-        header.setSectionResizeMode(9, QHeaderView.ResizeMode.ResizeToContents)  # Trạng thái
-        header.setSectionResizeMode(10, QHeaderView.ResizeMode.ResizeToContents)  # Hành động
+        header.setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)  # Chi phí
+        header.setSectionResizeMode(6, QHeaderView.ResizeMode.ResizeToContents)  # Ngày tạo
+        header.setSectionResizeMode(7, QHeaderView.ResizeMode.ResizeToContents)  # Dự kiến hoàn thành
+        header.setSectionResizeMode(8, QHeaderView.ResizeMode.ResizeToContents)  # Trạng thái
+        header.setSectionResizeMode(9, QHeaderView.ResizeMode.ResizeToContents)  # Hành động
     
     def show_invoice_details(self, invoice_id):
         cursor = self.db.conn.cursor()
-        # Lấy header hóa đơn
+        
         cursor.execute('''
-            SELECT i.id, i.created_date, i.total_amount,
-                   c.name, c.phone, c.address, e.full_name
-            FROM invoices i
-            LEFT JOIN customers c ON i.customer_id = c.id
-            LEFT JOIN employees e ON i.employee_id = e.id
-            WHERE i.id = ?
-        ''', (invoice_id,))
-        header = cursor.fetchone()
-
-        if not header:
-            QMessageBox.warning(self, 'Lỗi', f'Không tìm thấy hóa đơn #{invoice_id}')
-            return
-
-        inv_id, created_date, total_amount, cust_name, cust_phone, cust_addr, emp_name = header
-        cust_name = cust_name
-        created_date_fmt = _format_date(created_date)
-        emp_name = emp_name or ''
-
-        # Lấy chi tiết sản phẩm
-        cursor.execute('''
-            SELECT p.name, id.quantity, id.price, (id.quantity * id.price) as line_total
+            SELECT p.name, id.quantity, id.price, (id.quantity * id.price) as total
             FROM invoice_details id
             JOIN products p ON id.product_id = p.id
             WHERE id.invoice_id = ?
         ''', (invoice_id,))
         details = cursor.fetchall()
-
-        lines = [
-            f"HÓA ĐƠN #{inv_id}",
-            f"Ngày tạo: {created_date_fmt}",
-            f"Khách hàng: {cust_name}",
-        ]
-        if cust_phone:
-            lines.append(f"SĐT: {cust_phone}")
-        if cust_addr:
-            lines.append(f"Địa chỉ: {cust_addr}")
-        lines.append(f"Nhân viên: {emp_name}")
-        lines.append("\n--- Chi tiết sản phẩm ---")
-
-        for i, (name, qty, price, line_total) in enumerate(details, 1):
-            lines.append(
-                f"\n{i}. {name}\n"
-                f"   Số lượng : {qty}\n"
-                f"   Đơn giá  : {price:,.0f} VND\n"
-                f"   Thành tiền: {line_total:,.0f} VND"
-            )
-
-        lines.append("\n-------------------------")
-        total_display = total_amount or sum(d[3] for d in details)
-        lines.append(f"TỔNG CỘNG: {total_display:,.0f} VND")
-
-        detail_text = "\n".join(lines)
-        QMessageBox.information(self, f'Hóa đơn #{inv_id}', detail_text)
+        
+        detail_text = f"Chi tiết hóa đơn #{invoice_id}:\n\n"
+        total_amount = 0
+        for detail in details:
+            detail_text += f"{detail[0]} - {detail[1]} x {detail[2]:,} = {detail[3]:,} VND\n"
+            total_amount += detail[3]
+        detail_text += f"\nTổng cộng: {total_amount:,} VND"
+        
+        QMessageBox.information(self, 'Chi tiết', detail_text)
     
     def view_repair_details(self, row):
         repair_id = int(self.table.item(row, 0).text())
@@ -395,11 +427,10 @@ class InvoiceManagementTab(QWidget):
         employee = self.table.item(row, 2).text()
         watch_desc = self.table.item(row, 3).text()
         issue_desc = self.table.item(row, 4).text()
-        estimated_cost = self.table.item(row, 5).text()
-        actual_cost = self.table.item(row, 6).text()
-        created_date = self.table.item(row, 7).text()
-        estimated_completion = self.table.item(row, 8).text()
-        status = self.table.item(row, 9).text()
+        actual_cost = self.table.item(row, 5).text()
+        created_date = self.table.item(row, 6).text()
+        estimated_completion = self.table.item(row, 7).text()
+        status = self.table.item(row, 8).text()
         
         info_text = f"""
         Thông tin đơn sửa chữa #{repair_id}:
@@ -408,8 +439,7 @@ class InvoiceManagementTab(QWidget):
         Nhân viên: {employee}
         Đồng hồ: {watch_desc}
         Lỗi: {issue_desc}
-        Chi phí dự kiến: {estimated_cost}
-        Chi phí thực tế: {actual_cost}
+        Chi phí: {actual_cost}
         Ngày tạo: {created_date}
         Dự kiến hoàn thành: {estimated_completion}
         Trạng thái: {status}
@@ -419,10 +449,9 @@ class InvoiceManagementTab(QWidget):
     
     def get_repair_status_text(self, status):
         status_map = {
-            'pending': 'Chờ xử lý',
-            'in_progress': 'Đang sửa',
-            'completed': 'Hoàn thành',
-            'cancelled': 'Đã hủy'
+            'Chờ xử lý': 'Chờ xử lý',
+            'Hoàn thành': 'Hoàn thành',
+            'Đã hủy': 'Đã hủy'
         }
         return status_map.get(status, status)
     
@@ -434,11 +463,6 @@ class InvoiceManagementTab(QWidget):
             cursor.execute('DELETE FROM invoices WHERE id = ?', (invoice_id,))
             self.db.conn.commit()
             self.load_data()
-    
-    def edit_repair_row(self, row):
-        repair_id = int(self.table.item(row, 0).text())
-        # TODO: Triển khai dialog sửa đơn sửa chữa
-        QMessageBox.information(self, 'Thông báo', f'Sửa đơn sửa chữa #{repair_id}')
     
     def delete_repair_row(self, row):
         repair_id = int(self.table.item(row, 0).text())
