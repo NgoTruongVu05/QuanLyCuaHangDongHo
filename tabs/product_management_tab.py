@@ -8,6 +8,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor, QIcon, QFont, QIntValidator, QDoubleValidator
 import csv
 import os
+import re
 
 class ProductManagementTab(QWidget):
     def __init__(self, db, user_role):
@@ -20,8 +21,37 @@ class ProductManagementTab(QWidget):
         self.total_pages = 1
         self.total_products = 0
         self.current_filters = {}  # Store current filter state
+        # optional ordering (kept default)
+        self.order_by = 'p.quantity'
+        self.order_dir = 'ASC'
         self.init_ui()
         self.load_data()
+
+    # ---------------- helper ----------------
+    @staticmethod
+    def _parse_price_string(s):
+        """
+        Chuyển chuỗi giá (có thể có dấu phẩy/điểm/chuỗi 'VND') thành float.
+        Nếu không parse được trả về 0.
+        """
+        if not s:
+            return 0.0
+        if isinstance(s, (int, float)):
+            return float(s)
+        s = str(s).strip()
+        # loại bỏ chữ, dấu cách, giữ số
+        s = re.sub(r'[^\d\-\.]', '', s)
+        if not s:
+            return 0.0
+        try:
+            return float(s)
+        except Exception:
+            try:
+                # thay ',' bằng '' và thử lại (đề phòng 1,200,000)
+                s2 = s.replace(',', '')
+                return float(s2)
+            except Exception:
+                return 0.0
 
     def _format_input(self, line_edit):
         text = line_edit.text()
@@ -35,6 +65,7 @@ class ProductManagementTab(QWidget):
             except ValueError:
                 pass
 
+    # ---------------- UI ----------------
     def init_ui(self):
         layout = QVBoxLayout()
 
@@ -165,7 +196,7 @@ class ProductManagementTab(QWidget):
         self.table = QTableWidget()
         self.table.setSelectionMode(QTableWidget.SelectionMode.NoSelection)
 
-        # --- Thay đổi: chỉ còn 8 cột (gộp mô tả + thông số thành "Chi tiết sản phẩm") ---
+        # --- 8 cột ---
         self.table.setColumnCount(8)
         self.table.setHorizontalHeaderLabels(['ID', 'Tên', 'Thương hiệu', 'Loại', 'Giá', 'Số lượng', 'Chi tiết sản phẩm', 'Hành động'])
 
@@ -177,11 +208,11 @@ class ProductManagementTab(QWidget):
         header.setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)  # Loại
         header.setSectionResizeMode(4, QHeaderView.ResizeMode.ResizeToContents)  # Giá
         header.setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)  # Số lượng
-        header.setSectionResizeMode(6, QHeaderView.ResizeMode.Stretch)  # Chi tiết sản phẩm (mô tả + thông số)
+        header.setSectionResizeMode(6, QHeaderView.ResizeMode.Stretch)  # Chi tiết sản phẩm
         header.setSectionResizeMode(7, QHeaderView.ResizeMode.ResizeToContents)  # Hành động
 
-        # Enable sorting
-        self.table.setSortingEnabled(True)
+        # Tắt sorting (vì dữ liệu được phân trang và sorting server-side)
+        self.table.setSortingEnabled(False)
 
         # Allow deselection by clicking empty area
         self.table.clicked.connect(self.handle_click)
@@ -210,6 +241,7 @@ class ProductManagementTab(QWidget):
 
         self.setLayout(layout)
 
+    # ---------------- helpers UI pieces ----------------
     def _create_qty_widget(self, quantity: int):
         qty_widget = QWidget()
         layout = QHBoxLayout(qty_widget)
@@ -292,16 +324,75 @@ class ProductManagementTab(QWidget):
 
         return qty_widget
 
-    def load_data(self):
+    # ---------------- data loading with filters (fixed) ----------------
+    def load_data(self, filters=None):
         """
-        Lấy dữ liệu sản phẩm kèm tên brand qua JOIN với pagination,
-        rồi fill vào 8 cột của table: ID, Tên, Thương hiệu, Loại, Giá, Số lượng, Chi tiết sản phẩm, Hành động
+        Lấy dữ liệu sản phẩm kèm tên brand qua JOIN với pagination và filtering,
+        rồi fill vào 8 cột của table.
         """
+        if filters is None:
+            filters = self.current_filters
+
         try:
             cursor = self.db.conn.cursor()
 
-            # Get total count for pagination
-            cursor.execute('SELECT COUNT(*) FROM products')
+            # Build WHERE clause for filters
+            where_clauses = []
+            params = []
+
+            # Search filter (name or brand)
+            search_text = filters.get('search', '').strip()
+            if search_text:
+                where_clauses.append('(LOWER(p.name) LIKE ? OR LOWER(b.name) LIKE ?)')
+                search_param = f'%{search_text.lower()}%'
+                params.extend([search_param, search_param])
+
+            # Brand filter
+            selected_brand = filters.get('brand', 'Tất cả')
+            if selected_brand != 'Tất cả':
+                where_clauses.append('LOWER(b.name) = ?')
+                params.append(selected_brand.lower())
+
+            # Type filter
+            selected_type = filters.get('type', 'Tất cả')
+            if selected_type != 'Tất cả':
+                if selected_type == 'Đồng hồ cơ':
+                    where_clauses.append("LOWER(p.product_type) IN ('mechanical', 'm', 'coil')")
+                elif selected_type == 'Đồng hồ điện tử':
+                    where_clauses.append("LOWER(p.product_type) IN ('digital', 'smart', 'electronic')")
+
+            # Price range filters (expect numeric floats)
+            price_min = filters.get('price_min')
+            if price_min is not None:
+                where_clauses.append('p.price >= ?')
+                params.append(price_min)
+
+            price_max = filters.get('price_max')
+            if price_max is not None:
+                where_clauses.append('p.price <= ?')
+                params.append(price_max)
+
+            # Advanced filters
+            power_reserve_min = filters.get('power_reserve_min')
+            if power_reserve_min is not None:
+                where_clauses.append('p.power_reserve >= ?')
+                params.append(power_reserve_min)
+
+            battery_life_min = filters.get('battery_life_min')
+            if battery_life_min is not None:
+                where_clauses.append('p.battery_life >= ?')
+                params.append(battery_life_min)
+
+            selected_connectivity = filters.get('connectivity', 'Tất cả')
+            if selected_connectivity != 'Tất cả':
+                where_clauses.append('LOWER(p.connectivity) LIKE ?')
+                params.append(f'%{selected_connectivity.lower()}%')
+
+            where_sql = ' AND '.join(where_clauses) if where_clauses else '1=1'
+
+            # Get total count for pagination with filters
+            count_query = f'SELECT COUNT(*) FROM products p LEFT JOIN brands b ON p.brand_id = b.id WHERE {where_sql}'
+            cursor.execute(count_query, params)
             result = cursor.fetchone()
             if result is None:
                 self.total_products = 0
@@ -317,22 +408,24 @@ class ProductManagementTab(QWidget):
             if self.current_page < 1:
                 self.current_page = 1
 
-            # Fetch paginated products
+            # Fetch paginated products with filters
             offset = (self.current_page - 1) * self.page_size
-            cursor.execute('''
+            query = f'''
                 SELECT p.id, p.name, b.name AS brand, p.product_type, p.price, p.quantity,
                        p.description, p.movement_type, p.power_reserve, p.water_resistant,
                        p.battery_life, p.features, p.connectivity
                 FROM products p
                 LEFT JOIN brands b ON p.brand_id = b.id
-                ORDER BY p.quantity ASC, p.id ASC
+                WHERE {where_sql}
+                ORDER BY {self.order_by} {self.order_dir}
                 LIMIT ? OFFSET ?
-            ''', (self.page_size, offset))
-            products = cursor.fetchall()
-            # Lưu lại danh sách products cho trang hiện tại để dùng khi hiển thị dialog
-            self.products = products
+            '''
+            cursor.execute(query, params + [self.page_size, offset])
+            self.products = cursor.fetchall()
 
-            # Populate brand filter with all brands from database (always refresh)
+            # Populate brand filter with all brands from database (always refresh) but preserve selection
+            current_brand = self.brand_filter.currentText()
+            self.brand_filter.blockSignals(True)
             self.brand_filter.clear()
             self.brand_filter.addItem('Tất cả')
             cursor.execute('SELECT name FROM brands ORDER BY name')
@@ -341,6 +434,11 @@ class ProductManagementTab(QWidget):
                 brand_name = brand_row[0]
                 if brand_name:
                     self.brand_filter.addItem(brand_name)
+            # restore selection if possible
+            if current_brand and current_brand in [self.brand_filter.itemText(i) for i in range(self.brand_filter.count())]:
+                self.brand_filter.setCurrentText(current_brand)
+            self.brand_filter.blockSignals(False)
+
         except Exception as e:
             QMessageBox.critical(self, 'Lỗi tải dữ liệu', f'Không thể tải dữ liệu sản phẩm từ cơ sở dữ liệu.\nChi tiết lỗi: {str(e)}')
             self.products = []
@@ -348,9 +446,10 @@ class ProductManagementTab(QWidget):
             self.total_pages = 1
             self.current_page = 1
 
-        self.table.setRowCount(len(products))
+        # safe: always use self.products (fix NameError)
+        self.table.setRowCount(len(self.products))
 
-        for row, product in enumerate(products):
+        for row, product in enumerate(self.products):
             pid = product[0]
             name = product[1] or ''
             brand = product[2] or ''
@@ -404,11 +503,11 @@ class ProductManagementTab(QWidget):
             price_item.setFlags(price_item.flags() & ~Qt.ItemFlag.ItemIsEditable)
             self.table.setItem(row, 4, price_item)
 
-            # Col 5: Số lượng -> dùng custom widget có badge
+            # Col 5: Số lượng -> custom widget có badge
             qty_widget = self._create_qty_widget(int(quantity))
             self.table.setCellWidget(row, 5, qty_widget)
 
-            # Col 6: Chi tiết sản phẩm - nút "Xem chi tiết"
+            # Col 6: Chi tiết sản phẩm - nút "Xem chi tiết" (capture pid thay vì row)
             detail_widget = QWidget()
             detail_layout = QHBoxLayout(detail_widget)
             detail_layout.setContentsMargins(5, 2, 5, 2)
@@ -428,11 +527,12 @@ class ProductManagementTab(QWidget):
                     background-color: #27AE60;
                 }
             ''')
-            view_detail_btn.clicked.connect(lambda checked, r=row: self.show_details_dialog(r))
+            # capture pid to avoid row-index mismatch after reload/sort
+            view_detail_btn.clicked.connect(lambda _, pid=pid: self.show_details_dialog_by_id(pid))
             detail_layout.addWidget(view_detail_btn)
             self.table.setCellWidget(row, 6, detail_widget)
 
-            # Col 7: Action buttons (Sửa, Xóa)
+            # Col 7: Action buttons (Sửa, Xóa) - capture pid
             action_widget = QWidget()
             action_layout = QHBoxLayout(action_widget)
             action_layout.setContentsMargins(5, 2, 5, 2)
@@ -453,7 +553,7 @@ class ProductManagementTab(QWidget):
                         background-color: #2980B9;
                     }
                 ''')
-                edit_btn.clicked.connect(lambda checked, r=row: self.edit_product_row(r))
+                edit_btn.clicked.connect(lambda _, pid=pid: self.edit_product_by_id(pid))
                 action_layout.addWidget(edit_btn)
 
                 delete_btn = QPushButton('Xóa')
@@ -471,7 +571,7 @@ class ProductManagementTab(QWidget):
                         background-color: #C0392B;
                     }
                 ''')
-                delete_btn.clicked.connect(lambda checked, r=row: self.delete_product_row(r))
+                delete_btn.clicked.connect(lambda _, pid=pid: self.delete_product_by_id(pid))
                 action_layout.addWidget(delete_btn)
 
             action_layout.addStretch()
@@ -487,15 +587,40 @@ class ProductManagementTab(QWidget):
         self.prev_btn.setEnabled(self.current_page > 1)
         self.next_btn.setEnabled(self.current_page < self.total_pages)
 
-    # --- Hiển thị dialog chi tiết ---
-    def show_details_dialog(self, row):
+    # ---------------- show details by id (safe) ----------------
+    def show_details_dialog_by_id(self, pid):
         """
-        Mở dialog hiển thị mô tả và thông số chi tiết sản phẩm — dark theme.
+        Tìm product trong self.products theo id; nếu không tìm thấy, query DB trực tiếp.
+        Sau đó gọi show_details_dialog với index tạm thời (nếu tìm trong list) hoặc
+        tạo prod tuple tạm và mở dialog tương tự.
         """
-        if row < 0 or row >= len(self.products):
-            return
+        # tìm trong self.products
+        for idx, p in enumerate(self.products):
+            if p[0] == pid:
+                return self.show_details_dialog(idx)
 
-        prod = self.products[row]
+        # nếu không tìm thấy trong trang hiện tại -> load từ DB
+        try:
+            cursor = self.db.conn.cursor()
+            cursor.execute('''
+                SELECT p.id, p.name, b.name AS brand, p.product_type, p.price, p.quantity,
+                       p.description, p.movement_type, p.power_reserve, p.water_resistant,
+                       p.battery_life, p.features, p.connectivity
+                FROM products p
+                LEFT JOIN brands b ON p.brand_id = b.id
+                WHERE p.id = ?
+            ''', (pid,))
+            prod = cursor.fetchone()
+            if prod:
+                # tạm hiển thị dialog dùng dữ liệu prod (không thêm vào self.products)
+                self._open_details_dialog_from_tuple(prod)
+        except Exception as e:
+            QMessageBox.critical(self, 'Lỗi', f'Không thể lấy dữ liệu sản phẩm: {e}')
+
+    def _open_details_dialog_from_tuple(self, prod):
+        """
+        Tương tự show_details_dialog nhưng nhận tuple product trực tiếp.
+        """
         pid = prod[0]
         name = prod[1] or ''
         brand = prod[2] or ''
@@ -508,7 +633,6 @@ class ProductManagementTab(QWidget):
         features = prod[11] or ''
         connectivity = prod[12] or ''
 
-        # Dictionary for translating features to Vietnamese
         feature_translations = {
             'gps': 'GPS',
             'step_counter': 'Đếm bước',
@@ -516,8 +640,6 @@ class ProductManagementTab(QWidget):
             'heart_rate': 'Đo nhịp tim',
             'music_control': 'Điều khiển nhạc'
         }
-
-        # Dictionary for translating movement types to Vietnamese
         movement_translations = {
             'automatic': 'Tự động',
             'manual': 'Thủ công',
@@ -529,13 +651,13 @@ class ProductManagementTab(QWidget):
         if (ptype_raw or '').lower() in ('mechanical', 'm', 'coil'):
             movement_vn = movement_translations.get((movement_type or 'automatic').lower(), movement_type or 'Tự động')
             specs['Loại máy'] = f"Đồng hồ cơ ({movement_vn})"
-            if power_reserve:
+            if power_reserve is not None:
                 specs['Thời gian trữ cót'] = f"{power_reserve} giờ"
-            if water_resistant:
+            if water_resistant is not None and str(water_resistant).strip():
                 specs['Chống nước'] = str(water_resistant)
         else:
             specs['Loại máy'] = 'Điện tử'
-            specs['Thời lượng pin'] = f"{battery_life or 0} năm"
+            specs['Thời lượng pin'] = f"{battery_life if battery_life is not None else 0} năm"
             if connectivity:
                 specs['Kết nối'] = connectivity
         if features:
@@ -544,7 +666,7 @@ class ProductManagementTab(QWidget):
                 specs['Tính năng khác'] = '<ul style="margin: 0; padding-left: 20px; color: #f0f0f0;"><li>' + '</li><li>'.join(feature_list) + '</li></ul>'
         specs['Mã sản phẩm'] = str(pid)
 
-        # --- dialog setup ---
+        # Build and show dialog (same styling as original)
         dialog = QDialog(self)
         dialog.setWindowTitle(f"Chi tiết sản phẩm — {name}")
         dialog.setMinimumWidth(560)
@@ -554,7 +676,7 @@ class ProductManagementTab(QWidget):
         main_layout.setContentsMargins(14, 14, 14, 14)
         main_layout.setSpacing(10)
 
-        # ----- header -----
+        # header
         header_widget = QWidget()
         header_layout = QVBoxLayout(header_widget)
         header_layout.setContentsMargins(0, 0, 0, 0)
@@ -576,13 +698,12 @@ class ProductManagementTab(QWidget):
         header_layout.addWidget(brand_label)
         main_layout.addWidget(header_widget)
 
-        # ----- body (mô tả + thông số) -----
+        # body (mô tả + thông số)
         body_widget = QWidget()
         body_layout = QVBoxLayout(body_widget)
         body_layout.setContentsMargins(0, 0, 0, 0)
         body_layout.setSpacing(12)
 
-        # Mô tả
         desc_container = QScrollArea()
         desc_container.setWidgetResizable(True)
         desc_widget = QWidget()
@@ -616,7 +737,7 @@ class ProductManagementTab(QWidget):
         desc_container.setMinimumHeight(200)
         body_layout.addWidget(desc_container, stretch=2)
 
-        # Thông số kỹ thuật
+        # specs
         specs_container = QScrollArea()
         specs_container.setWidgetResizable(True)
         specs_widget = QWidget()
@@ -645,7 +766,7 @@ class ProductManagementTab(QWidget):
 
         main_layout.addWidget(body_widget)
 
-        # ----- footer -----
+        # footer
         buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok)
         buttons.button(QDialogButtonBox.StandardButton.Ok).setStyleSheet("""
             QPushButton {
@@ -661,7 +782,6 @@ class ProductManagementTab(QWidget):
         buttons.accepted.connect(dialog.accept)
         main_layout.addWidget(buttons, alignment=Qt.AlignmentFlag.AlignRight)
 
-        # Tổng thể dialog style
         dialog.setStyleSheet("""
             QDialog {
                 background-color: #353535;
@@ -677,7 +797,8 @@ class ProductManagementTab(QWidget):
         """)
 
         dialog.exec()
-    # --- Các hàm khác giữ nguyên (chỉ sửa view/edit/delete để dùng self.products khi cần) ---
+
+    # ---------------- CRUD helpers using id (safer) ----------------
     def add_product(self):
         from dialogs.product_dialog import ProductDialog
         dialog = ProductDialog(self.db)
@@ -685,32 +806,25 @@ class ProductManagementTab(QWidget):
             self.load_data()
             QMessageBox.information(self, 'Thành công', 'Đã thêm sản phẩm mới!')
 
-    def edit_product_row(self, row):
-        # Lấy product id từ self.products để đảm bảo đúng (không phụ thuộc row thay đổi)
-        if row < 0 or row >= len(self.products):
-            return
-        product_id = int(self.products[row][0])
+    def edit_product_by_id(self, pid):
         from dialogs.product_dialog import ProductDialog
-        dialog = ProductDialog(self.db, product_id)
+        dialog = ProductDialog(self.db, pid)
         if dialog.exec():
             self.load_data()
             QMessageBox.information(self, 'Thành công', 'Đã cập nhật sản phẩm!')
 
-    def delete_product_row(self, row):
-        if row < 0 or row >= len(self.products):
-            return
-        product_id = int(self.products[row][0])
-        product_name = self.products[row][1] or ''
-
+    def delete_product_by_id(self, pid):
         try:
-            # Check if product has been sold
             cursor = self.db.conn.cursor()
-            cursor.execute('SELECT COUNT(*) FROM invoice_details WHERE product_id = ?', (product_id,))
+            # get name
+            cursor.execute('SELECT name FROM products WHERE id = ?', (pid,))
+            row = cursor.fetchone()
+            product_name = row[0] if row else ''
+
+            # Check if product has been sold
+            cursor.execute('SELECT COUNT(*) FROM invoice_details WHERE product_id = ?', (pid,))
             result = cursor.fetchone()
-            if result is None:
-                sold_count = 0
-            else:
-                sold_count = result[0]
+            sold_count = result[0] if result else 0
 
             if sold_count > 0:
                 QMessageBox.warning(self, 'Không thể xóa',
@@ -721,32 +835,31 @@ class ProductManagementTab(QWidget):
                                          f'Bạn có chắc muốn xóa sản phẩm \"{product_name}\"?',
                                          QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if reply == QMessageBox.StandardButton.Yes:
-                cursor.execute('DELETE FROM products WHERE id = ?', (product_id,))
+                cursor.execute('DELETE FROM products WHERE id = ?', (pid,))
                 self.db.conn.commit()
                 self.load_data()
                 QMessageBox.information(self, 'Thành công', 'Đã xóa sản phẩm!')
         except Exception as e:
-            QMessageBox.critical(self, 'Lỗi xóa sản phẩm', f'Không thể xóa sản phẩm \"{product_name}\".\nChi tiết lỗi: {str(e)}')
+            QMessageBox.critical(self, 'Lỗi xóa sản phẩm', f'Không thể xóa sản phẩm.\nChi tiết lỗi: {str(e)}')
 
+    # ---------------- filter (client collects -> server-side load) ----------------
     def filter_products(self):
         """
-        Filter products based on search input, brand, type, price range, and specifications.
+        Collect filter values and reload data with filters applied.
         """
-        search_text = self.search_input.text().lower()
+        search_text = self.search_input.text().strip()
         selected_brand = self.brand_filter.currentText()
         selected_type = self.type_filter.currentText()
 
-        # Price filters
+        # Price filters (parse robust)
         price_min_text = self.price_min_input.text().strip()
         price_max_text = self.price_max_input.text().strip()
-        try:
-            price_min = float(price_min_text.replace(',', '').replace(' VND', '')) if price_min_text else None
-        except ValueError:
-            price_min = None
-        try:
-            price_max = float(price_max_text.replace(',', '').replace(' VND', '')) if price_max_text else None
-        except ValueError:
-            price_max = None
+        price_min = None
+        price_max = None
+        if price_min_text:
+            price_min = self._parse_price_string(price_min_text)
+        if price_max_text:
+            price_max = self._parse_price_string(price_max_text)
 
         # Advanced filters
         power_reserve_min_text = self.power_reserve_input.text().strip()
@@ -763,77 +876,31 @@ class ProductManagementTab(QWidget):
 
         selected_connectivity = self.connectivity_filter.currentText()
 
-        for row in range(self.table.rowCount()):
-            if row >= len(self.products):
-                continue
+        # Collect filters
+        filters = {
+            'search': search_text,
+            'brand': selected_brand,
+            'type': selected_type,
+            'price_min': price_min,
+            'price_max': price_max,
+            'power_reserve_min': power_reserve_min,
+            'battery_life_min': battery_life_min,
+            'connectivity': selected_connectivity
+        }
 
-            product = self.products[row]
-            name = (product[1] or '').lower()
-            brand = (product[2] or '').lower()
-            ptype_raw = product[3] or ''
-            price = product[4] or 0
-            power_reserve = product[8] or 0
-            battery_life = product[10] or 0
-            connectivity = product[12] or ''
-
-            # Determine display type
-            if ptype_raw.lower() in ('mechanical', 'm', 'coil'):
-                display_type = "Đồng hồ cơ"
-            elif ptype_raw.lower() in ('digital', 'smart', 'electronic'):
-                display_type = "Đồng hồ điện tử"
-            else:
-                display_type = ptype_raw
-
-            # Check search
-            search_match = not search_text or search_text in name or search_text in brand
-
-            # Check brand
-            brand_match = selected_brand == 'Tất cả' or selected_brand.lower() == brand
-
-            # Check type
-            type_match = selected_type == 'Tất cả' or selected_type == display_type
-
-            # Check price range
-            price_match = True
-            if price_min is not None and price < price_min:
-                price_match = False
-            if price_max is not None and price > price_max:
-                price_match = False
-
-            # Check specifications based on type
-            spec_match = True
-            if selected_type == 'Tất cả':
-                # When "Tất cả" is selected, apply filters to all products based on entered values
-                if power_reserve_min is not None:
-                    if display_type != "Đồng hồ cơ" or power_reserve < power_reserve_min:
-                        spec_match = False
-                if battery_life_min is not None:
-                    if display_type != "Đồng hồ điện tử" or battery_life < battery_life_min:
-                        spec_match = False
-                if selected_connectivity != 'Tất cả':
-                    if display_type != "Đồng hồ điện tử" or selected_connectivity not in connectivity:
-                        spec_match = False
-            else:
-                # When specific type is selected, apply filters only to that type
-                if display_type == "Đồng hồ cơ":
-                    if power_reserve_min is not None and power_reserve < power_reserve_min:
-                        spec_match = False
-                elif display_type == "Đồng hồ điện tử":
-                    if battery_life_min is not None and battery_life < battery_life_min:
-                        spec_match = False
-                    if selected_connectivity != 'Tất cả' and selected_connectivity not in connectivity:
-                        spec_match = False
-
-            if search_match and brand_match and type_match and price_match and spec_match:
-                self.table.setRowHidden(row, False)
-            else:
-                self.table.setRowHidden(row, True)
+        # Update current filters and reset to first page, then load data
+        self.current_filters = filters
+        self.current_page = 1
+        self.load_data()
 
     def view_product_row(self, row):
         """
-        Giữ cho tương thích: mở dialog chi tiết (nếu có)
+        Tương thích: mở dialog chi tiết (nếu có) - giữ nguyên
         """
-        self.show_details_dialog(row)
+        if row < 0 or row >= len(self.products):
+            return
+        pid = self.products[row][0]
+        self.show_details_dialog_by_id(pid)
 
     def update_advanced_filters_visibility(self):
         """
@@ -866,6 +933,7 @@ class ProductManagementTab(QWidget):
             self.connectivity_label.show()
             self.connectivity_filter.show()
 
+    # ---------------- import CSV (validate but no longer require brand exists) ----------------
     def import_csv(self):
         """
         Import products from CSV file.
@@ -901,33 +969,38 @@ class ProductManagementTab(QWidget):
                     # Parse data for validation
                     name = row.get('name', '').strip()
                     brand_name = row.get('brand', '').strip()
-                    # Check if brand exists
-                    cursor.execute('SELECT id FROM brands WHERE name = ?', (brand_name,))
-                    brand_result = cursor.fetchone()
-                    if not brand_result:
-                        errors.append(f"Dòng {i+2}: Thương hiệu '{brand_name}' không tồn tại trong cơ sở dữ liệu")
-                        continue
                     product_type = row.get('product_type', '').strip()
-                    price = float(row.get('price', 0)) if row.get('price') else 0
+                    price_raw = row.get('price', '')
+                    price = self._parse_price_string(price_raw)
                     # Validate price range: 500k to 1 trillion VND
                     if price < 500000 or price > 1000000000000:
-                        errors.append(f"Dòng {i+2}: Giá phải từ 500,000 đến 1,000,000,000,000 VND")
+                        errors.append(f"Dòng {i+2}: Giá phải từ 500,000 đến 1,000,000,000,000 VND (giá: {price_raw})")
                         continue
                     quantity = int(float(row.get('quantity', 0))) if row.get('quantity') else 0
-                    # Validate quantity: must be positive
+                    # Validate quantity: must be non-negative
                     if quantity < 0:
                         errors.append(f"Dòng {i+2}: Số lượng không được âm")
                         continue
-                    power_reserve = float(row.get('power_reserve', 0)) if row.get('power_reserve') else None
-                    # Validate power reserve: max 999 hours
-                    if power_reserve is not None and power_reserve > 999:
-                        errors.append(f"Dòng {i+2}: Thời gian trữ cót không được vượt quá 999 giờ")
-                        continue
-                    battery_life = int(float(row.get('battery_life', 0))) if row.get('battery_life') else None
-                    # Validate battery life: max 99 years
-                    if battery_life is not None and battery_life > 99:
-                        errors.append(f"Dòng {i+2}: Thời lượng pin không được vượt quá 99 năm")
-                        continue
+                    power_reserve = None
+                    if row.get('power_reserve'):
+                        try:
+                            power_reserve = float(row.get('power_reserve'))
+                            if power_reserve > 999:
+                                errors.append(f"Dòng {i+2}: Thời gian trữ cót không được vượt quá 999 giờ")
+                                continue
+                        except Exception:
+                            errors.append(f"Dòng {i+2}: Thời gian trữ cót không hợp lệ")
+                            continue
+                    battery_life = None
+                    if row.get('battery_life'):
+                        try:
+                            battery_life = int(float(row.get('battery_life')))
+                            if battery_life > 99:
+                                errors.append(f"Dòng {i+2}: Thời lượng pin không được vượt quá 99 năm")
+                                continue
+                        except Exception:
+                            errors.append(f"Dòng {i+2}: Thời lượng pin không hợp lệ")
+                            continue
                 except Exception as e:
                     errors.append(f"Dòng {i+2}: {str(e)}")
 
@@ -940,7 +1013,6 @@ class ProductManagementTab(QWidget):
                 return
 
             # If validation passed, proceed with import
-            # Show progress dialog
             progress = QProgressDialog("Đang nhập dữ liệu...", "Hủy", 0, len(rows), self)
             progress.setWindowModality(Qt.WindowModality.WindowModal)
             progress.show()
@@ -954,10 +1026,11 @@ class ProductManagementTab(QWidget):
                 if progress.wasCanceled():
                     break
 
-                progress.setValue(i)
+                # set progress value to i+1 for more intuitive progress
+                progress.setValue(i + 1)
 
                 try:
-                    # Get brand_id
+                    # Get or create brand_id (allow creating brand)
                     brand_name = row.get('brand', '').strip()
                     if brand_name:
                         cursor.execute('SELECT id FROM brands WHERE name = ?', (brand_name,))
@@ -973,7 +1046,7 @@ class ProductManagementTab(QWidget):
                     # Parse data
                     name = row.get('name', '').strip()
                     product_type = row.get('product_type', '').strip()
-                    price = float(row.get('price', 0)) if row.get('price') else 0
+                    price = self._parse_price_string(row.get('price', 0))
                     new_quantity = int(float(row.get('quantity', 0))) if row.get('quantity') else 0
                     description = row.get('description', '').strip()
                     movement_type = row.get('movement_type', '').strip()
@@ -1011,7 +1084,6 @@ class ProductManagementTab(QWidget):
                         imported_count += 1
 
                 except Exception as e:
-                    # This shouldn't happen since we validated, but just in case
                     QMessageBox.warning(self, 'Lỗi', f'Lỗi không mong muốn ở dòng {i+2}: {str(e)}')
                     return
 
@@ -1030,6 +1102,7 @@ class ProductManagementTab(QWidget):
         except Exception as e:
             QMessageBox.critical(self, 'Lỗi', f'Không thể đọc file CSV: {str(e)}')
 
+    # ---------------- handlers ----------------
     def handle_click(self, index):
         if not index.isValid():
             self.table.clearSelection()
