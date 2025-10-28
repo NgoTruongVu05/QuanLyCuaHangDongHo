@@ -72,9 +72,9 @@ class EmployeeManagementTab(QWidget):
         
         # Table - BỎ cột position (chức vụ)
         self.table = QTableWidget()
-        self.table.setColumnCount(7)
+        self.table.setColumnCount(8)
         self.table.setHorizontalHeaderLabels([
-            'ID', 'Mã ĐD', 'Họ tên', 'Vai trò', 'Lương cơ bản', 'Điện thoại', 'Hành động'
+            'ID', 'Mã ĐD', 'Họ tên', 'Vai trò', 'Lương cơ bản', 'Điện thoại', 'Email', 'Hành động'
         ])
         
         # KHÔNG CHO CHỌN BẤT KỲ Ô NÀO
@@ -88,8 +88,9 @@ class EmployeeManagementTab(QWidget):
         header.setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)  # Role
         header.setSectionResizeMode(4, QHeaderView.ResizeMode.ResizeToContents)  # Salary
         header.setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)  # Phone
-        header.setSectionResizeMode(6, QHeaderView.ResizeMode.ResizeToContents)  # Action
-        
+        header.setSectionResizeMode(6, QHeaderView.ResizeMode.Stretch)  # Email
+        header.setSectionResizeMode(7, QHeaderView.ResizeMode.ResizeToContents)  # Action
+
         layout.addWidget(self.table)
         
         self.setLayout(layout)
@@ -198,7 +199,7 @@ class EmployeeManagementTab(QWidget):
     def load_data(self):
         """Tải toàn bộ dữ liệu nhân viên"""
         cursor = self.db.conn.cursor()
-        cursor.execute('SELECT id, ma_dinh_danh, full_name, vaitro, base_salary, phone FROM employees')
+        cursor.execute('SELECT id, ma_dinh_danh, full_name, vaitro, base_salary, phone, email FROM employees')
         employees = cursor.fetchall()
         self.display_employees(employees)
     
@@ -271,7 +272,7 @@ class EmployeeManagementTab(QWidget):
                 action_layout.addWidget(delete_btn)
             
             action_layout.addStretch()
-            self.table.setCellWidget(row, 6, action_widget)
+            self.table.setCellWidget(row, 7, action_widget)
         
         for row in range(self.table.rowCount()):
             self.table.setRowHeight(row, 40)
