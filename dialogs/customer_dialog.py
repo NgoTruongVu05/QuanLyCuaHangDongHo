@@ -67,6 +67,15 @@ class CustomerDialog(QDialog):
             QMessageBox.warning(self, 'Lỗi', 'Vui lòng nhập tên khách hàng!')
             return
         
+        if phone and not self.is_valid_phone(phone):
+            QMessageBox.warning(self, 'Lỗi', 'Số điện thoại không hợp lệ! Vui lòng nhập số điện thoại Việt Nam (10-11 chữ số, bắt đầu bằng 0 hoặc +84).')
+            return
+        
+        # Validate email
+        if email and not self.is_valid_email(email):
+            QMessageBox.warning(self, 'Lỗi', 'Email không hợp lệ! Vui lòng nhập đúng định dạng email.')
+            return
+        
         cursor = self.db.conn.cursor()
         if self.customer_id:
             cursor.execute('''
@@ -81,3 +90,38 @@ class CustomerDialog(QDialog):
         
         self.db.conn.commit()
         self.accept()
+
+    def is_valid_phone(self, phone):
+        """
+        Validate Vietnamese phone numbers
+        Formats: 
+        - 0xxxxxxxxx (10 digits)
+        - 0xxxxxxxxxx (11 digits) 
+        - +84xxxxxxxxx (11 digits with country code)
+        - +84xxxxxxxxxx (12 digits with country code)
+        """
+        import re
+        
+        # Remove spaces and special characters
+        phone = re.sub(r'[\s\-\(\)\.]', '', phone)
+        
+        # Check for Vietnamese phone number patterns
+        patterns = [
+            r'^0[3|5|7|8|9][0-9]{8}$',  # 10 digits starting with 0
+            r'^0[3|5|7|8|9][0-9]{9}$',  # 11 digits starting with 0
+            r'^\+84[3|5|7|8|9][0-9]{8}$',  # 11 digits with +84
+            r'^\+84[3|5|7|8|9][0-9]{9}$',  # 12 digits with +84
+            r'^84[3|5|7|8|9][0-9]{8}$',   # 11 digits with 84 (without +)
+            r'^84[3|5|7|8|9][0-9]{9}$'    # 12 digits with 84 (without +)
+        ]
+        
+        return any(re.match(pattern, phone) for pattern in patterns)
+
+    def is_valid_email(self, email):
+        """
+        Validate email format using regex
+        """
+        import re
+        
+        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        return re.match(pattern, email) is not None
