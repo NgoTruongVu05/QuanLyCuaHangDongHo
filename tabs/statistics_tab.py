@@ -156,9 +156,9 @@ class StatisticsTab(QWidget):
 
             # --- Doanh thu sửa chữa ---
             if month == 'Tất cả':
-                cursor.execute("SELECT IFNULL(SUM(estimated_cost),0), COUNT(*), SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) FROM repair_orders WHERE strftime('%Y', created_date) = ?", (str(year),))
+                cursor.execute("SELECT IFNULL(SUM(actual_cost),0), COUNT(*), SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) FROM repair_orders WHERE strftime('%Y', created_date) = ?", (str(year),))
             else:
-                cursor.execute("SELECT IFNULL(SUM(estimated_cost),0), COUNT(*), SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) FROM repair_orders WHERE strftime('%Y', created_date) = ? AND strftime('%m', created_date) = ?", (str(year), month.zfill(2)))
+                cursor.execute("SELECT IFNULL(SUM(actual_cost),0), COUNT(*), SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) FROM repair_orders WHERE strftime('%Y', created_date) = ? AND strftime('%m', created_date) = ?", (str(year), month.zfill(2)))
             r_sum, r_count, r_completed = cursor.fetchone() or (0,0,0)
             self.total_repair_revenue_label.setText(f'Tổng doanh thu sửa chữa: {r_sum:,.0f} VND')
             self.total_repairs_label.setText(f'Tổng số đơn sửa chữa: {r_count}')
@@ -243,7 +243,7 @@ class StatisticsTab(QWidget):
                     for m in months:
                         cursor.execute('SELECT IFNULL(SUM(total_amount),0) FROM invoices WHERE strftime("%m", created_date)=? AND strftime("%Y", created_date)=?', (m, str(year)))
                         s_sum = cursor.fetchone()[0] or 0
-                        cursor.execute("SELECT IFNULL(SUM(estimated_cost),0) FROM repair_orders WHERE strftime('%m', created_date)=? AND strftime('%Y', created_date)=?", (m, str(year)))
+                        cursor.execute("SELECT IFNULL(SUM(actual_cost),0) FROM repair_orders WHERE strftime('%m', created_date)=? AND strftime('%Y', created_date)=?", (m, str(year)))
                         r_sum = cursor.fetchone()[0] or 0
                         sales_data.append(s_sum); repair_data.append(r_sum)
                     ax = self.figure.add_subplot(111); ax.set_facecolor('#353535')
@@ -263,7 +263,7 @@ class StatisticsTab(QWidget):
                     rows_s = cursor.fetchall()
                     days = [r[0] for r in rows_s] if rows_s else []
                     sums = [r[1] for r in rows_s] if rows_s else []
-                    cursor.execute('SELECT strftime("%d", created_date) as d, IFNULL(SUM(estimated_cost),0) FROM repair_orders WHERE strftime("%m", created_date)=? AND strftime("%Y", created_date)=? GROUP BY d ORDER BY d', (m, str(year)))
+                    cursor.execute('SELECT strftime("%d", created_date) as d, IFNULL(SUM(actual_cost),0) FROM repair_orders WHERE strftime("%m", created_date)=? AND strftime("%Y", created_date)=? GROUP BY d ORDER BY d', (m, str(year)))
                     rows_r = cursor.fetchall()
                     days_r = [r[0] for r in rows_r] if rows_r else []
                     sums_r = [r[1] for r in rows_r] if rows_r else []
