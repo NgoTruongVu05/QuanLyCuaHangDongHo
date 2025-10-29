@@ -591,13 +591,13 @@ class ProductManagementTab(QWidget):
     def show_details_dialog_by_id(self, pid):
         """
         Tìm product trong self.products theo id; nếu không tìm thấy, query DB trực tiếp.
-        Sau đó gọi show_details_dialog với index tạm thời (nếu tìm trong list) hoặc
-        tạo prod tuple tạm và mở dialog tương tự.
+        Sau đó mở dialog chi tiết.
         """
         # tìm trong self.products
         for idx, p in enumerate(self.products):
             if p[0] == pid:
-                return self.show_details_dialog_by_id(idx)
+                self._open_details_dialog_from_tuple(p)
+                return
 
         # nếu không tìm thấy trong trang hiện tại -> load từ DB
         try:
