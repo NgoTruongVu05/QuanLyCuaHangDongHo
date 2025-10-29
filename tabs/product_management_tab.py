@@ -597,7 +597,7 @@ class ProductManagementTab(QWidget):
         # tìm trong self.products
         for idx, p in enumerate(self.products):
             if p[0] == pid:
-                return self.show_details_dialog(idx)
+                return self.show_details_dialog_by_id(idx)
 
         # nếu không tìm thấy trong trang hiện tại -> load từ DB
         try:
