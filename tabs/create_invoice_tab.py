@@ -218,6 +218,7 @@ class CreateInvoiceTab(QWidget):
             self.customer_label.setText("Khách hàng: (chưa chọn)")
 
     def add_selected_products_to_cart(self):
+        selected_products = []
         total_qty_in_cart = sum(item['quantity'] for item in self.cart)
         selected_any = False
 
@@ -225,43 +226,47 @@ class CreateInvoiceTab(QWidget):
             checkbox = self.product_table.cellWidget(row, 0)
             if checkbox and checkbox.isChecked():
                 selected_any = True
-
                 pid = int(self.product_table.item(row, 5).text())
                 name = self.product_table.item(row, 1).text()
                 price = float(self.product_table.item(row, 2).text().replace(' VND', '').replace(',', ''))
                 available_qty = int(self.product_table.item(row, 3).text())
-
                 spin = self.product_table.cellWidget(row, 4)
                 qty = spin.value()
 
-                # Tính số lượng nếu thêm vào
-                new_total_qty = total_qty_in_cart + qty
-
-                if new_total_qty > 5:
-                    remaining = max(0, 5 - total_qty_in_cart)
-                    QMessageBox.warning(
-                        self,
-                        "Giới hạn giỏ hàng",
-                        f"Tổng số lượng sản phẩm trong giỏ hàng không được vượt quá 5.\n"
-                        f"Hiện tại bạn còn có thể thêm tối đa {remaining} sản phẩm."
-                    )
-                    return  # Dừng lại, không thêm
-
-                # Kiểm tra sản phẩm đã tồn tại trong giỏ
-                existing = next((item for item in self.cart if item['id'] == pid), None)
-                if existing:
-                    if existing['quantity'] + qty > available_qty:
-                        QMessageBox.warning(self, "Lỗi", f"Sản phẩm '{name}' chỉ còn {available_qty} trong kho.")
-                        continue
-                    existing['quantity'] += qty
-                else:
-                    self.cart.append({'id': pid, 'name': name, 'price': price, 'quantity': qty})
-
-                total_qty_in_cart += qty  # Cập nhật tổng hiện tại
+                selected_products.append({
+                    'id': pid,
+                    'name': name,
+                    'price': price,
+                    'available_qty': available_qty,
+                    'quantity': qty
+                })
 
         if not selected_any:
             QMessageBox.warning(self, "Lỗi", "Vui lòng chọn ít nhất một sản phẩm!")
             return
+
+        # Tính tổng số lượng sau khi thêm
+        total_selected_qty = sum(p['quantity'] for p in selected_products)
+        if total_qty_in_cart + total_selected_qty > 5:
+            remaining = max(0, 5 - total_qty_in_cart)
+            QMessageBox.warning(
+                self,
+                "Giới hạn giỏ hàng",
+                f"Tổng số lượng sản phẩm trong giỏ hàng không được vượt quá 5.\n"
+                f"Hiện tại bạn còn có thể thêm tối đa {remaining} sản phẩm."
+            )
+            return
+
+        # Nếu hợp lệ thì thêm từng sản phẩm
+        for p in selected_products:
+            existing = next((item for item in self.cart if item['id'] == p['id']), None)
+            if existing:
+                if existing['quantity'] + p['quantity'] > p['available_qty']:
+                    QMessageBox.warning(self, "Lỗi", f"Sản phẩm '{p['name']}' chỉ còn {p['available_qty']} trong kho.")
+                    continue
+                existing['quantity'] += p['quantity']
+            else:
+                self.cart.append({'id': p['id'], 'name': p['name'], 'price': p['price'], 'quantity': p['quantity']})
 
         self.update_cart_display()
 
