@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QTableWidget, 
                              QTableWidgetItem, QPushButton, QMessageBox,
                              QHeaderView, QHBoxLayout, QLabel, QDialog, QWidget as _QWidget,
-                             QLineEdit, QDateEdit, QComboBox, QSizePolicy)
+                             QLineEdit, QDateEdit, QComboBox, QSizePolicy, QGridLayout)
 from PyQt6.QtCore import Qt, QDate
 from dialogs.edit_repair_dialog import EditRepairDialog
 from datetime import datetime
@@ -601,6 +601,8 @@ class InvoiceManagementTab(QWidget):
         ])
         
         header = self.table.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.ResizeMode.Interactive)
+        header.setStretchLastSection(True)
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)  # ID
         header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)  # Khách hàng
         header.setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)  # Nhân viên
@@ -630,10 +632,9 @@ class InvoiceManagementTab(QWidget):
     
     def show_invoice_details(self, invoice_id):
         cursor = self.db.conn.cursor()
-        # Lấy header hóa đơn
         cursor.execute('''
             SELECT i.id, i.created_date, i.total_amount,
-                   c.name, c.phone, c.address, e.full_name
+                c.name, c.phone, c.address, e.full_name
             FROM invoices i
             LEFT JOIN customers c ON i.customer_id = c.id
             LEFT JOIN employees e ON i.employee_id = e.id
@@ -645,12 +646,78 @@ class InvoiceManagementTab(QWidget):
             QMessageBox.warning(self, 'Lỗi', f'Không tìm thấy hóa đơn #{invoice_id}')
             return
 
-        inv_id, created_date, total_amount, cust_name, cust_phone, cust_addr, emp_name = header
-        cust_name = cust_name
-        created_date_fmt = _format_date(created_date)
-        emp_name = emp_name or ''
+        # Create custom dialog
+        dialog = QDialog(self)
+        dialog.setWindowTitle(f'Chi tiết hóa đơn #{invoice_id}')
+        dialog.setMinimumWidth(500)
+        dialog.setAutoFillBackground(True)
+        palette = dialog.palette()
+        palette.setColor(dialog.backgroundRole(), self.palette().color(self.backgroundRole()))
+        palette.setColor(dialog.foregroundRole(), self.palette().color(self.foregroundRole()))
+        dialog.setPalette(palette)
+        dialog.setStyleSheet('''
+            QTableWidget {
+                selection-background-color: #FF7043;
+                selection-color: white;
+            }
+            QPushButton {
+                background-color: #388E3C;
+                color: white;
+                border-radius: 6px;
+                padding: 6px 12px;
+            }
+            QPushButton:hover {
+                background-color: #2e7d32;
+            }
+        ''')
 
-        # Lấy chi tiết sản phẩm
+        layout = QVBoxLayout(dialog)
+        layout.setSpacing(15)
+        layout.setContentsMargins(20, 20, 20, 20)
+
+        # Header section
+        header_label = QLabel(f'HÓA ĐƠN #{invoice_id}')
+        header_label.setProperty('heading', True)
+        header_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(header_label)
+
+        # Invoice info
+        inv_id, created_date, total_amount, cust_name, cust_phone, cust_addr, emp_name = header
+        info_layout = QGridLayout()
+        info_layout.setSpacing(10)
+
+        # Left column
+        info_layout.addWidget(QLabel('<b>Ngày tạo:</b>'), 0, 0)
+        info_layout.addWidget(QLabel(_format_date(created_date)), 0, 1)
+        info_layout.addWidget(QLabel('<b>Nhân viên:</b>'), 1, 0)
+        info_layout.addWidget(QLabel(emp_name or 'N/A'), 1, 1)
+
+        # Right column
+        info_layout.addWidget(QLabel('<b>Khách hàng:</b>'), 0, 2)
+        info_layout.addWidget(QLabel(cust_name or 'Khách lẻ'), 0, 3)
+        if cust_phone:
+            info_layout.addWidget(QLabel('<b>SĐT:</b>'), 1, 2)
+            info_layout.addWidget(QLabel(cust_phone), 1, 3)
+        if cust_addr:
+            info_layout.addWidget(QLabel('<b>Địa chỉ:</b>'), 2, 2)
+            info_layout.addWidget(QLabel(cust_addr), 2, 3)
+
+        layout.addLayout(info_layout)
+
+        # Product details
+        layout.addWidget(QLabel('CHI TIẾT SẢN PHẨM'))
+        
+        # Products table
+        table = QTableWidget()
+        table.setColumnCount(4)
+        table.setHorizontalHeaderLabels(['Sản phẩm', 'Số lượng', 'Đơn giá', 'Thành tiền'])
+        header = table.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)
+        table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+
         cursor.execute('''
             SELECT p.name, id.quantity, id.price, (id.quantity * id.price) as line_total
             FROM invoice_details id
@@ -659,32 +726,45 @@ class InvoiceManagementTab(QWidget):
         ''', (invoice_id,))
         details = cursor.fetchall()
 
-        lines = [
-            f"HÓA ĐƠN #{inv_id}",
-            f"Ngày tạo: {created_date_fmt}",
-            f"Khách hàng: {cust_name}",
-        ]
-        if cust_phone:
-            lines.append(f"SĐT: {cust_phone}")
-        if cust_addr:
-            lines.append(f"Địa chỉ: {cust_addr}")
-        lines.append(f"Nhân viên: {emp_name}")
-        lines.append("\n--- Chi tiết sản phẩm ---")
+        table.setRowCount(len(details))
+        for row, (name, qty, price, line_total) in enumerate(details):
+            table.setItem(row, 0, QTableWidgetItem(name))
+            table.setItem(row, 1, QTableWidgetItem(str(qty)))
+            table.setItem(row, 2, QTableWidgetItem(f"{price:,.0f} VND"))
+            table.setItem(row, 3, QTableWidgetItem(f"{line_total:,.0f} VND"))
 
-        for i, (name, qty, price, line_total) in enumerate(details, 1):
-            lines.append(
-                f"\n{i}. {name}\n"
-                f"   Số lượng : {qty}\n"
-                f"   Đơn giá  : {price:,.0f} VND\n"
-                f"   Thành tiền: {line_total:,.0f} VND"
-            )
+        layout.addWidget(table)
 
-        lines.append("\n-------------------------")
-        total_display = total_amount or sum(d[3] for d in details)
-        lines.append(f"TỔNG CỘNG: {total_display:,.0f} VND")
+        # Total
+        total_layout = QHBoxLayout()
+        total_layout.addStretch()
+        total_label = QLabel(f'Tổng cộng: {total_amount:,.0f} VND')
+        total_label.setProperty('total', True)
+        total_layout.addWidget(total_label)
+        layout.addLayout(total_layout)
 
-        detail_text = "\n".join(lines)
-        QMessageBox.information(self, f'Hóa đơn #{inv_id}', detail_text)
+        # Close button
+        btn_layout = QHBoxLayout()
+        close_btn = QPushButton('Đóng')
+        close_btn.setStyleSheet('''
+            QPushButton {
+                background-color: #3498DB;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                padding: 8px 15px;
+                min-width: 80px;
+            }
+            QPushButton:hover {
+                background-color: #2980B9;
+            }
+        ''')
+        close_btn.clicked.connect(dialog.accept)
+        btn_layout.addStretch()
+        btn_layout.addWidget(close_btn)
+        layout.addLayout(btn_layout)
+
+        dialog.exec()
     
     def view_repair_details(self, repair_id):
         cursor = self.db.conn.cursor()
