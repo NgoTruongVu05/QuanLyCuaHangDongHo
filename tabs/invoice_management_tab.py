@@ -202,7 +202,7 @@ class InvoiceManagementTab(QWidget):
             FROM invoices i
             LEFT JOIN customers c ON i.customer_id = c.id
             LEFT JOIN employees e ON i.employee_id = e.id
-            WHERE i.created_date BETWEEN ? AND ?
+            WHERE DATE(i.created_date) BETWEEN ? AND ?
         '''
         params = [from_date, to_date]
         
@@ -380,21 +380,26 @@ class InvoiceManagementTab(QWidget):
     
     def load_data(self):
         """Tải dữ liệu theo chế độ hiện tại"""
+        self.table.clearContents()
         if self.current_mode == "invoices":
             self.load_invoices_data()
         else:
             self.load_repairs_data()
     
     def load_invoices_data(self):
-        """Tải dữ liệu hóa đơn - không lọc"""
+        """Tải dữ liệu hóa đơn với lọc ngày"""
+        from_date = self.invoice_from_date.date().toString('yyyy-MM-dd')
+        to_date = self.invoice_to_date.date().toString('yyyy-MM-dd')
+        
         cursor = self.db.conn.cursor()
         cursor.execute('''
             SELECT i.id, c.name, e.full_name, i.total_amount, i.created_date
             FROM invoices i
             LEFT JOIN customers c ON i.customer_id = c.id
             LEFT JOIN employees e ON i.employee_id = e.id
+            WHERE DATE(i.created_date) BETWEEN ? AND ?
             ORDER BY i.id DESC
-        ''')
+        ''', (from_date, to_date))
         
         invoices = cursor.fetchall()
         
@@ -514,12 +519,12 @@ class InvoiceManagementTab(QWidget):
             self.table.setItem(row, 5, item)
 
             # Ngày tạo
-            item = QTableWidgetItem(str(created_date) if created_date else '')
+            item = QTableWidgetItem(_format_date(created_date))
             item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
             self.table.setItem(row, 6, item)
 
             # Dự kiến hoàn thành
-            item = QTableWidgetItem(str(est_completion) if est_completion else '')
+            item = QTableWidgetItem(_format_date(est_completion))
             item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
             self.table.setItem(row, 7, item)
 
@@ -547,7 +552,7 @@ class InvoiceManagementTab(QWidget):
                     background-color: #229954;
                 }
             ''')
-            view_btn.clicked.connect(lambda checked, r=row: self.view_repair_details(r))
+            view_btn.clicked.connect(lambda checked, rid=rep[0]: self.view_repair_details(rid))
             action_layout.addWidget(view_btn)
             
             if self.user_role == 1:  # Chỉ admin mới được sửa/xóa
@@ -681,31 +686,39 @@ class InvoiceManagementTab(QWidget):
         detail_text = "\n".join(lines)
         QMessageBox.information(self, f'Hóa đơn #{inv_id}', detail_text)
     
-    def view_repair_details(self, row):
-        repair_id = int(self.table.item(row, 0).text())
-        customer = self.table.item(row, 1).text()
-        employee = self.table.item(row, 2).text()
-        watch_desc = self.table.item(row, 3).text()
-        issue_desc = self.table.item(row, 4).text()
-        actual_cost = self.table.item(row, 5).text()
-        created_date = self.table.item(row, 6).text()
-        estimated_completion = self.table.item(row, 7).text()
-        status = self.table.item(row, 8).text()
+    def view_repair_details(self, repair_id):
+        cursor = self.db.conn.cursor()
+        cursor.execute('''
+            SELECT r.id, c.name, e.full_name,
+                   r.watch_description, r.issue_description,
+                   COALESCE(r.actual_cost, 0.0) AS actual_cost,
+                   r.created_date, r.estimated_completion, r.status
+            FROM repair_orders r
+            LEFT JOIN customers c ON r.customer_id = c.id
+            LEFT JOIN employees e ON r.employee_id = e.id
+            WHERE r.id = ?
+        ''', (repair_id,))
+        row = cursor.fetchone()
+        if not row:
+            QMessageBox.warning(self, 'Lỗi', f'Không tìm thấy đơn sửa chữa #{repair_id}')
+            return
+
+        rid, cust, emp, watch, issue, cost, created, est, status = row
+
+        info = f"""
+        Thông tin đơn sửa chữa #{rid}:
         
-        info_text = f"""
-        Thông tin đơn sửa chữa #{repair_id}:
-        
-        Khách hàng: {customer}
-        Nhân viên: {employee}
-        Đồng hồ: {watch_desc}
-        Lỗi: {issue_desc}
-        Chi phí: {actual_cost}
-        Ngày tạo: {created_date}
-        Dự kiến hoàn thành: {estimated_completion}
-        Trạng thái: {status}
+        Khách hàng: {cust or 'Khách lẻ'}
+        Nhân viên: {emp or ''}
+        Đồng hồ: {watch or ''}
+        Lỗi: {issue or ''}
+        Chi phí: {cost:,.0f} VND
+        Ngày tạo: {_format_date(created)}
+        Dự kiến hoàn thành: {_format_date(est)}
+        Trạng thái: {self.get_repair_status_text(status)}
         """
         
-        QMessageBox.information(self, 'Chi tiết sửa chữa', info_text)
+        QMessageBox.information(self, 'Chi tiết sửa chữa', info)
     
     def get_repair_status_text(self, status):
         status_map = {
