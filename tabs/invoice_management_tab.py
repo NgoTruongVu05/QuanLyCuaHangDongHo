@@ -84,6 +84,7 @@ class InvoiceManagementTab(QWidget):
         self.invoice_from_date = QDateEdit()
         self.invoice_from_date.setDate(QDate.currentDate().addMonths(-1))
         self.invoice_from_date.setCalendarPopup(True)
+        self.invoice_from_date.setDisplayFormat('dd/MM/yyyy')
         self.invoice_from_date.dateChanged.connect(self.load_data)
         self.invoice_search_layout.addWidget(self.invoice_from_date)
         
@@ -91,6 +92,7 @@ class InvoiceManagementTab(QWidget):
         self.invoice_to_date = QDateEdit()
         self.invoice_to_date.setDate(QDate.currentDate())
         self.invoice_to_date.setCalendarPopup(True)
+        self.invoice_to_date.setDisplayFormat('dd/MM/yyyy')
         self.invoice_to_date.dateChanged.connect(self.load_data)
         self.invoice_search_layout.addWidget(self.invoice_to_date)
 
@@ -128,6 +130,7 @@ class InvoiceManagementTab(QWidget):
         self.repair_date_from = QDateEdit()
         self.repair_date_from.setDate(QDate.currentDate().addMonths(-1))
         self.repair_date_from.setCalendarPopup(True)
+        self.repair_date_from.setDisplayFormat('dd/MM/yyyy')
         self.repair_date_from.dateChanged.connect(self.load_data)
         self.repair_search_layout.addWidget(self.repair_date_from)
         
@@ -135,6 +138,7 @@ class InvoiceManagementTab(QWidget):
         self.repair_date_to = QDateEdit()
         self.repair_date_to.setDate(QDate.currentDate())
         self.repair_date_to.setCalendarPopup(True)
+        self.repair_date_to.setDisplayFormat('dd/MM/yyyy')
         self.repair_date_to.dateChanged.connect(self.load_data)
         self.repair_search_layout.addWidget(self.repair_date_to)
         

@@ -26,6 +26,7 @@ class EditRepairDialog(QDialog):
 
         self.estimated_completion_input = QDateEdit()
         self.estimated_completion_input.setCalendarPopup(True)
+        self.estimated_completion_input.setDisplayFormat('dd/MM/yyyy')
         self.layout.addRow('Dự kiến hoàn thành:', self.estimated_completion_input)
 
         # Chi phí thực tế - chỉ editable khi chọn "Hoàn thành"

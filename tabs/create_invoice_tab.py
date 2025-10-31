@@ -73,6 +73,16 @@ class CreateInvoiceTab(QWidget):
         product_layout.addLayout(pagination_layout)
 
         add_to_cart_btn = QPushButton('Thêm vào giỏ')
+        add_to_cart_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #388E3C;
+                color: white;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #2E7D32;
+            }
+        """)
         add_to_cart_btn.clicked.connect(self.add_selected_products_to_cart)
         product_layout.addWidget(add_to_cart_btn)
 
@@ -122,6 +132,15 @@ class CreateInvoiceTab(QWidget):
         self.cart_table = QTableWidget()
         self.cart_table.setColumnCount(5)
         self.cart_table.setHorizontalHeaderLabels(['Sản phẩm', 'Đơn giá', 'Số lượng', 'Thành tiền', 'Hành động'])
+
+        header = self.cart_table.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.ResizeMode.Interactive)
+        header.setStretchLastSection(True)
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(4, QHeaderView.ResizeMode.ResizeToContents)
         self.cart_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self.cart_table.setAlternatingRowColors(True)
         right_layout.addWidget(self.cart_table)
