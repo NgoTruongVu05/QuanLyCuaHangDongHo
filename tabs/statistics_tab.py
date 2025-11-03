@@ -156,9 +156,9 @@ class StatisticsTab(QWidget):
 
             # --- Doanh thu sửa chữa ---
             if month == 'Tất cả':
-                cursor.execute("SELECT IFNULL(SUM(actual_cost),0), COUNT(*), SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) FROM repair_orders WHERE strftime('%Y', created_date) = ?", (str(year),))
+                cursor.execute("SELECT IFNULL(SUM(actual_cost),0), COUNT(*), SUM(CASE WHEN status = 'Hoàn thành' THEN 1 ELSE 0 END) FROM repair_orders WHERE strftime('%Y', created_date) = ?", (str(year),))
             else:
-                cursor.execute("SELECT IFNULL(SUM(actual_cost),0), COUNT(*), SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) FROM repair_orders WHERE strftime('%Y', created_date) = ? AND strftime('%m', created_date) = ?", (str(year), month.zfill(2)))
+                cursor.execute("SELECT IFNULL(SUM(actual_cost),0), COUNT(*), SUM(CASE WHEN status = 'Hoàn thành' THEN 1 ELSE 0 END) FROM repair_orders WHERE strftime('%Y', created_date) = ? AND strftime('%m', created_date) = ?", (str(year), month.zfill(2)))
             r_sum, r_count, r_completed = cursor.fetchone() or (0,0,0)
             self.total_repair_revenue_label.setText(f'Tổng doanh thu sửa chữa: {r_sum:,.0f} VND')
             self.total_repairs_label.setText(f'Tổng số đơn sửa chữa: {r_count}')

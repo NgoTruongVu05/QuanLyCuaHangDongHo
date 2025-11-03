@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QTableWidget, 
                              QTableWidgetItem, QPushButton, QMessageBox,
                              QHeaderView, QHBoxLayout, QLabel, QDialog, QWidget as _QWidget,
-                             QLineEdit, QDateEdit, QComboBox, QSizePolicy, QGridLayout)
+                             QLineEdit, QDateEdit, QComboBox, QSizePolicy, QGridLayout, QGroupBox, QTextEdit)
 from PyQt6.QtCore import Qt, QDate
 from dialogs.edit_repair_dialog import EditRepairDialog
 from datetime import datetime
@@ -462,10 +462,11 @@ class InvoiceManagementTab(QWidget):
         
         # Xây dựng query với điều kiện lọc ngày
         query = '''
-            SELECT r.id, c.name, e.full_name, r.watch_description, r.issue_description,
+            SELECT r.id, c.name, e.full_name, p.name,
                    COALESCE(r.actual_cost, 0.0) as actual_cost, r.created_date, 
                    r.estimated_completion, r.status
             FROM repair_orders r
+            JOIN products p ON r.id = p.id
             LEFT JOIN customers c ON r.customer_id = c.id
             LEFT JOIN employees e ON r.employee_id = e.id
             WHERE DATE(r.created_date) BETWEEN ? AND ?
@@ -474,7 +475,7 @@ class InvoiceManagementTab(QWidget):
         
         # Thêm điều kiện tìm kiếm theo tên đồng hồ nếu có
         if watch_search:
-            query += ' AND LOWER(r.watch_description) LIKE ?'
+            query += ' AND LOWER(p.name ) LIKE ?'
             params.append(f'%{watch_search}%')
         
         query += ' ORDER BY r.id DESC'
@@ -487,7 +488,7 @@ class InvoiceManagementTab(QWidget):
         self.table.setRowCount(len(repairs))
         
         for row, rep in enumerate(repairs):
-            (rid, cust_name, emp_name, watch_desc, issue_desc,
+            (rid, cust_name, emp_name,  watch_desc,
              actual_cost, created_date, est_completion, status) = rep
 
             # ID
@@ -504,15 +505,12 @@ class InvoiceManagementTab(QWidget):
             item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
             self.table.setItem(row, 2, item)
 
-            # Đồng hồ
+
+             # Đồng hồ
             item = QTableWidgetItem(str(watch_desc) if watch_desc else '')
             item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
             self.table.setItem(row, 3, item)
 
-            # Lỗi
-            item = QTableWidgetItem(str(issue_desc) if issue_desc else '')
-            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
-            self.table.setItem(row, 4, item)
 
             # Chi phí
             try:
@@ -520,82 +518,82 @@ class InvoiceManagementTab(QWidget):
             except Exception:
                 item = QTableWidgetItem("0 VND")
             item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
-            self.table.setItem(row, 5, item)
+            self.table.setItem(row, 4, item)
 
             # Ngày tạo
             item = QTableWidgetItem(_format_date(created_date))
             item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
-            self.table.setItem(row, 6, item)
+            self.table.setItem(row, 5, item)
 
             # Dự kiến hoàn thành
             item = QTableWidgetItem(_format_date(est_completion))
             item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
-            self.table.setItem(row, 7, item)
+            self.table.setItem(row, 6, item)
 
             # Trạng thái 
             item = QTableWidgetItem(self.get_repair_status_text(status))
             item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
-            self.table.setItem(row, 8, item)
-            # Nút hành động cho từng dòng
-            action_widget = _QWidget()
+            self.table.setItem(row, 7, item)
+
+                        # Nút hành động cho từng dòng
+                        # Nút hành động cho từng dòng
+            action_widget = QWidget()
             action_layout = QHBoxLayout(action_widget)
-            action_layout.setContentsMargins(5, 2, 5, 2)
-            
-            # Nút xem chi tiết cho tất cả user
+            action_layout.setContentsMargins(8, 4, 8, 4)
+            action_layout.setSpacing(10)
+
+            # Nút xem chi tiết
             view_btn = QPushButton('Xem chi tiết')
+            view_btn.setFixedHeight(30)
+            view_btn.setMinimumWidth(85)  # Đảm bảo không bị co
             view_btn.setStyleSheet('''
                 QPushButton {
                     background-color: #27AE60;
                     color: white;
                     border: none;
-                    border-radius: 3px;
-                    padding: 3px 8px;
+                    border-radius: 4px;
+                    padding: 4px 8px;
                     font-size: 11px;
+                    font-weight: bold;
                 }
                 QPushButton:hover {
                     background-color: #229954;
                 }
             ''')
             view_btn.clicked.connect(lambda checked, rid=rep[0]: self.view_repair_details(rid))
-            action_layout.addWidget(view_btn)
-            
-            if self.user_role == 1:  # Chỉ admin mới được sửa/xóa
+
+            # Nút Sửa (chỉ admin)
+            edit_btn = None
+            if self.user_role == 1:
                 edit_btn = QPushButton('Sửa')
+                edit_btn.setFixedHeight(30)
+                edit_btn.setMinimumWidth(50)
                 edit_btn.setStyleSheet('''
                     QPushButton {
                         background-color: #3498DB;
                         color: white;
                         border: none;
-                        border-radius: 3px;
-                        padding: 3px 8px;
+                        border-radius: 4px;
+                        padding: 4px 8px;
                         font-size: 11px;
+                        font-weight: bold;
                     }
                     QPushButton:hover {
                         background-color: #2980B9;
                     }
                 ''')
                 edit_btn.clicked.connect(lambda checked, r=row: self.edit_repair_row(r))
-                action_layout.addWidget(edit_btn)
-                
-                delete_btn = QPushButton('Xóa')
-                delete_btn.setStyleSheet('''
-                    QPushButton {
-                        background-color: #E74C3C;
-                        color: white;
-                        border: none;
-                        border-radius: 3px;
-                        padding: 3px 8px;
-                        font-size: 11px;
-                    }
-                    QPushButton:hover {
-                        background-color: #C0392B;
-                    }
-                ''')
-                delete_btn.clicked.connect(lambda checked, r=row: self.delete_repair_row(r))
-                action_layout.addWidget(delete_btn)
-            
+
+            # CĂN GIỮA HOÀN HẢO
             action_layout.addStretch()
-            self.table.setCellWidget(row, 9, action_widget)
+            action_layout.addWidget(view_btn)
+            if edit_btn:
+                action_layout.addSpacing(10)
+                action_layout.addWidget(edit_btn)
+            action_layout.addStretch()
+
+            self.table.setCellWidget(row, 8, action_widget)
+            self.table.setRowHeight(row, 46)
     
     def setup_invoices_table(self):
         """Thiết lập bảng cho chế độ hóa đơn"""
@@ -614,26 +612,27 @@ class InvoiceManagementTab(QWidget):
         header.setSectionResizeMode(4, QHeaderView.ResizeMode.ResizeToContents)  # Ngày tạo
         header.setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)  # Chi tiết
     
-    def setup_repairs_table(self):
-        """Thiết lập bảng cho chế độ sửa chữa"""
-        self.table.setColumnCount(10)
+    def setup_repairs_table(self):  
+        self.table.setColumnCount(9)
         self.table.setHorizontalHeaderLabels([
-            'ID', 'Khách hàng', 'Nhân viên', 'Đồng hồ', 'Lỗi'
-            , 'Chi phí', 'Ngày tạo', 'Dự kiến hoàn thành', 'Trạng thái', 'Hành động'
+            'ID', 'Khách hàng', 'Nhân viên', 'Đồng hồ',
+            'Chi phí', 'Ngày tạo', 'Dự kiến hoàn thành', 'Trạng thái', 'Hành động'
         ])
         
         header = self.table.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)  # ID
         header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)  # Khách hàng
         header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)  # Nhân viên
-        header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)  # Đồng hồ
-        header.setSectionResizeMode(4, QHeaderView.ResizeMode.Stretch)  # Lỗi
-        header.setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)  # Chi phí
-        header.setSectionResizeMode(6, QHeaderView.ResizeMode.ResizeToContents)  # Ngày tạo
-        header.setSectionResizeMode(7, QHeaderView.ResizeMode.ResizeToContents)  # Dự kiến hoàn thành
-        header.setSectionResizeMode(8, QHeaderView.ResizeMode.ResizeToContents)  # Trạng thái
-        header.setSectionResizeMode(9, QHeaderView.ResizeMode.ResizeToContents)  # Hành động
-    
+        header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)          # Đồng hồ
+        header.setSectionResizeMode(4, QHeaderView.ResizeMode.ResizeToContents)  # Chi phí
+        header.setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)  # Ngày tạo
+        header.setSectionResizeMode(6, QHeaderView.ResizeMode.ResizeToContents)  # Dự kiến hoàn thành
+        header.setSectionResizeMode(7, QHeaderView.ResizeMode.ResizeToContents)  # Trạng thái
+        header.setSectionResizeMode(8, QHeaderView.ResizeMode.Fixed)            # Hành động → CỐ ĐỊNH
+
+        # Ép chiều rộng đủ cho 2 nút + khoảng cách
+        self.table.setColumnWidth(8, 180)  # 180px đủ cho "Xem chi tiết" + "Sửa" + spacing
+
     def show_invoice_details(self, invoice_id):
         cursor = self.db.conn.cursor()
         cursor.execute('''
@@ -773,36 +772,182 @@ class InvoiceManagementTab(QWidget):
     def view_repair_details(self, repair_id):
         cursor = self.db.conn.cursor()
         cursor.execute('''
-            SELECT r.id, c.name, e.full_name,
-                   r.watch_description, r.issue_description,
-                   COALESCE(r.actual_cost, 0.0) AS actual_cost,
-                   r.created_date, r.estimated_completion, r.status
+            SELECT r.id, r.created_date, r.estimated_completion, r.actual_cost,
+                   r.issue_description, r.status, p.name,
+                   c.name, c.phone, c.address, e.full_name
             FROM repair_orders r
+            Join products p on r.id=p.id
             LEFT JOIN customers c ON r.customer_id = c.id
             LEFT JOIN employees e ON r.employee_id = e.id
             WHERE r.id = ?
         ''', (repair_id,))
-        row = cursor.fetchone()
-        if not row:
+        header = cursor.fetchone()
+
+        if not header:
             QMessageBox.warning(self, 'Lỗi', f'Không tìm thấy đơn sửa chữa #{repair_id}')
             return
 
-        rid, cust, emp, watch, issue, cost, created, est, status = row
+        # Giải nén dữ liệu
+        rid, created_date, est_completion, actual_cost, issue_desc, status, watch_desc, \
+        cust_name, cust_phone, cust_addr, emp_name = header
 
-        info = f"""
-        Thông tin đơn sửa chữa #{rid}:
-        
-        Khách hàng: {cust or 'Khách lẻ'}
-        Nhân viên: {emp or ''}
-        Đồng hồ: {watch or ''}
-        Lỗi: {issue or ''}
-        Chi phí: {cost:,.0f} VND
-        Ngày tạo: {_format_date(created)}
-        Dự kiến hoàn thành: {_format_date(est)}
-        Trạng thái: {self.get_repair_status_text(status)}
-        """
-        
-        QMessageBox.information(self, 'Chi tiết sửa chữa', info)
+        # Tạo dialog
+        dialog = QDialog(self)
+        dialog.setWindowTitle(f'Chi tiết đơn sửa chữa #{repair_id}')
+        dialog.setMinimumWidth(560)
+        dialog.setAutoFillBackground(True)
+        palette = dialog.palette()
+        palette.setColor(dialog.backgroundRole(), self.palette().color(self.backgroundRole()))
+        palette.setColor(dialog.foregroundRole(), self.palette().color(self.foregroundRole()))
+        dialog.setPalette(palette)
+        dialog.setStyleSheet('''
+            QTableWidget {
+                selection-background-color: #FF7043;
+                selection-color: white;
+            }
+            QPushButton {
+                background-color: #388E3C;
+                color: white;
+                border-radius: 6px;
+                padding: 6px 12px;
+            }
+            QPushButton:hover {
+                background-color: #2e7d32;
+            }
+        ''')
+
+        layout = QVBoxLayout(dialog)
+        layout.setSpacing(15)
+        layout.setContentsMargins(20, 20, 20, 20)
+
+        # Tiêu đề
+        title_label = QLabel(f'ĐƠN SỬA CHỮA #{rid}')
+        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        title_label.setStyleSheet("font-size: 16px; font-weight: bold; color: white;")
+        layout.addWidget(title_label)
+
+        # Thông tin cơ bản
+        info_layout = QGridLayout()
+        info_layout.setSpacing(10)
+
+        # Cột trái
+        info_layout.addWidget(QLabel('<b>Ngày tạo:</b>'), 0, 0)
+        info_layout.addWidget(QLabel(_format_date(created_date)), 0, 1)
+        info_layout.addWidget(QLabel('<b>Nhân viên:</b>'), 1, 0)
+        info_layout.addWidget(QLabel(emp_name or 'Chưa có'), 1, 1)
+        info_layout.addWidget(QLabel('<b>Trạng thái:</b>'), 2, 0)
+        status_text = self.get_repair_status_text(status)
+        status_label = QLabel(status_text)
+        status_label.setStyleSheet(f"color: {'#E67E22' if status == 'Chờ xử lý' else '#27AE60' if status == 'Hoàn thành' else '#E74C3C'}; font-weight: bold;")
+        info_layout.addWidget(status_label, 2, 1)
+
+        # Cột phải
+        info_layout.addWidget(QLabel('<b>Khách hàng:</b>'), 0, 2)
+        info_layout.addWidget(QLabel(cust_name or 'Khách lẻ'), 0, 3)
+        if cust_phone:
+            info_layout.addWidget(QLabel('<b>SĐT:</b>'), 1, 2)
+            info_layout.addWidget(QLabel(cust_phone), 1, 3)
+        if cust_addr:
+            info_layout.addWidget(QLabel('<b>Địa chỉ:</b>'), 2, 2)
+            info_layout.addWidget(QLabel(cust_addr), 2, 3)
+
+        layout.addLayout(info_layout)
+
+        # Thông tin đồng hồ & lỗi
+               # === THÔNG TIN ĐỒNG HỒ (chỉ tên) ===
+        watch_group = QGroupBox("Thông tin đồng hồ")
+        watch_group.setStyleSheet("QGroupBox { font-weight: bold; }")
+        watch_layout = QGridLayout()
+        watch_layout.setSpacing(8)
+        watch_layout.setContentsMargins(12, 12, 12, 12)
+
+        watch_layout.addWidget(QLabel('<b>Đồng hồ:</b>'), 0, 0)
+        watch_layout.addWidget(QLabel(watch_desc or 'Chưa xác định'), 0, 1)
+
+        watch_group.setLayout(watch_layout)
+        layout.addWidget(watch_group)
+
+        # === MÔ TẢ LỖI (tách riêng) ===
+        issue_group = QGroupBox("Mô tả lỗi")
+        issue_group.setStyleSheet("""
+            QGroupBox {
+                font-weight: bold;
+                border: 1px solid #444;
+                border-radius: 6px;
+                background-color: #2d2d2d;
+                margin-top: 6px;
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                subcontrol-position: top left;
+                padding: 0 8px;
+                background-color: #2d2d2d;
+                color: #E67E22;
+            }
+        """)
+
+        issue_layout = QVBoxLayout()
+        issue_layout.setContentsMargins(12, 12, 12, 12)
+
+        issue_text = QTextEdit()
+        issue_text.setPlainText(issue_desc or 'Chưa có mô tả')
+        issue_text.setReadOnly(True)
+        issue_text.setStyleSheet("""
+            QTextEdit {
+                background-color: #1e1e1e;
+                color: #f0f0f0;
+                border: none;
+                border-radius: 4px;
+                padding: 10px;
+                font-size: 13px;
+                line-height: 1.5;
+            }
+            QTextEdit:focus { border: none; }
+        """)
+        issue_text.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        issue_text.setMinimumHeight(80)
+        issue_text.setMaximumHeight(250)
+
+        issue_layout.addWidget(issue_text)
+        issue_group.setLayout(issue_layout)
+        layout.addWidget(issue_group)
+
+        # Dự kiến & chi phí
+        cost_layout = QHBoxLayout()
+        cost_layout.addStretch()
+
+        est_label = QLabel(f"Dự kiến hoàn thành: <b>{_format_date(est_completion)}</b>")
+        cost_layout.addWidget(est_label)
+
+        cost_text = f"{float(actual_cost):,.0f} VND" if actual_cost else "Chưa xác định"
+        cost_label = QLabel(f"Chi phí: <b>{cost_text}</b>")
+        cost_label.setStyleSheet("font-weight: bold; color: #E67E22;")
+        cost_layout.addWidget(cost_label)
+
+        layout.addLayout(cost_layout)
+
+        # Nút đóng
+        btn_layout = QHBoxLayout()
+        close_btn = QPushButton('Đóng')
+        close_btn.setStyleSheet('''
+            QPushButton {
+                background-color: #3498DB;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                padding: 8px 15px;
+                min-width: 80px;
+            }
+            QPushButton:hover {
+                background-color: #2980B9;
+            }
+        ''')
+        close_btn.clicked.connect(dialog.accept)
+        btn_layout.addStretch()
+        btn_layout.addWidget(close_btn)
+        layout.addLayout(btn_layout)
+
+        dialog.exec()
     
     def get_repair_status_text(self, status):
         status_map = {

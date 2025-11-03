@@ -95,15 +95,16 @@ class Database:
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS repair_orders (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                product_id INTEGER,
                 customer_id INTEGER,
                 employee_id TEXT,
-                watch_description TEXT NOT NULL,
                 issue_description TEXT NOT NULL,
                 actual_cost REAL DEFAULT 0,
                 created_date TEXT NOT NULL,
                 estimated_completion TEXT,
                 status TEXT DEFAULT 'pending',
                 FOREIGN KEY (customer_id) REFERENCES customers (id),
+                FOREIGN KEY (product_id) REFERENCES products (id),
                 FOREIGN KEY (employee_id) REFERENCES employees (id)
             )
         ''')

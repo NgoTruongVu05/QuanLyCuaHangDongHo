@@ -1,219 +1,405 @@
-from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
-                             QLineEdit, QPushButton, QTableWidget, 
-                             QTableWidgetItem, QComboBox, QDoubleSpinBox, 
-                             QGroupBox, QFormLayout, QMessageBox, QTextEdit,
-                             QDateEdit)
-from PyQt6.QtCore import QDate
+from PyQt6.QtWidgets import (
+    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+    QTableWidget, QLineEdit, QTableWidgetItem, QTextEdit,
+    QGroupBox, QMessageBox, QCheckBox, QHeaderView, QDateEdit
+)
+from PyQt6.QtCore import QDate, Qt
+
 
 class CreateRepairTab(QWidget):
     def __init__(self, db, user_id):
         super().__init__()
         self.db = db
         self.user_id = user_id
+        self.selected_customer = None
+        self.selected_product = None
+        self.all_customers = []
+        self.filtered_customers = []
+        self.all_products = []
+        self.filtered_products = []
+        self.current_customer_page = 1
+        self.current_product_page = 1
+        self.items_per_page = 8
         self.init_ui()
-    
-    def init_ui(self):
-        layout = QVBoxLayout()
-        
-        # Customer info
-        customer_group = QGroupBox('Thông tin khách hàng')
-        customer_layout = QFormLayout()
-        
-        self.customer_combo = QComboBox()
-        self.load_customers()
-        customer_layout.addRow('Khách hàng:', self.customer_combo)
-        
-        customer_group.setLayout(customer_layout)
-        layout.addWidget(customer_group)
-        
-        # Repair details
-        repair_group = QGroupBox('Thông tin sửa chữa')
-        repair_layout = QFormLayout()
-        
-        self.watch_desc_input = QTextEdit()
-        self.watch_desc_input.setMaximumHeight(80)
-        
-        # Thêm ô tìm kiếm đồng hồ
-        self.product_search = QLineEdit()
-        self.product_search.setPlaceholderText('Tìm kiếm đồng hồ...')
-        self.product_search.textChanged.connect(self.filter_products)
-        repair_layout.addRow('Tìm kiếm:', self.product_search)
-        
-        # Cho phép chọn một đồng hồ có sẵn từ database (nếu muốn)
-        self.product_combo = QComboBox()
-        self.product_combo.addItem('--- Chọn đồng hồ ---', -1)
-        self.all_products = []  
-        self.load_products()
-        self.product_combo.currentIndexChanged.connect(self.on_product_selected)
-        repair_layout.addRow('Chọn đồng hồ:', self.product_combo)
 
-        repair_layout.addRow('Mô tả đồng hồ:', self.watch_desc_input)
+    def init_ui(self):
+        layout = QHBoxLayout()
+        layout.setContentsMargins(8, 8, 8, 8)
+        layout.setSpacing(12)
+
+        # ===== LEFT SIDE =====
+        left_layout = QVBoxLayout()
+
+        # --- Product selection (Đồng hồ) ---
+        product_group = QGroupBox('Chọn đồng hồ')
+        product_layout = QVBoxLayout()
+
+        # Search bar
+        search_layout = QHBoxLayout()
+        self.product_search = QLineEdit()
+        self.product_search.setPlaceholderText("Tìm kiếm đồng hồ...")
+        self.product_search.textChanged.connect(self.search_products)
+        search_layout.addWidget(self.product_search)
+        product_layout.addLayout(search_layout)
+
+        # Product table
+        self.product_table = QTableWidget()
+        self.product_table.setColumnCount(5)
+        self.product_table.setHorizontalHeaderLabels(['Chọn', 'Tên đồng hồ', 'Giá', 'Tồn kho', 'ID'])
+        self.product_table.setColumnHidden(4, True)
+        self.product_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+        self.product_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
+        self.product_table.setAlternatingRowColors(True)
+        self.product_table.verticalHeader().setDefaultSectionSize(36)
+
+        header = self.product_table.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)
+        self.product_table.setColumnWidth(0, 50)
+
+        product_layout.addWidget(self.product_table)
         
+
+        # Pagination
+        pagination_layout = QHBoxLayout()
+        pagination_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.prev_product_btn = QPushButton("Trước")
+        self.next_product_btn = QPushButton("Sau")
+        self.product_page_label = QLabel("Trang 1/1")
+        self.prev_product_btn.clicked.connect(self.prev_product_page)
+        self.next_product_btn.clicked.connect(self.next_product_page)
+        pagination_layout.addWidget(self.prev_product_btn)
+        pagination_layout.addWidget(self.product_page_label)
+        pagination_layout.addWidget(self.next_product_btn)
+        product_layout.addLayout(pagination_layout)
+
+
+        product_group.setLayout(product_layout)
+        left_layout.addWidget(product_group)
+
+        # --- Customer info ---
+        customer_group = QGroupBox('Thông tin khách hàng')
+        customer_layout = QVBoxLayout()
+
+        self.customer_search = QLineEdit()
+        self.customer_search.setPlaceholderText("Tìm khách hàng theo SĐT...")
+        self.customer_search.textChanged.connect(self.search_customers)
+        customer_layout.addWidget(self.customer_search)
+
+        self.customer_table = QTableWidget()
+        self.customer_table.setColumnCount(4)
+        self.customer_table.setHorizontalHeaderLabels(['Chọn', 'Tên', 'Số điện thoại', 'Địa chỉ'])
+        self.customer_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+        self.customer_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
+        self.customer_table.setAlternatingRowColors(True)
+
+        header = self.customer_table.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
+        self.customer_table.setColumnWidth(0, 50)
+
+        customer_layout.addWidget(self.customer_table)
+
+        # Customer Pagination
+        cust_pag_layout = QHBoxLayout()
+        cust_pag_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.prev_cust_btn = QPushButton("Trước")
+        self.next_cust_btn = QPushButton("Sau")
+        self.cust_page_label = QLabel("Trang 1/1")
+        self.prev_cust_btn.clicked.connect(self.prev_customer_page)
+        self.next_cust_btn.clicked.connect(self.next_customer_page)
+        cust_pag_layout.addWidget(self.prev_cust_btn)
+        cust_pag_layout.addWidget(self.cust_page_label)
+        cust_pag_layout.addWidget(self.next_cust_btn)
+        customer_layout.addLayout(cust_pag_layout)
+
+        customer_group.setLayout(customer_layout)
+        left_layout.addWidget(customer_group)
+        
+        self.load_data()
+
+        # ===== RIGHT SIDE =====
+        right_layout = QVBoxLayout()
+
+        # --- Khách hàng ---
+        self.customer_label = QLabel("Khách hàng: (chưa chọn)")
+        self.customer_label.setStyleSheet("font-weight: bold; color: white; margin-bottom: 4px;")
+        right_layout.addWidget(self.customer_label)
+
+        # --- Đồng hồ đã chọn ---
+        self.product_label = QLabel("Đồng hồ: (chưa chọn)")
+        self.product_label.setStyleSheet("font-weight: bold; color: #1976D2; margin-bottom: 8px;")
+        right_layout.addWidget(self.product_label)
+
+        # --- Chi tiết sửa chữa ---
+        details_group = QGroupBox("Mô tả lỗi")
+        details_layout = QVBoxLayout()
+
+        # Mô tả lỗi
+        issue_layout = QHBoxLayout()
         self.issue_desc_input = QTextEdit()
-        self.issue_desc_input.setMaximumHeight(80)
-        repair_layout.addRow('Mô tả lỗi:', self.issue_desc_input)
-        
-        
-        # Không hiển thị input chi phí khi tạo đơn
-        
+        issue_layout.addWidget(self.issue_desc_input)
+        details_layout.addLayout(issue_layout)
+
+        # Dự kiến hoàn thành
         date_layout = QHBoxLayout()
+        date_layout.addWidget(QLabel("Dự kiến hoàn thành:"))
         self.estimated_completion_input = QDateEdit()
         self.estimated_completion_input.setDate(QDate.currentDate().addDays(7))
         self.estimated_completion_input.setCalendarPopup(True)
-        date_layout.addWidget(QLabel('Dự kiến hoàn thành:'))
         date_layout.addWidget(self.estimated_completion_input)
-        
-        repair_layout.addRow(date_layout)
-        
-        repair_group.setLayout(repair_layout)
-        layout.addWidget(repair_group)
-        
-        # Buttons
-        button_layout = QHBoxLayout()
+        details_layout.addLayout(date_layout)
+
+        details_group.setLayout(details_layout)
+        right_layout.addWidget(details_group)
+
+        # --- Buttons ---
+        total_layout = QHBoxLayout()
+        total_layout.addStretch()
+
         create_btn = QPushButton('Tạo đơn sửa chữa')
+        create_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #388E3C;
+                color: white;
+                border-radius: 4px;
+                padding: 6px 12px;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #2E7D32;
+            }
+        """)
         create_btn.clicked.connect(self.create_repair_order)
-        button_layout.addWidget(create_btn)
-        
+        total_layout.addWidget(create_btn)
+
         clear_btn = QPushButton('Làm mới')
-        # Làm mới form và tải lại danh sách sản phẩm/khách hàng mới (nếu có)
-        clear_btn.clicked.connect(self.refresh_form)
-        button_layout.addWidget(clear_btn)
-        
-        layout.addLayout(button_layout)
-        layout.addStretch()
-        
+        clear_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #757575;
+                color: white;
+                border-radius: 4px;
+                padding: 6px 12px;
+            }
+            QPushButton:hover {
+                background-color: #616161;
+            }
+        """)
+        clear_btn.clicked.connect(self.reset_form)
+        total_layout.addWidget(clear_btn)
+
+        right_layout.addLayout(total_layout)
+
+        # Gắn hai cột
+        layout.addLayout(left_layout, 1)
+        layout.addLayout(right_layout, 1)
         self.setLayout(layout)
-    
-    def load_customers(self):
-        cursor = self.db.conn.cursor()
-        cursor.execute('SELECT id, name FROM customers')
-        customers = cursor.fetchall()
-        
-        self.customer_combo.clear()
-        self.customer_combo.addItem('Khách lẻ', -1)
-        for customer in customers:
-            self.customer_combo.addItem(customer[1], customer[0])
+
+
+    def load_data(self):
+        self.load_products()
+        self.load_customers()
 
     def load_products(self):
-        """Tải danh sách sản phẩm (đồng hồ) từ database vào combobox."""
-        try:
-            cursor = self.db.conn.cursor()
-            # Sắp xếp theo tên để sản phẩm mới dễ tìm
-            cursor.execute('SELECT id, name FROM products ORDER BY name')
-            self.all_products = cursor.fetchall()
-
-            # Giữ item mặc định ở vị trí 0
-            self.product_combo.clear()
-            self.product_combo.addItem('--- Chọn đồng hồ ---', -1)
-            for p in self.all_products:
-                self.product_combo.addItem(p[1], p[0])
-        except Exception:
-            # Nếu lỗi DB, giữ combobox rỗng (ngoại trừ placeholder)
-            self.product_combo.clear()
-            self.product_combo.addItem('--- Chọn đồng hồ ---', -1)
-            self.all_products = []
-            
-    def filter_products(self, search_text):
-        """Lọc danh sách đồng hồ theo từ khóa tìm kiếm."""
-        self.product_combo.clear()
-        self.product_combo.addItem('--- Chọn đồng hồ ---', -1)
-        
-        # Nếu không có từ khóa tìm kiếm, hiển thị tất cả
-        if not search_text.strip():
-            for p in self.all_products:
-                self.product_combo.addItem(p[1], p[0])
-            return
-            
-        # Lọc sản phẩm theo từ khóa (không phân biệt hoa thường)
-        search_text = search_text.lower()
-        for p in self.all_products:
-            if search_text in p[1].lower():
-                self.product_combo.addItem(p[1], p[0])
-
-    def showEvent(self, event):
-        """Khi tab/Widget hiện lên, reload products và áp dụng lại bộ lọc tìm kiếm."""
-        try:
-            self.load_products()
-            # Áp dụng lại bộ lọc tìm kiếm hiện tại
-            self.filter_products(self.product_search.text())
-        except Exception:
-            pass
-        return super().showEvent(event)
-
-    def on_product_selected(self, index):
-        """Khi chọn sản phẩm: tự động cập nhật mô tả đồng hồ."""
-        pid = self.product_combo.currentData()
-        if pid and pid != -1:
-            name = self.product_combo.currentText()
-            #cập nhật mô tả khi chọn đồng hồ mới
-            self.watch_desc_input.setPlainText(name)
-    
-    def create_repair_order(self):
-        customer_id = self.customer_combo.currentData()
-        watch_desc = self.watch_desc_input.toPlainText()
-        issue_desc = self.issue_desc_input.toPlainText()
-        estimated_completion = self.estimated_completion_input.date().toString('yyyy-MM-dd')
-        # Mặc định trạng thái là "Chờ xử lý"
-        status = 'Chờ xử lý'
-        
-        if not watch_desc or not issue_desc:
-            QMessageBox.warning(self, 'Lỗi', 'Vui lòng nhập đầy đủ thông tin!')
-            return
-        
-        # Nếu chưa đăng nhập, sử dụng employee_id mặc định
-        employee_id = self.user_id if self.user_id else 1
-        
-        if customer_id == -1:
-            customer_id = None
-        
         cursor = self.db.conn.cursor()
-        
+        cursor.execute('SELECT id, name, price, quantity FROM products WHERE quantity > 0 ORDER BY name')
+        self.all_products = cursor.fetchall()
+        self.filtered_products = self.all_products[:]
+        self.current_product_page = 1
+        self.display_product_page()
+
+    def load_customers(self):
+        cursor = self.db.conn.cursor()
+        cursor.execute('SELECT id, name, phone, address FROM customers ORDER BY name')
+        self.all_customers = cursor.fetchall()
+        self.filtered_customers = self.all_customers[:]
+        self.current_customer_page = 1
+        self.display_customer_page()
+
+    def search_products(self):
+        text = self.product_search.text().strip().lower()
+        self.filtered_products = [
+            p for p in self.all_products if text in p[1].lower()
+        ] if text else self.all_products[:]
+        self.current_product_page = 1
+        self.display_product_page()
+
+    def search_customers(self):
+        text = self.customer_search.text().strip()
+        self.filtered_customers = [
+            c for c in self.all_customers if text in c[2]
+        ] if text else self.all_customers[:]
+        self.current_customer_page = 1
+        self.display_customer_page()
+
+    def display_product_page(self):
+        self.product_table.setRowCount(0)
+        start = (self.current_product_page - 1) * self.items_per_page
+        end = start + self.items_per_page
+        page_items = self.filtered_products[start:end]
+
+        self.product_table.setRowCount(len(page_items))
+        for row, (pid, name, price, qty) in enumerate(page_items):
+            checkbox = QCheckBox()
+            checkbox.setStyleSheet("margin-left:10px;")
+            checkbox.stateChanged.connect(lambda _, r=row: self.select_single_product(r))
+            self.product_table.setCellWidget(row, 0, checkbox)
+
+            self.product_table.setItem(row, 1, QTableWidgetItem(name))
+            self.product_table.setItem(row, 2, QTableWidgetItem(f"{int(price):,} VND"))
+            self.product_table.setItem(row, 3, QTableWidgetItem(str(qty)))
+            self.product_table.setItem(row, 4, QTableWidgetItem(str(pid)))
+
+        total_pages = max(1, (len(self.filtered_products) + self.items_per_page - 1) // self.items_per_page)
+        self.product_page_label.setText(f"Trang {self.current_product_page}/{total_pages}")
+        self.prev_product_btn.setEnabled(self.current_product_page > 1)
+        self.next_product_btn.setEnabled(self.current_product_page < total_pages)
+
+    def display_customer_page(self):
+        self.customer_table.setRowCount(0)
+        start = (self.current_customer_page - 1) * self.items_per_page
+        end = start + self.items_per_page
+        page_items = self.filtered_customers[start:end]
+
+        self.customer_table.setRowCount(len(page_items))
+        for row, (cid, name, phone, address) in enumerate(page_items):
+            checkbox = QCheckBox()
+            checkbox.stateChanged.connect(lambda _, r=row: self.select_single_customer(r))
+            self.customer_table.setCellWidget(row, 0, checkbox)
+            self.customer_table.setItem(row, 1, QTableWidgetItem(name))
+            self.customer_table.setItem(row, 2, QTableWidgetItem(phone))
+            self.customer_table.setItem(row, 3, QTableWidgetItem(address or ""))
+
+        total_pages = max(1, (len(self.filtered_customers) + self.items_per_page - 1) // self.items_per_page)
+        self.cust_page_label.setText(f"Trang {self.current_customer_page}/{total_pages}")
+        self.prev_cust_btn.setEnabled(self.current_customer_page > 1)
+        self.next_cust_btn.setEnabled(self.current_customer_page < total_pages)
+
+    def select_single_customer(self, selected_row):
+        for row in range(self.customer_table.rowCount()):
+            checkbox = self.customer_table.cellWidget(row, 0)
+            if row != selected_row:
+                checkbox.blockSignals(True)
+                checkbox.setChecked(False)
+                checkbox.blockSignals(False)
+
+        checkbox = self.customer_table.cellWidget(selected_row, 0)
+        if checkbox.isChecked():
+            name = self.customer_table.item(selected_row, 1).text()
+            phone = self.customer_table.item(selected_row, 2).text()
+            self.selected_customer = {'name': name, 'phone': phone}
+            self.customer_label.setText(f"Khách hàng: {name}")
+        else:
+            self.selected_customer = None
+            self.customer_label.setText("Khách hàng: (chưa chọn)")
+
+    def select_single_product(self, selected_row):
+        """Chỉ cho phép chọn 1 đồng hồ duy nhất"""
+        for row in range(self.product_table.rowCount()):
+            checkbox = self.product_table.cellWidget(row, 0)
+            if row != selected_row:
+                checkbox.blockSignals(True)
+                checkbox.setChecked(False)
+                checkbox.blockSignals(False)
+
+        checkbox = self.product_table.cellWidget(selected_row, 0)
+        if checkbox.isChecked():
+            name = self.product_table.item(selected_row, 1).text()
+            pid = int(self.product_table.item(selected_row, 4).text())
+            self.selected_product = {'id': pid, 'name': name}
+            self.product_label.setText(f"Đồng hồ: {name}")
+        else:
+            self.selected_product = None
+            self.product_label.setText("Đồng hồ: (chưa chọn)")
+
+    def select_product(self):
+        """Nút 'Chọn đồng hồ' - kiểm tra và cập nhật"""
+        selected = None
+        for row in range(self.product_table.rowCount()):
+            checkbox = self.product_table.cellWidget(row, 0)
+            if checkbox and checkbox.isChecked():
+                pid = int(self.product_table.item(row, 4).text())
+                name = self.product_table.item(row, 1).text()
+                selected = {'id': pid, 'name': name}
+                break
+
+        if not selected:
+            QMessageBox.warning(self, "Lỗi", "Vui lòng chọn một đồng hồ!")
+            return
+
+        self.selected_product = selected
+        self.product_label.setText(f"Đồng hồ: {selected['name']}")
+
+    def next_product_page(self):
+        total_pages = (len(self.filtered_products) + self.items_per_page - 1) // self.items_per_page
+        if self.current_product_page < total_pages:
+            self.current_product_page += 1
+            self.display_product_page()
+
+    def prev_product_page(self):
+        if self.current_product_page > 1:
+            self.current_product_page -= 1
+            self.display_product_page()
+
+    def next_customer_page(self):
+        total_pages = (len(self.filtered_customers) + self.items_per_page - 1) // self.items_per_page
+        if self.current_customer_page < total_pages:
+            self.current_customer_page += 1
+            self.display_customer_page()
+
+    def prev_customer_page(self):
+        if self.current_customer_page > 1:
+            self.current_customer_page -= 1
+            self.display_customer_page()
+
+    def create_repair_order(self):
+        if not self.selected_customer:
+            QMessageBox.warning(self, 'Lỗi', 'Vui lòng chọn khách hàng!')
+            return
+        if not self.selected_product:
+            QMessageBox.warning(self, 'Lỗi', 'Vui lòng chọn đồng hồ!')
+            return
+        if not self.issue_desc_input.toPlainText().strip():
+            QMessageBox.warning(self, 'Lỗi', 'Vui lòng nhập mô tả lỗi!')
+            return
+
+        cursor = self.db.conn.cursor()
+        cursor.execute('SELECT id FROM customers WHERE phone = ?', (self.selected_customer['phone'],))
+        res = cursor.fetchone()
+        if not res:
+            QMessageBox.warning(self, 'Lỗi', 'Không tìm thấy khách hàng!')
+            return
+        customer_id = res[0]
+
+        issue_desc = self.issue_desc_input.toPlainText()
+        estimated = self.estimated_completion_input.date().toString('yyyy-MM-dd')
+        status = 'Chờ xử lý'
+
         cursor.execute('''
             INSERT INTO repair_orders 
-            (customer_id, employee_id, watch_description, issue_description, 
+            (customer_id, employee_id,  issue_description, 
              actual_cost, created_date, estimated_completion, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (customer_id, employee_id, watch_desc, issue_desc, 
-             0, QDate.currentDate().toString('yyyy-MM-dd'), estimated_completion, status))
-        
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', (customer_id, self.user_id or 1,  issue_desc, 0,
+              QDate.currentDate().toString('yyyy-MM-dd'), estimated, status))
+
         repair_id = cursor.lastrowid
         self.db.conn.commit()
-        
+
         QMessageBox.information(self, 'Thành công', f'Đơn sửa chữa #{repair_id} đã được tạo!')
-        self.clear_form()
-    
-    def get_status_value(self, status_text):
-        status_map = {
-            'Chờ xử lý': 'pending',
-            'Đang sửa': 'in_progress', 
-            'Hoàn thành': 'completed',
-            'Đã hủy': 'cancelled'
-        }
-        return status_map.get(status_text, 'pending')
-    
-    def clear_form(self):
-        self.watch_desc_input.clear()
+        self.reset_form()
+
+    def reset_form(self):
+        self.selected_customer = None
+        self.selected_product = None
+        self.customer_label.setText("Khách hàng: (chưa chọn)")
+        self.product_label.setText("Đồng hồ: (chưa chọn)")
         self.issue_desc_input.clear()
         self.estimated_completion_input.setDate(QDate.currentDate().addDays(7))
-        # Reset product combo về mặc định nhưng không xóa kết quả tìm kiếm
-        current_search = self.product_search.text()
-        if current_search:
-            self.filter_products(current_search)
-        else:
-            self.product_combo.setCurrentIndex(0)
-
-    def refresh_form(self):
-        """Làm mới form và reload dữ liệu tham chiếu (sản phẩm, khách hàng)."""
-        # Giữ hành vi clear hiện tại
-        self.clear_form()
-        # Clear ô tìm kiếm
         self.product_search.clear()
-        # Reload danh sách sản phẩm và khách hàng trong combobox
-        try:
-            self.load_products()
-        except Exception:
-            pass
-        try:
-            self.load_customers()
-        except Exception:
-            pass
+        self.customer_search.clear()
+        self.load_data()
