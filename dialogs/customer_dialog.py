@@ -21,7 +21,7 @@ class CustomerDialog(QDialog):
         form_layout.addRow('Tên khách hàng:', self.name_input)
         
         self.phone_input = QLineEdit()
-        form_layout.addRow('Điện thoại:', self.phone_input)
+        form_layout.addRow('Điện thoại:*', self.phone_input)  # Thêm dấu * để chỉ bắt buộc
         
         self.email_input = QLineEdit()
         form_layout.addRow('Email:', self.email_input)
@@ -67,21 +67,27 @@ class CustomerDialog(QDialog):
             QMessageBox.warning(self, 'Lỗi', 'Vui lòng nhập tên khách hàng!')
             return
         
-        if phone and not self.is_valid_phone(phone):
+        # Kiểm tra bắt buộc nhập số điện thoại
+        if not phone:
+            QMessageBox.warning(self, 'Lỗi', 'Vui lòng nhập số điện thoại!')
+            return
+        
+        # Validate số điện thoại
+        if not self.is_valid_phone(phone):
             QMessageBox.warning(self, 'Lỗi', 'Số điện thoại không hợp lệ! Vui lòng nhập số điện thoại Việt Nam (10-11 chữ số, bắt đầu bằng 0 hoặc +84).')
             return
         
-        # Validate email
+        # Validate email (chỉ validate nếu có nhập)
         if email and not self.is_valid_email(email):
             QMessageBox.warning(self, 'Lỗi', 'Email không hợp lệ! Vui lòng nhập đúng định dạng email.')
             return
         
         # Kiểm tra trùng số điện thoại
-        if phone and self.is_phone_exists(phone):
+        if self.is_phone_exists(phone):
             QMessageBox.warning(self, 'Lỗi', 'Số điện thoại đã tồn tại! Vui lòng nhập số điện thoại khác.')
             return
         
-        # Kiểm tra trùng email
+        # Kiểm tra trùng email (chỉ kiểm tra nếu có nhập)
         if email and self.is_email_exists(email):
             QMessageBox.warning(self, 'Lỗi', 'Email đã tồn tại! Vui lòng nhập email khác.')
             return
