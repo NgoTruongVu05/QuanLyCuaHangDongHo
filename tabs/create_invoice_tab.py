@@ -17,6 +17,10 @@ class CreateInvoiceTab(QWidget):
         self.items_per_page = 10
         self.all_products = []
         self.filtered_products = []
+        self.customer_current_page = 1
+        self.customer_items_per_page = 10
+        self.all_customers = []
+        self.filtered_customers = []
         self.init_ui()
 
     def init_ui(self):
@@ -119,6 +123,21 @@ class CreateInvoiceTab(QWidget):
         self.customer_table.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
         customer_layout.addWidget(self.customer_table)
+
+        customer_pagination = QHBoxLayout()
+        customer_pagination.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.customer_prev_btn = QPushButton("◀ Trước")
+        self.customer_next_btn = QPushButton("Sau ▶")
+        self.customer_page_label = QLabel("Trang 1/1")
+
+        self.customer_prev_btn.clicked.connect(self.prev_customer_page)
+        self.customer_next_btn.clicked.connect(self.next_customer_page)
+
+        customer_pagination.addWidget(self.customer_prev_btn)
+        customer_pagination.addWidget(self.customer_page_label)
+        customer_pagination.addWidget(self.customer_next_btn)
+        customer_layout.addLayout(customer_pagination)
+
         customer_group.setLayout(customer_layout)
         left_layout.addWidget(customer_group)
 
@@ -197,24 +216,16 @@ class CreateInvoiceTab(QWidget):
         self.display_page(self.current_page)
 
     def search_customers(self):
-        search_text = self.customer_search.text()
-        cursor = self.db.conn.cursor()
-        cursor.execute('''
-            SELECT name, phone, address
-            FROM customers
-            WHERE phone LIKE ?
-        ''', (f'%{search_text}%',))
-        customers = cursor.fetchall()
-
-        self.customer_table.setRowCount(len(customers))
-        for row, (name, phone, address) in enumerate(customers):
-            checkbox = QCheckBox()
-            checkbox.stateChanged.connect(lambda _, r=row: self.select_single_customer(r))
-            self.customer_table.setCellWidget(row, 0, checkbox)
-
-            self.customer_table.setItem(row, 1, QTableWidgetItem(name))
-            self.customer_table.setItem(row, 2, QTableWidgetItem(phone))
-            self.customer_table.setItem(row, 3, QTableWidgetItem(address))
+        search_text = self.customer_search.text().strip().lower()
+        if search_text:
+            self.filtered_customers = [
+                c for c in self.all_customers
+                if search_text in c[1].lower()  # lọc theo số điện thoại
+            ]
+        else:
+            self.filtered_customers = self.all_customers[:]
+        self.customer_current_page = 1
+        self.display_customer_page(self.customer_current_page)
 
     def select_single_customer(self, selected_row):
         """Đảm bảo chỉ chọn 1 khách hàng duy nhất"""
@@ -383,15 +394,10 @@ class CreateInvoiceTab(QWidget):
 
         # Load lại khách hàng
         cursor.execute('SELECT name, phone, address FROM customers')
-        customers = cursor.fetchall()
-        self.customer_table.setRowCount(len(customers))
-        for row, (name, phone, address) in enumerate(customers):
-            checkbox = QCheckBox()
-            checkbox.stateChanged.connect(lambda _, r=row: self.select_single_customer(r))
-            self.customer_table.setCellWidget(row, 0, checkbox)
-            self.customer_table.setItem(row, 1, QTableWidgetItem(name))
-            self.customer_table.setItem(row, 2, QTableWidgetItem(phone))
-            self.customer_table.setItem(row, 3, QTableWidgetItem(address))
+        self.all_customers = cursor.fetchall()
+        self.filtered_customers = self.all_customers[:]
+        self.customer_current_page = 1
+        self.display_customer_page(self.customer_current_page)
 
     def reset_form(self):
         self.cart.clear()
@@ -458,3 +464,36 @@ class CreateInvoiceTab(QWidget):
         if self.current_page > 1:
             self.current_page -= 1
             self.display_page(self.current_page)
+
+    def display_customer_page(self, page):
+        data_source = self.filtered_customers
+        start = (page - 1) * self.customer_items_per_page
+        end = start + self.customer_items_per_page
+        page_items = data_source[start:end]
+
+        self.customer_table.setRowCount(len(page_items))
+
+        for row, (name, phone, address) in enumerate(page_items):
+            checkbox = QCheckBox()
+            checkbox.stateChanged.connect(lambda _, r=row: self.select_single_customer(r + start))
+            self.customer_table.setCellWidget(row, 0, checkbox)
+            self.customer_table.setItem(row, 1, QTableWidgetItem(name))
+            self.customer_table.setItem(row, 2, QTableWidgetItem(phone))
+            self.customer_table.setItem(row, 3, QTableWidgetItem(address))
+
+        total_pages = max(1, (len(data_source) + self.customer_items_per_page - 1) // self.customer_items_per_page)
+        self.customer_page_label.setText(f"Trang {self.customer_current_page}/{total_pages}")
+
+        self.customer_prev_btn.setEnabled(self.customer_current_page > 1)
+        self.customer_next_btn.setEnabled(self.customer_current_page < total_pages)
+
+    def next_customer_page(self):
+        total_pages = (len(self.filtered_customers) + self.customer_items_per_page - 1) // self.customer_items_per_page
+        if self.customer_current_page < total_pages:
+            self.customer_current_page += 1
+            self.display_customer_page(self.customer_current_page)
+
+    def prev_customer_page(self):
+        if self.customer_current_page > 1:
+            self.customer_current_page -= 1
+            self.display_customer_page(self.customer_current_page)
