@@ -19,7 +19,7 @@ class CreateRepairTab(QWidget):
         self.filtered_products = []
         self.current_customer_page = 1
         self.current_product_page = 1
-        self.items_per_page = 8
+        self.items_per_page = 10
         self.init_ui()
 
     def init_ui(self):
@@ -119,8 +119,6 @@ class CreateRepairTab(QWidget):
 
         customer_group.setLayout(customer_layout)
         left_layout.addWidget(customer_group)
-        
-        self.load_data()
 
         # ===== RIGHT SIDE =====
         right_layout = QVBoxLayout()
@@ -150,7 +148,8 @@ class CreateRepairTab(QWidget):
         date_layout.addWidget(QLabel("Dự kiến hoàn thành:"))
         self.estimated_completion_input = QDateEdit()
         self.estimated_completion_input.setDate(QDate.currentDate().addDays(7))
-        self.estimated_completion_input.setCalendarPopup(True)
+        self.estimated_completion_input.setCalendarPopup(True)  
+        self.estimated_completion_input.setDisplayFormat("dd/MM/yyyy")
         date_layout.addWidget(self.estimated_completion_input)
         details_layout.addLayout(date_layout)
 
@@ -177,21 +176,6 @@ class CreateRepairTab(QWidget):
         create_btn.clicked.connect(self.create_repair_order)
         total_layout.addWidget(create_btn)
 
-        clear_btn = QPushButton('Làm mới')
-        clear_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #757575;
-                color: white;
-                border-radius: 4px;
-                padding: 6px 12px;
-            }
-            QPushButton:hover {
-                background-color: #616161;
-            }
-        """)
-        clear_btn.clicked.connect(self.reset_form)
-        total_layout.addWidget(clear_btn)
-
         right_layout.addLayout(total_layout)
 
         # Gắn hai cột
@@ -199,10 +183,12 @@ class CreateRepairTab(QWidget):
         layout.addLayout(right_layout, 1)
         self.setLayout(layout)
 
+        self.load_data()
 
     def load_data(self):
         self.load_products()
         self.load_customers()
+        self.reset_form()
 
     def load_products(self):
         cursor = self.db.conn.cursor()
@@ -391,7 +377,7 @@ class CreateRepairTab(QWidget):
         self.db.conn.commit()
 
         QMessageBox.information(self, 'Thành công', f'Đơn sửa chữa #{repair_id} đã được tạo!')
-        self.reset_form()
+        self.load_data()
 
     def reset_form(self):
         self.selected_customer = None
@@ -402,4 +388,3 @@ class CreateRepairTab(QWidget):
         self.estimated_completion_input.setDate(QDate.currentDate().addDays(7))
         self.product_search.clear()
         self.customer_search.clear()
-        self.load_data()
