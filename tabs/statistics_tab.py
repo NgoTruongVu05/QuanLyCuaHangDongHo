@@ -370,7 +370,7 @@ class StatisticsTab(QWidget):
                             JOIN products p ON p.id = id.product_id
                             JOIN invoices inv ON inv.id = id.invoice_id
                             WHERE strftime('%Y', inv.created_date)=? AND strftime('%m', inv.created_date)=?
-                            GROUP BY p.name ORDER BY sold_qty DESC LIMIT 15
+                            GROUP BY p.name ORDER BY sold_qty DESC LIMIT 5
                         ''', (str(year), month.zfill(2)))
                     else:
                         cursor.execute('''
@@ -379,7 +379,7 @@ class StatisticsTab(QWidget):
                             JOIN products p ON p.id = id.product_id
                             JOIN invoices inv ON inv.id = id.invoice_id
                             WHERE strftime('%Y', inv.created_date)=?
-                            GROUP BY p.name ORDER BY sold_qty DESC LIMIT 15
+                            GROUP BY p.name ORDER BY sold_qty DESC LIMIT 5
                         ''', (str(year),))
                     rows = cursor.fetchall()
 
