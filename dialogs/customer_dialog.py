@@ -58,10 +58,10 @@ class CustomerDialog(QDialog):
             self.address_input.setText(customer[4] if customer[4] else '')
     
     def save_customer(self):
-        name = self.name_input.text()
-        phone = self.phone_input.text()
-        email = self.email_input.text()
-        address = self.address_input.text()
+        name = self.name_input.text().strip()
+        phone = self.phone_input.text().strip()
+        email = self.email_input.text().strip()
+        address = self.address_input.text().strip()
         
         if not name:
             QMessageBox.warning(self, 'Lỗi', 'Vui lòng nhập tên khách hàng!')
@@ -74,6 +74,16 @@ class CustomerDialog(QDialog):
         # Validate email
         if email and not self.is_valid_email(email):
             QMessageBox.warning(self, 'Lỗi', 'Email không hợp lệ! Vui lòng nhập đúng định dạng email.')
+            return
+        
+        # Kiểm tra trùng số điện thoại
+        if phone and self.is_phone_exists(phone):
+            QMessageBox.warning(self, 'Lỗi', 'Số điện thoại đã tồn tại! Vui lòng nhập số điện thoại khác.')
+            return
+        
+        # Kiểm tra trùng email
+        if email and self.is_email_exists(email):
+            QMessageBox.warning(self, 'Lỗi', 'Email đã tồn tại! Vui lòng nhập email khác.')
             return
         
         cursor = self.db.conn.cursor()
@@ -90,6 +100,44 @@ class CustomerDialog(QDialog):
         
         self.db.conn.commit()
         self.accept()
+
+    def is_phone_exists(self, phone):
+        """Kiểm tra xem số điện thoại đã tồn tại chưa"""
+        cursor = self.db.conn.cursor()
+        
+        if self.customer_id:
+            # Nếu là sửa, kiểm tra trùng với các khách hàng khác (không tính chính nó)
+            cursor.execute('''
+                SELECT id FROM customers 
+                WHERE phone = ? AND id != ?
+            ''', (phone, self.customer_id))
+        else:
+            # Nếu là thêm mới, kiểm tra trùng với bất kỳ khách hàng nào
+            cursor.execute('''
+                SELECT id FROM customers 
+                WHERE phone = ?
+            ''', (phone,))
+        
+        return cursor.fetchone() is not None
+
+    def is_email_exists(self, email):
+        """Kiểm tra xem email đã tồn tại chưa"""
+        cursor = self.db.conn.cursor()
+        
+        if self.customer_id:
+            # Nếu là sửa, kiểm tra trùng với các khách hàng khác (không tính chính nó)
+            cursor.execute('''
+                SELECT id FROM customers 
+                WHERE email = ? AND id != ?
+            ''', (email, self.customer_id))
+        else:
+            # Nếu là thêm mới, kiểm tra trùng với bất kỳ khách hàng nào
+            cursor.execute('''
+                SELECT id FROM customers 
+                WHERE email = ?
+            ''', (email,))
+        
+        return cursor.fetchone() is not None
 
     def is_valid_phone(self, phone):
         """
