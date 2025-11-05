@@ -3,10 +3,13 @@ from PyQt6.QtWidgets import (QDialog, QFormLayout, QLineEdit, QPushButton,
                              QVBoxLayout, QHBoxLayout, QSpacerItem, QSizePolicy)
 
 class EmployeeDialog(QDialog):
-    def __init__(self, db, employee_id=None):
+    def __init__(self, db, employee_id=None, user_id=None, user_role=None, employee_role=None):
         super().__init__()
         self.db = db
         self.employee_id = employee_id
+        self.user_id = user_id
+        self.user_role = user_role
+        self.employee_role = employee_role
         self.init_ui()
         if employee_id:
             self.load_employee_data()
@@ -40,7 +43,11 @@ class EmployeeDialog(QDialog):
             self.password_input.setPlaceholderText('Bắt buộc khi thêm mới')
         else:
             self.password_input.setPlaceholderText('Để trống nếu không đổi mật khẩu')
+        if (self.employee_role == "Quản lý" and self.employee_id != self.user_id):
+            self.password_input.setPlaceholderText('Không thể sửa mật khẩu của Quản lý khác')
+            self.password_input.setDisabled(True)              
         form_layout.addRow('Mật khẩu:', self.password_input)
+
         
         self.full_name_input = QLineEdit()
         form_layout.addRow('Họ tên:', self.full_name_input)
@@ -48,6 +55,9 @@ class EmployeeDialog(QDialog):
         self.role_combo = QComboBox()
         self.role_combo.addItems(['Nhân viên', 'Quản lý'])
         self.role_combo.currentTextChanged.connect(self.on_role_changed)
+        if self.employee_id:           
+            if self.employee_id == self.user_id:
+                self.role_combo.setEnabled(False)  # Không cho phép thay đổi vai trò của chính mình
         form_layout.addRow('Vai trò:', self.role_combo)
         
         self.base_salary_input = QDoubleSpinBox()
@@ -84,7 +94,7 @@ class EmployeeDialog(QDialog):
         if len(text) == 12 and text.isdigit():
             role = 1 if self.role_combo.currentText() == 'Quản lý' else 0
             try:
-                employee_id = self.db.generate_employee_id(text, role)
+                employee_id = self.db.generate_employee_id(text)
                 self.id_label.setText(employee_id)
             except ValueError:
                 self.id_label.setText('Mã định danh không hợp lệ')
@@ -98,7 +108,7 @@ class EmployeeDialog(QDialog):
             if len(ma_dinh_danh) == 12 and ma_dinh_danh.isdigit():
                 role = 1 if role_text == 'Quản lý' else 0
                 try:
-                    employee_id = self.db.generate_employee_id(ma_dinh_danh, role)
+                    employee_id = self.db.generate_employee_id(ma_dinh_danh)
                     self.id_label.setText(employee_id)
                 except ValueError:
                     self.id_label.setText('Mã định danh không hợp lệ')

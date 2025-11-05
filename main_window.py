@@ -81,7 +81,7 @@ class MainWindow(QMainWindow):
         
         # Chỉ thêm tab quản lý nhân viên và lương cho admin
         if self.user_role == 1:
-            self.employee_tab = EmployeeManagementTab(self.db, self.user_role)
+            self.employee_tab = EmployeeManagementTab(self.db, self.user_role, self.user_info[0])
             self.salary_tab = SalaryManagementTab(self.db, self.user_role)
             self.tabs.addTab(self.product_tab, "Quản lý sản phẩm")
             self.brand_tab = BrandManagementTab(self.db, self.user_role)

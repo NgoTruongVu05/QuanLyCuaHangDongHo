@@ -4,10 +4,11 @@ from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
 from PyQt6.QtCore import Qt
 
 class EmployeeManagementTab(QWidget):
-    def __init__(self, db, user_role):
+    def __init__(self, db, user_role, user_id):
         super().__init__()
         self.db = db
         self.user_role = user_role
+        self.user_id = user_id
         self.init_ui()
         self.load_data()
     
@@ -285,8 +286,9 @@ class EmployeeManagementTab(QWidget):
     
     def edit_employee_row(self, row):
         employee_id = self.table.item(row, 0).text()
+        employee_role = self.table.item(row, 3).text()
         from dialogs.employee_dialog import EmployeeDialog
-        dialog = EmployeeDialog(self.db, employee_id)
+        dialog = EmployeeDialog(self.db, employee_id, self.user_id, self.user_role, employee_role)
         if dialog.exec():
             self.load_data()
     

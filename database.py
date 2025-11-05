@@ -128,14 +128,13 @@ class Database:
         
         self.conn.commit()
     
-    def generate_employee_id(self, ma_dinh_danh, vaitro):
+    def generate_employee_id(self, ma_dinh_danh):
         """Tạo ID theo format: nv/ql + 6 số cuối mã định danh"""
         if len(ma_dinh_danh) != 12 or not ma_dinh_danh.isdigit():
             raise ValueError("Mã định danh phải có đúng 12 chữ số")
         
         six_digits = ma_dinh_danh[-6:]  # 6 số cuối
-        prefix = "ql" if vaitro == 1 else "nv"  # ql cho quản lý, nv cho nhân viên
-        return f"{prefix}{six_digits}"
+        return f"{six_digits}"
     
     def hash_password(self, password):
         return hashlib.sha256(password.encode()).hexdigest()
