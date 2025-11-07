@@ -89,17 +89,32 @@ class EmployeeDialog(QDialog):
 
         self.setLayout(main_layout)
     
+    def check_id_exists(self, employee_id):
+        """Kiểm tra xem ID đã tồn tại trong hệ thống chưa"""
+        cursor = self.db.conn.cursor()
+        cursor.execute('SELECT id FROM employees WHERE id = ?', (employee_id,))
+        return cursor.fetchone() is not None
+    
     def on_ma_dinh_danh_changed(self, text):
         """Cập nhật ID khi mã định danh thay đổi"""
         if len(text) == 12 and text.isdigit():
             role = 1 if self.role_combo.currentText() == 'Quản lý' else 0
             try:
                 employee_id = self.db.generate_employee_id(text)
-                self.id_label.setText(employee_id)
+                
+                # Kiểm tra xem ID đã tồn tại chưa
+                if self.check_id_exists(employee_id):
+                    self.id_label.setText('ĐÃ CÓ - ' + employee_id)
+                    self.id_label.setStyleSheet('color: #FF0000; font-weight: bold; background-color: #ffe6e6; padding: 5px; border: 1px solid #ff0000;')
+                else:
+                    self.id_label.setText(employee_id)
+                    self.id_label.setStyleSheet('color: #2E86AB; font-weight: bold; background-color: #f0f0f0; padding: 5px; border: 1px solid #ccc;')
             except ValueError:
                 self.id_label.setText('Mã định danh không hợp lệ')
+                self.id_label.setStyleSheet('color: #FF0000; font-weight: bold; background-color: #ffe6e6; padding: 5px; border: 1px solid #ff0000;')
         else:
             self.id_label.setText('Chưa có ID')
+            self.id_label.setStyleSheet('color: #2E86AB; font-weight: bold; background-color: #f0f0f0; padding: 5px; border: 1px solid #ccc;')
     
     def on_role_changed(self, role_text):
         """Cập nhật ID khi vai trò thay đổi"""
@@ -109,9 +124,17 @@ class EmployeeDialog(QDialog):
                 role = 1 if role_text == 'Quản lý' else 0
                 try:
                     employee_id = self.db.generate_employee_id(ma_dinh_danh)
-                    self.id_label.setText(employee_id)
+                    
+                    # Kiểm tra xem ID đã tồn tại chưa
+                    if self.check_id_exists(employee_id):
+                        self.id_label.setText('ĐÃ CÓ - ' + employee_id)
+                        self.id_label.setStyleSheet('color: #FF0000; font-weight: bold; background-color: #ffe6e6; padding: 5px; border: 1px solid #ff0000;')
+                    else:
+                        self.id_label.setText(employee_id)
+                        self.id_label.setStyleSheet('color: #2E86AB; font-weight: bold; background-color: #f0f0f0; padding: 5px; border: 1px solid #ccc;')
                 except ValueError:
                     self.id_label.setText('Mã định danh không hợp lệ')
+                    self.id_label.setStyleSheet('color: #FF0000; font-weight: bold; background-color: #ffe6e6; padding: 5px; border: 1px solid #ff0000;')
     
     def load_employee_data(self):
         cursor = self.db.conn.cursor()
@@ -166,14 +189,19 @@ class EmployeeDialog(QDialog):
                 QMessageBox.warning(self, 'Lỗi', 'Mã định danh đã tồn tại!')
                 return
             
-            if not password:
-                QMessageBox.warning(self, 'Lỗi', 'Vui lòng nhập mật khẩu!')
-                return
-            
             # Lấy ID từ label (đã được tạo tự động)
             employee_id = self.id_label.text()
-            if employee_id == 'Chưa có ID':
-                QMessageBox.warning(self, 'Lỗi', 'Vui lòng nhập mã định danh hợp lệ!')
+            if employee_id == 'Chưa có ID' or employee_id.startswith('ĐÃ CÓ') or employee_id == 'Mã định danh không hợp lệ':
+                QMessageBox.warning(self, 'Lỗi', 'Vui lòng nhập mã định danh hợp lệ và chưa tồn tại!')
+                return
+            
+            # Kiểm tra lại một lần nữa để chắc chắn ID không tồn tại
+            if self.check_id_exists(employee_id):
+                QMessageBox.warning(self, 'Lỗi', 'ID nhân viên đã tồn tại trong hệ thống! Vui lòng nhập mã định danh khác.')
+                return
+            
+            if not password:
+                QMessageBox.warning(self, 'Lỗi', 'Vui lòng nhập mật khẩu!')
                 return
             
             hashed_password = self.db.hash_password(password)
