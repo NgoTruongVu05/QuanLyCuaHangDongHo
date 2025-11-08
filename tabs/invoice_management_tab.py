@@ -466,7 +466,7 @@ class InvoiceManagementTab(QWidget):
                    COALESCE(r.actual_cost, 0.0) as actual_cost, r.created_date, 
                    r.estimated_completion, r.status
             FROM repair_orders r
-            JOIN products p ON r.id = p.id
+            LEFT JOIN products p ON r.product_id = p.id
             LEFT JOIN customers c ON r.customer_id = c.id
             LEFT JOIN employees e ON r.employee_id = e.id
             WHERE DATE(r.created_date) BETWEEN ? AND ?
@@ -776,7 +776,7 @@ class InvoiceManagementTab(QWidget):
                    r.issue_description, r.status, p.name,
                    c.name, c.phone, c.address, e.full_name
             FROM repair_orders r
-            Join products p on r.id=p.id
+            LEFT JOIN products p ON r.product_id = p.id
             LEFT JOIN customers c ON r.customer_id = c.id
             LEFT JOIN employees e ON r.employee_id = e.id
             WHERE r.id = ?

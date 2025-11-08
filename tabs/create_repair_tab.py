@@ -363,15 +363,17 @@ class CreateRepairTab(QWidget):
 
         issue_desc = self.issue_desc_input.toPlainText()
         estimated = self.estimated_completion_input.date().toString('yyyy-MM-dd')
+        product_id = self.selected_product['id']
         status = 'Chờ xử lý'
 
+        created = QDate.currentDate().toString('yyyy-MM-dd')
+
         cursor.execute('''
-            INSERT INTO repair_orders 
-            (customer_id, employee_id,  issue_description, 
-             actual_cost, created_date, estimated_completion, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        ''', (customer_id, self.user_id or 1,  issue_desc, 0,
-              QDate.currentDate().toString('yyyy-MM-dd'), estimated, status))
+        INSERT INTO repair_orders 
+        (product_id, customer_id, employee_id, issue_description, 
+         actual_cost, created_date, estimated_completion, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (product_id, customer_id, self.user_id or 1, issue_desc, 0, created, estimated, status))
 
         repair_id = cursor.lastrowid
         self.db.conn.commit()
