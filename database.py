@@ -58,7 +58,7 @@ class Database:
             CREATE TABLE IF NOT EXISTS customers (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
-                phone TEXT,
+                phone TEXT NOT NULL,
                 email TEXT,
                 address TEXT
             )
@@ -72,7 +72,6 @@ class Database:
                 employee_id TEXT,
                 total_amount REAL NOT NULL,
                 created_date TEXT NOT NULL,
-                status TEXT DEFAULT '',
                 FOREIGN KEY (customer_id) REFERENCES customers (id),
                 FOREIGN KEY (employee_id) REFERENCES employees (id)
             )
