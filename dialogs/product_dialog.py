@@ -158,119 +158,134 @@ class ProductDialog(QDialog):
     
     def load_brands(self):
         """Load brands from database into combo box"""
-        cursor = self.db.conn.cursor()
-        cursor.execute('SELECT name FROM brands ORDER BY name')
-        brands = cursor.fetchall()
-        self.brand_combo.clear()
-        for brand in brands:
-            self.brand_combo.addItem(brand[0])
+        try:
+            cursor = self.db.conn.cursor()
+            cursor.execute('SELECT name FROM brands ORDER BY name')
+            brands = cursor.fetchall()
+            self.brand_combo.clear()
+            for brand in brands:
+                self.brand_combo.addItem(brand[0])
+        except Exception as e:
+            QMessageBox.critical(self, 'Lỗi', f'Không thể tải danh sách thương hiệu: {str(e)}')
+            self.brand_combo.clear()
+            self.brand_combo.addItem('Lỗi tải dữ liệu')
     
     def load_product_data(self):
-        cursor = self.db.conn.cursor()
-        cursor.execute('''
-            SELECT p.*, b.name as brand_name 
-            FROM products p
-            JOIN brands b ON p.brand_id = b.id
-            WHERE p.id = ?
-        ''', (self.product_id,))
-        product_data = cursor.fetchone()
-        
-        if product_data:
-            # Basic info
-            self.name_input.setText(product_data[1])
-            self.brand_combo.setCurrentText(product_data[-1])  # Set brand from joined query
-            self.price_input.setText(f"{product_data[4]:,.0f}".replace(',', '.'))
-            self.quantity_input.setValue(product_data[5])
-            self.description_input.setText(product_data[6] if product_data[6] else '')
-            
-            # Set product type
-            if product_data[3] == "mechanical":
-                self.type_combo.setCurrentText('Đồng hồ cơ')
-                self.movement_combo.setCurrentText(product_data[7] if product_data[7] else 'Automatic')
-                self.power_reserve_input.setValue(product_data[8] if product_data[8] else 0)
-                self.water_resistant_check.setChecked(bool(product_data[9]))
-            else:
-                self.type_combo.setCurrentText('Đồng hồ điện tử')
-                self.battery_life_input.setValue(product_data[10] if product_data[10] else 0)
-                
-                # Features
-                features = product_data[11].split(',') if product_data[11] else []
-                self.heart_rate_check.setChecked('heart_rate' in features)
-                self.gps_check.setChecked('gps' in features)
-                self.steps_check.setChecked('steps' in features)
-                self.sleep_check.setChecked('sleep' in features)
-                
-                self.connectivity_combo.setCurrentText(product_data[12] if product_data[12] else 'Không')
+        try:
+            cursor = self.db.conn.cursor()
+            cursor.execute('''
+                SELECT p.*, b.name as brand_name
+                FROM products p
+                JOIN brands b ON p.brand_id = b.id
+                WHERE p.id = ?
+            ''', (self.product_id,))
+            product_data = cursor.fetchone()
+
+            if product_data:
+                # Basic info
+                self.name_input.setText(product_data[1])
+                self.brand_combo.setCurrentText(product_data[-1])  # Set brand from joined query
+                self.price_input.setText(f"{product_data[4]:,.0f}".replace(',', '.'))
+                self.quantity_input.setValue(product_data[5])
+                self.description_input.setText(product_data[6] if product_data[6] else '')
+
+                # Set product type
+                if product_data[3] == "mechanical":
+                    self.type_combo.setCurrentText('Đồng hồ cơ')
+                    self.movement_combo.setCurrentText(product_data[7] if product_data[7] else 'Automatic')
+                    self.power_reserve_input.setValue(product_data[8] if product_data[8] else 0)
+                    self.water_resistant_check.setChecked(bool(product_data[9]))
+                else:
+                    self.type_combo.setCurrentText('Đồng hồ điện tử')
+                    self.battery_life_input.setValue(product_data[10] if product_data[10] else 0)
+
+                    # Features
+                    features = product_data[11].split(',') if product_data[11] else []
+                    self.heart_rate_check.setChecked('heart_rate' in features)
+                    self.gps_check.setChecked('gps' in features)
+                    self.steps_check.setChecked('steps' in features)
+                    self.sleep_check.setChecked('sleep' in features)
+
+                    self.connectivity_combo.setCurrentText(product_data[12] if product_data[12] else 'Không')
+        except Exception as e:
+            QMessageBox.critical(self, 'Lỗi', f'Không thể tải dữ liệu sản phẩm: {str(e)}')
     
     def save_product(self):
-        name = self.name_input.text()
-        brand = self.brand_combo.currentText()
-        
-        # Get brand_id from selected brand name
-        cursor = self.db.conn.cursor()
-        cursor.execute('SELECT id FROM brands WHERE name = ?', (brand,))
-        brand_id = cursor.fetchone()[0]
-        
         try:
-            price_text = self.price_input.text().replace('.', '')
-            price = float(price_text)
-        except ValueError:
-            QMessageBox.warning(self, 'Lỗi', 'Giá phải là số hợp lệ!')
-            return
-        quantity = self.quantity_input.value()
-        description = self.description_input.text()
-        
-        if not name or not brand:
-            QMessageBox.warning(self, 'Lỗi', 'Vui lòng nhập đầy đủ thông tin!')
-            return
-        
-        cursor = self.db.conn.cursor()
-        
-        if self.product_type == "mechanical":
-            movement_type = self.movement_combo.currentText().lower()
-            power_reserve = self.power_reserve_input.value()
-            water_resistant = 1 if self.water_resistant_check.isChecked() else 0
-            
-            if self.product_id:
-                cursor.execute('''
-                    UPDATE products SET name=?, brand_id=?, product_type=?, price=?, quantity=?, description=?,
-                    movement_type=?, power_reserve=?, water_resistant=?, battery_life=NULL, features=NULL, connectivity=NULL
-                    WHERE id=?
-                ''', (name, brand_id, self.product_type, price, quantity, description,
-                     movement_type, power_reserve, water_resistant, self.product_id))
-            else:
-                cursor.execute('''
-                    INSERT INTO products (name, brand_id, product_type, price, quantity, description,
-                    movement_type, power_reserve, water_resistant)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ''', (name, brand_id, self.product_type, price, quantity, description,
-                     movement_type, power_reserve, water_resistant))
-        
-        else:  # electronic
-            battery_life = self.battery_life_input.value()
-            connectivity = self.connectivity_combo.currentText()
-            
-            features = []
-            if self.heart_rate_check.isChecked(): features.append('heart_rate')
-            if self.gps_check.isChecked(): features.append('gps')
-            if self.steps_check.isChecked(): features.append('steps')
-            if self.sleep_check.isChecked(): features.append('sleep')
-            features_str = ','.join(features)
-            
-            if self.product_id:
-                cursor.execute('''
-                    UPDATE products SET name=?, brand_id=?, product_type=?, price=?, quantity=?, description=?,
-                    movement_type=NULL, power_reserve=NULL, water_resistant=NULL, battery_life=?, features=?, connectivity=?
-                    WHERE id=?
-                ''', (name, brand_id, self.product_type, price, quantity, description,
-                     battery_life, features_str, connectivity, self.product_id))
-            else:
-                cursor.execute('''
-                    INSERT INTO products (name, brand_id, product_type, price, quantity, description,
-                    battery_life, features, connectivity)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ''', (name, brand_id, self.product_type, price, quantity, description,
-                     battery_life, features_str, connectivity))
-        
-        self.db.conn.commit()
-        self.accept()
+            name = self.name_input.text()
+            brand = self.brand_combo.currentText()
+
+            # Get brand_id from selected brand name
+            cursor = self.db.conn.cursor()
+            cursor.execute('SELECT id FROM brands WHERE name = ?', (brand,))
+            brand_result = cursor.fetchone()
+            if not brand_result:
+                QMessageBox.warning(self, 'Lỗi', 'Thương hiệu không hợp lệ!')
+                return
+            brand_id = brand_result[0]
+
+            try:
+                price_text = self.price_input.text().replace('.', '')
+                price = float(price_text)
+            except ValueError:
+                QMessageBox.warning(self, 'Lỗi', 'Giá phải là số hợp lệ!')
+                return
+            quantity = self.quantity_input.value()
+            description = self.description_input.text()
+
+            if not name or not brand:
+                QMessageBox.warning(self, 'Lỗi', 'Vui lòng nhập đầy đủ thông tin!')
+                return
+
+            cursor = self.db.conn.cursor()
+
+            if self.product_type == "mechanical":
+                movement_type = self.movement_combo.currentText().lower()
+                power_reserve = self.power_reserve_input.value()
+                water_resistant = 1 if self.water_resistant_check.isChecked() else 0
+
+                if self.product_id:
+                    cursor.execute('''
+                        UPDATE products SET name=?, brand_id=?, product_type=?, price=?, quantity=?, description=?,
+                        movement_type=?, power_reserve=?, water_resistant=?, battery_life=NULL, features=NULL, connectivity=NULL
+                        WHERE id=?
+                    ''', (name, brand_id, self.product_type, price, quantity, description,
+                         movement_type, power_reserve, water_resistant, self.product_id))
+                else:
+                    cursor.execute('''
+                        INSERT INTO products (name, brand_id, product_type, price, quantity, description,
+                        movement_type, power_reserve, water_resistant)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ''', (name, brand_id, self.product_type, price, quantity, description,
+                         movement_type, power_reserve, water_resistant))
+
+            else:  # electronic
+                battery_life = self.battery_life_input.value()
+                connectivity = self.connectivity_combo.currentText()
+
+                features = []
+                if self.heart_rate_check.isChecked(): features.append('heart_rate')
+                if self.gps_check.isChecked(): features.append('gps')
+                if self.steps_check.isChecked(): features.append('steps')
+                if self.sleep_check.isChecked(): features.append('sleep')
+                features_str = ','.join(features)
+
+                if self.product_id:
+                    cursor.execute('''
+                        UPDATE products SET name=?, brand_id=?, product_type=?, price=?, quantity=?, description=?,
+                        movement_type=NULL, power_reserve=NULL, water_resistant=NULL, battery_life=?, features=?, connectivity=?
+                        WHERE id=?
+                    ''', (name, brand_id, self.product_type, price, quantity, description,
+                         battery_life, features_str, connectivity, self.product_id))
+                else:
+                    cursor.execute('''
+                        INSERT INTO products (name, brand_id, product_type, price, quantity, description,
+                        battery_life, features, connectivity)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ''', (name, brand_id, self.product_type, price, quantity, description,
+                         battery_life, features_str, connectivity))
+
+            self.db.conn.commit()
+            self.accept()
+        except Exception as e:
+            QMessageBox.critical(self, 'Lỗi', f'Không thể lưu sản phẩm: {str(e)}')

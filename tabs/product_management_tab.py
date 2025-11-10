@@ -800,18 +800,24 @@ class ProductManagementTab(QWidget):
 
     # ---------------- CRUD helpers using id (safer) ----------------
     def add_product(self):
-        from dialogs.product_dialog import ProductDialog
-        dialog = ProductDialog(self.db)
-        if dialog.exec():
-            self.load_data()
-            QMessageBox.information(self, 'Thành công', 'Đã thêm sản phẩm mới!')
+        try:
+            from dialogs.product_dialog import ProductDialog
+            dialog = ProductDialog(self.db)
+            if dialog.exec():
+                self.load_data()
+                QMessageBox.information(self, 'Thành công', 'Đã thêm sản phẩm mới!')
+        except Exception as e:
+            QMessageBox.critical(self, 'Lỗi', f'Không thể thêm sản phẩm: {str(e)}')
 
     def edit_product_by_id(self, pid):
-        from dialogs.product_dialog import ProductDialog
-        dialog = ProductDialog(self.db, pid)
-        if dialog.exec():
-            self.load_data()
-            QMessageBox.information(self, 'Thành công', 'Đã cập nhật sản phẩm!')
+        try:
+            from dialogs.product_dialog import ProductDialog
+            dialog = ProductDialog(self.db, pid)
+            if dialog.exec():
+                self.load_data()
+                QMessageBox.information(self, 'Thành công', 'Đã cập nhật sản phẩm!')
+        except Exception as e:
+            QMessageBox.critical(self, 'Lỗi', f'Không thể chỉnh sửa sản phẩm: {str(e)}')
 
     def delete_product_by_id(self, pid):
         try:

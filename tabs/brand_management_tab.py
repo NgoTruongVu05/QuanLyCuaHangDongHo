@@ -91,6 +91,7 @@ class BrandManagementTab(QWidget):
             add_btn = QPushButton('Thêm thương hiệu')
             add_btn.setStyleSheet('''
                 QPushButton {
+                    background-color: #27AE60;
                     color: white;
                     border: none;
                     border-radius: 12px;
@@ -98,7 +99,7 @@ class BrandManagementTab(QWidget):
                     font-size: 12px;
                 }
                 QPushButton:hover {
-                    background-color: #8E44AD;
+                    background-color: #229954;
                 }
             ''')
             add_btn.clicked.connect(self.add_brand)
