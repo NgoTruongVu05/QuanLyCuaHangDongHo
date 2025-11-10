@@ -831,6 +831,16 @@ class ProductManagementTab(QWidget):
                                     f'Sản phẩm \"{product_name}\" đã được bán ra và không thể xóa!')
                 return
 
+            # Check if product has repair orders
+            cursor.execute('SELECT COUNT(*) FROM repair_orders WHERE product_id = ?', (pid,))
+            result = cursor.fetchone()
+            repair_count = result[0] if result else 0
+
+            if repair_count > 0:
+                QMessageBox.warning(self, 'Không thể xóa',
+                                    f'Sản phẩm \"{product_name}\" đã có đơn sửa chữa và không thể xóa!')
+                return
+
             reply = QMessageBox.question(self, 'Xác nhận',
                                          f'Bạn có chắc muốn xóa sản phẩm \"{product_name}\"?',
                                          QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
