@@ -39,33 +39,39 @@ class BrandDialog(QDialog):
         self.setLayout(layout)
     
     def load_brand_data(self):
-        cursor = self.db.conn.cursor()
-        cursor.execute('SELECT name, country FROM brands WHERE id = ?', (self.brand_id,))
-        brand = cursor.fetchone()
-        
-        if brand:
-            self.name_input.setText(brand[0])
-            self.country_input.setText(brand[1] if brand[1] else '')
+        try:
+            cursor = self.db.conn.cursor()
+            cursor.execute('SELECT name, country FROM brands WHERE id = ?', (self.brand_id,))
+            brand = cursor.fetchone()
+
+            if brand:
+                self.name_input.setText(brand[0])
+                self.country_input.setText(brand[1] if brand[1] else '')
+        except Exception as e:
+            QMessageBox.critical(self, 'Lỗi', 'Không thể tải dữ liệu thương hiệu. Vui lòng kiểm tra kết nối và thử lại.')
     
     def save_brand(self):
         name = self.name_input.text().strip()
         country = self.country_input.text().strip()
-        
+
         if not name:
             QMessageBox.warning(self, 'Lỗi', 'Vui lòng nhập tên thương hiệu!')
             return
-        
-        cursor = self.db.conn.cursor()
-        
-        if self.brand_id:
-            cursor.execute('UPDATE brands SET name=?, country=? WHERE id=?', 
-                         (name, country, self.brand_id))
-        else:
-            cursor.execute('INSERT INTO brands (name, country) VALUES (?, ?)', 
-                         (name, country))
-        
-        self.db.conn.commit()
-        self.accept()
+
+        try:
+            cursor = self.db.conn.cursor()
+
+            if self.brand_id:
+                cursor.execute('UPDATE brands SET name=?, country=? WHERE id=?',
+                             (name, country, self.brand_id))
+            else:
+                cursor.execute('INSERT INTO brands (name, country) VALUES (?, ?)',
+                             (name, country))
+
+            self.db.conn.commit()
+            self.accept()
+        except Exception as e:
+            QMessageBox.critical(self, 'Lỗi', 'Không thể lưu thương hiệu. Vui lòng kiểm tra dữ liệu và thử lại.')
 
 class BrandManagementTab(QWidget):
     def __init__(self, db, user_role):
@@ -133,63 +139,66 @@ class BrandManagementTab(QWidget):
         self.setLayout(layout)
     
     def load_data(self):
-        cursor = self.db.conn.cursor()
-        cursor.execute('SELECT * FROM brands ORDER BY id')
-        brands = cursor.fetchall()
-        
-        self.table.setRowCount(len(brands))
-        for row, brand in enumerate(brands):
-            # ID, Tên, Quốc gia
-            for col in range(3):
-                self.table.setItem(row, col, QTableWidgetItem(str(brand[col] or '')))
-            
-            # Nút hành động
-            action_widget = QWidget()
-            action_layout = QHBoxLayout(action_widget)
-            action_layout.setContentsMargins(5, 2, 5, 2)
-            
-            if self.user_role == 1:  # Chỉ admin mới có nút sửa/xóa
-                edit_btn = QPushButton('Sửa')
-                edit_btn.setStyleSheet('''
-                    QPushButton {
-                        background-color: #3498DB;
-                        color: white;
-                        border: none;
-                        border-radius: 3px;
-                        padding: 3px 8px;
-                        font-size: 11px;
-                        margin-right: 2px;
-                    }
-                    QPushButton:hover {
-                        background-color: #2980B9;
-                    }
-                ''')
-                edit_btn.clicked.connect(lambda checked, r=row: self.edit_brand_row(r))
-                action_layout.addWidget(edit_btn)
-                
-                delete_btn = QPushButton('Xóa')
-                delete_btn.setStyleSheet('''
-                    QPushButton {
-                        background-color: #E74C3C;
-                        color: white;
-                        border: none;
-                        border-radius: 3px;
-                        padding: 3px 8px;
-                        font-size: 11px;
-                        margin: 0 3px;
-                    }
-                    QPushButton:hover {
-                        background-color: #C0392B;
-                    }
-                ''')
-                delete_btn.clicked.connect(lambda checked, r=row: self.delete_brand_row(r))
-                action_layout.addWidget(delete_btn)
-            
-            
-            action_layout.addStretch()
-            self.table.setCellWidget(row, 3, action_widget)
-        for row in range(self.table.rowCount()):
-            self.table.setRowHeight(row, 40)
+        try:
+            cursor = self.db.conn.cursor()
+            cursor.execute('SELECT * FROM brands ORDER BY id')
+            brands = cursor.fetchall()
+
+            self.table.setRowCount(len(brands))
+            for row, brand in enumerate(brands):
+                # ID, Tên, Quốc gia
+                for col in range(3):
+                    self.table.setItem(row, col, QTableWidgetItem(str(brand[col] or '')))
+
+                # Nút hành động
+                action_widget = QWidget()
+                action_layout = QHBoxLayout(action_widget)
+                action_layout.setContentsMargins(5, 2, 5, 2)
+
+                if self.user_role == 1:  # Chỉ admin mới có nút sửa/xóa
+                    edit_btn = QPushButton('Sửa')
+                    edit_btn.setStyleSheet('''
+                        QPushButton {
+                            background-color: #3498DB;
+                            color: white;
+                            border: none;
+                            border-radius: 3px;
+                            padding: 3px 8px;
+                            font-size: 11px;
+                            margin-right: 2px;
+                        }
+                        QPushButton:hover {
+                            background-color: #2980B9;
+                        }
+                    ''')
+                    edit_btn.clicked.connect(lambda checked, r=row: self.edit_brand_row(r))
+                    action_layout.addWidget(edit_btn)
+
+                    delete_btn = QPushButton('Xóa')
+                    delete_btn.setStyleSheet('''
+                        QPushButton {
+                            background-color: #E74C3C;
+                            color: white;
+                            border: none;
+                            border-radius: 3px;
+                            padding: 3px 8px;
+                            font-size: 11px;
+                            margin: 0 3px;
+                        }
+                        QPushButton:hover {
+                            background-color: #C0392B;
+                        }
+                    ''')
+                    delete_btn.clicked.connect(lambda checked, r=row: self.delete_brand_row(r))
+                    action_layout.addWidget(delete_btn)
+
+
+                action_layout.addStretch()
+                self.table.setCellWidget(row, 3, action_widget)
+            for row in range(self.table.rowCount()):
+                self.table.setRowHeight(row, 40)
+        except Exception as e:
+            QMessageBox.critical(self, 'Lỗi', 'Không thể tải danh sách thương hiệu. Vui lòng kiểm tra kết nối và thử lại.')
     
     def add_brand(self):
         dialog = BrandDialog(self.db)
@@ -205,27 +214,30 @@ class BrandManagementTab(QWidget):
             QMessageBox.information(self, 'Thành công', 'Đã cập nhật thương hiệu!')
     
     def delete_brand_row(self, row):
-        brand_id = int(self.table.item(row, 0).text())
-        brand_name = self.table.item(row, 1).text()
-        
-        # Kiểm tra xem thương hiệu có sản phẩm không
-        cursor = self.db.conn.cursor()
-        cursor.execute('SELECT COUNT(*) FROM products WHERE brand_id = ?', (brand_id,))
-        product_count = cursor.fetchone()[0]
-        
-        if product_count > 0:
-            QMessageBox.warning(self, 'Lỗi', 
-                              f'Không thể xóa thương hiệu "{brand_name}" vì có {product_count} sản phẩm đang sử dụng!')
-            return
-        
-        reply = QMessageBox.question(self, 'Xác nhận',
-                                   f'Bạn có chắc muốn xóa thương hiệu "{brand_name}"?',
-                                   QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-        if reply == QMessageBox.StandardButton.Yes:
-            cursor.execute('DELETE FROM brands WHERE id = ?', (brand_id,))
-            self.db.conn.commit()
-            self.load_data()
-            QMessageBox.information(self, 'Thành công', 'Đã xóa thương hiệu!')
+        try:
+            brand_id = int(self.table.item(row, 0).text())
+            brand_name = self.table.item(row, 1).text()
+
+            # Kiểm tra xem thương hiệu có sản phẩm không
+            cursor = self.db.conn.cursor()
+            cursor.execute('SELECT COUNT(*) FROM products WHERE brand_id = ?', (brand_id,))
+            product_count = cursor.fetchone()[0]
+
+            if product_count > 0:
+                QMessageBox.warning(self, 'Lỗi',
+                                  f'Không thể xóa thương hiệu "{brand_name}" vì có {product_count} sản phẩm đang sử dụng!')
+                return
+
+            reply = QMessageBox.question(self, 'Xác nhận',
+                                       f'Bạn có chắc muốn xóa thương hiệu "{brand_name}"?',
+                                       QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+            if reply == QMessageBox.StandardButton.Yes:
+                cursor.execute('DELETE FROM brands WHERE id = ?', (brand_id,))
+                self.db.conn.commit()
+                self.load_data()
+                QMessageBox.information(self, 'Thành công', 'Đã xóa thương hiệu!')
+        except Exception as e:
+            QMessageBox.critical(self, 'Lỗi', 'Không thể xóa thương hiệu. Vui lòng kiểm tra dữ liệu và thử lại.')
 
     def import_csv(self):
         """
@@ -255,7 +267,6 @@ class BrandManagementTab(QWidget):
 
             # Validate all rows first before importing
             errors = []
-            cursor = self.db.conn.cursor()
             for i, row in enumerate(rows):
                 try:
                     # Parse data for validation
@@ -281,48 +292,54 @@ class BrandManagementTab(QWidget):
             progress.setWindowModality(Qt.WindowModality.WindowModal)
             progress.show()
 
-            cursor = self.db.conn.cursor()
-            imported_count = 0
-            skipped_count = 0
+            try:
+                cursor = self.db.conn.cursor()
+                imported_count = 0
+                skipped_count = 0
 
-            for i, row in enumerate(rows):
-                if progress.wasCanceled():
-                    break
+                for i, row in enumerate(rows):
+                    if progress.wasCanceled():
+                        break
 
-                progress.setValue(i)
+                    progress.setValue(i)
 
-                try:
-                    # Parse data
-                    name = row.get('name', '').strip()
-                    country = row.get('country', '').strip()
+                    try:
+                        # Parse data
+                        name = row.get('name', '').strip()
+                        country = row.get('country', '').strip()
 
-                    # Check if brand already exists
-                    cursor.execute('SELECT id FROM brands WHERE name = ?', (name,))
-                    if cursor.fetchone():
-                        skipped_count += 1
-                        continue
+                        # Check if brand already exists
+                        cursor.execute('SELECT id FROM brands WHERE name = ?', (name,))
+                        if cursor.fetchone():
+                            skipped_count += 1
+                            continue
 
-                    # Insert brand
-                    cursor.execute('INSERT INTO brands (name, country) VALUES (?, ?)', (name, country))
+                        # Insert brand
+                        cursor.execute('INSERT INTO brands (name, country) VALUES (?, ?)', (name, country))
 
-                    imported_count += 1
+                        imported_count += 1
 
-                except Exception as e:
-                    # This shouldn't happen since we validated, but just in case
-                    QMessageBox.warning(self, 'Lỗi', f'Lỗi không mong muốn ở dòng {i+2}: {str(e)}')
-                    return
+                    except Exception as e:
+                        # This shouldn't happen since we validated, but just in case
+                        QMessageBox.warning(self, 'Lỗi', f'Lỗi không mong muốn ở dòng {i+2}. Vui lòng kiểm tra dữ liệu và thử lại.')
+                        return
 
-            self.db.conn.commit()
-            progress.setValue(len(rows))
+                self.db.conn.commit()
+                progress.setValue(len(rows))
 
-            # Show success
-            self.load_data()
-            if skipped_count > 0:
-                QMessageBox.information(self, 'Thành công',
-                                      f'Đã nhập thành công {imported_count} thương hiệu. Đã bỏ qua {skipped_count} thương hiệu đã tồn tại.')
-            else:
-                QMessageBox.information(self, 'Thành công',
-                                      f'Đã nhập thành công {imported_count} thương hiệu.')
+                # Show success
+                self.load_data()
+                if skipped_count > 0:
+                    QMessageBox.information(self, 'Thành công',
+                                          f'Đã nhập thành công {imported_count} thương hiệu. Đã bỏ qua {skipped_count} thương hiệu đã tồn tại.')
+                else:
+                    QMessageBox.information(self, 'Thành công',
+                                          f'Đã nhập thành công {imported_count} thương hiệu.')
 
+            except Exception as e:
+                QMessageBox.critical(self, 'Lỗi', 'Không thể nhập dữ liệu vào cơ sở dữ liệu. Vui lòng kiểm tra kết nối và thử lại.')
+
+        except (FileNotFoundError, PermissionError, UnicodeDecodeError, csv.Error) as e:
+            QMessageBox.critical(self, 'Lỗi', 'Không thể đọc file CSV. Vui lòng kiểm tra file và thử lại.')
         except Exception as e:
-            QMessageBox.critical(self, 'Lỗi', f'Không thể đọc file CSV: {str(e)}')
+            QMessageBox.critical(self, 'Lỗi', 'Lỗi không mong muốn khi nhập CSV. Vui lòng kiểm tra dữ liệu và thử lại.')
